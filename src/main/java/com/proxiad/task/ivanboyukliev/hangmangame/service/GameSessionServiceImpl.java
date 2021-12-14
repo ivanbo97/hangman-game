@@ -91,5 +91,4 @@ public class GameSessionServiceImpl implements GameSessionService {
     }
     return resultWord;
   }
-
 }
