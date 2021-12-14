@@ -13,14 +13,20 @@ public class InvalidGameSessionServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    resp.sendRedirect("/hangman-game/invalidGameId.jsp");
+    processException(req, resp);
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    resp.sendRedirect("/hangman-game/invalidGameId.jsp");
+    processException(req, resp);
   }
 
-
+  private void processException(HttpServletRequest req, HttpServletResponse resp)
+      throws IOException {
+    ServletException servletException =
+        (ServletException) req.getAttribute("jakarta.servlet.error.exception");
+    req.getSession().setAttribute("errorMsg", servletException.getMessage());
+    resp.sendRedirect("/hangman-game/invalidGameId.jsp");
+  }
 }
