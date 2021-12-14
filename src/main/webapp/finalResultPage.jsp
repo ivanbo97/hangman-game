@@ -2,12 +2,16 @@
 <html>
 <head>
 <style>
-<%@include file="/resources/css/landing-page.css"%>
+body {
+  font-family: 'Brush Script MT', cursive;
+   text-align: center;
+}
 </style>
 <title>Your result</title>
 </head>
 <body>
-	<p>Game Result : ${sessionScope.result}</p>
+	<h1>Game Result : </h1>
+	<h2>${sessionScope.result}</h2>
 	<form method="post" action="games" class="inline">
 		<button type="submit" class="link-button">Start New Game</button>
 	</form>
