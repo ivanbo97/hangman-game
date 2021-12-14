@@ -5,16 +5,22 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.proxiad.task.ivanboyukliev.hangmangame.domain.GameSession;
+import com.proxiad.task.ivanboyukliev.hangmangame.exception.InvalidGameSessionException;
 import com.proxiad.task.ivanboyukliev.hangmangame.repository.WordRepository;
+import com.proxiad.task.ivanboyukliev.hangmangame.validator.UserInputValidator;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 
 @Service
 public class GameSessionServiceImpl implements GameSessionService {
 
   private WordRepository wordRepository;
+  private UserInputValidator inputValidator;
 
   @Autowired
-  public GameSessionServiceImpl(WordRepository wordRepository) {
+  public GameSessionServiceImpl(WordRepository wordRepository, UserInputValidator inputValidator) {
     this.wordRepository = wordRepository;
+    this.inputValidator = inputValidator;
   }
 
   @Override
@@ -22,12 +28,23 @@ public class GameSessionServiceImpl implements GameSessionService {
     return wordRepository.getWord();
   }
 
-  public void makeTry(GameSession gameSession, char userGuess) {
+
+  @Override
+  public GameSession makeTry(ServletContext servletContext, String requestUri, String userGuess)
+      throws ServletException {
+
+    String gameId = extractGameId(requestUri);
+
+    inputValidator.validateSingleLetterInput(userGuess);
+    inputValidator.validateGameSessionId(servletContext, gameId);
+
+    GameSession gameSession = (GameSession) servletContext.getAttribute(gameId);
 
     int numberOfLettersToGuess = gameSession.getLettersToGuessLeft();
     int triesLeft = gameSession.getTriesLeft();
+    char userInputLetter = userGuess.charAt(0);
 
-    int lettersGuessedInThisAttempt = checkForGuessedLetters(gameSession, userGuess);
+    int lettersGuessedInThisAttempt = checkForGuessedLetters(gameSession, userInputLetter);
 
     numberOfLettersToGuess -= lettersGuessedInThisAttempt;
     gameSession.setLettersToGuessLeft(numberOfLettersToGuess);
@@ -35,12 +52,21 @@ public class GameSessionServiceImpl implements GameSessionService {
     triesLeft -= 1;
     gameSession.setTriesLeft(triesLeft);
 
+    return gameSession;
   }
 
   @Override
   public GameSession startNewGame() {
     String wordToGuess = getNewWord();
     return new GameSession(wordToGuess);
+  }
+
+  @Override
+  public GameSession reloadGame(ServletContext servletContext, String userRequest)
+      throws InvalidGameSessionException {
+    String gameId = extractGameId(userRequest);
+    inputValidator.validateGameSessionId(servletContext, gameId);
+    return (GameSession) servletContext.getAttribute(gameId);
   }
 
   private int checkForGuessedLetters(GameSession gameSession, char userInputLetter) {
@@ -91,4 +117,11 @@ public class GameSessionServiceImpl implements GameSessionService {
     }
     return resultWord;
   }
+
+  private String extractGameId(String reqUri) {
+    String uri = reqUri.substring(1);
+    return uri.substring(uri.indexOf("/", uri.indexOf("/") + 1) + 1, uri.length());
+  }
+
+
 }
