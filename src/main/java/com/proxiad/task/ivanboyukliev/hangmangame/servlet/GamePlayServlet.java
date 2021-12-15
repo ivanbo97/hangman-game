@@ -1,5 +1,6 @@
 package com.proxiad.task.ivanboyukliev.hangmangame.servlet;
 
+import static com.proxiad.task.ivanboyukliev.hangmangame.util.ApplicationConstants.GAME_PLAY_URL;
 import java.io.IOException;
 import com.proxiad.task.ivanboyukliev.hangmangame.domain.GameSession;
 import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
@@ -9,7 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/games/*")
+@WebServlet(GAME_PLAY_URL)
 public class GamePlayServlet extends HttpServlet {
 
   private GameSessionService gameSessionService;
