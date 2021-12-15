@@ -123,5 +123,4 @@ public class GameSessionServiceImpl implements GameSessionService {
     return uri.substring(uri.indexOf("/", uri.indexOf("/") + 1) + 1, uri.length());
   }
 
-
 }
