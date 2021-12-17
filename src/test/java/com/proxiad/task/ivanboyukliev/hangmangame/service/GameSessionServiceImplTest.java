@@ -72,8 +72,8 @@ class GameSessionServiceImplTest {
     GameSession gameSession = new GameSession("interface");
     gameSession.setPuzzledWord("___e____e");
     gameSession.setLettersToGuessLeft("___e____e".length() - 2);
-    gameSession.setTriesLeft(10);
     String userInput = "e";
+    int initialTriesLeft = gameSession.getTriesLeft();
     given(servletContext.getAttribute(anyString())).willReturn(gameSession);
 
     // when
@@ -81,7 +81,7 @@ class GameSessionServiceImplTest {
     int lettersToGuessLeft = gameSession.getLettersToGuessLeft();
     // then
     assertThat(lettersToGuessLeft).isEqualTo(7);
-    assertThat(gameSession.getTriesLeft()).isLessThan(10);
+    assertThat(gameSession.getTriesLeft()).isLessThan(initialTriesLeft);
 
   }
 
