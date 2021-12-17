@@ -47,8 +47,7 @@ class GameSessionServiceImplTest {
 
     // given
     GameSession gameSession = new GameSession(wordToGuess);
-
-    gameSession.setTriesLeft(5);
+    int initialTries = gameSession.getTriesLeft();
     given(servletContext.getAttribute(anyString())).willReturn(gameSession);
 
     // when
@@ -58,7 +57,7 @@ class GameSessionServiceImplTest {
 
     // then
     assertThat(receivedLettersToGuess).isEqualTo(lettersToGuessLeft);
-    assertThat(gameSession.getTriesLeft()).isEqualTo(5 - 1);
+    assertThat(gameSession.getTriesLeft()).isEqualTo(initialTries - 1);
   }
 
   private static Stream<Arguments> supplyTestParameters() {
