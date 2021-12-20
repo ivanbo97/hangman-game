@@ -7,9 +7,22 @@ body {
   font-family: 'Brush Script MT', cursive;
    text-align: center;
 }
+
+h1,h2,p,label{
+color:white;
+}
+
+.submit-btn{
+border-radius: 20%;
+width :90px;
+}
+
+.submit-btn:hover{
+background-color: #4CAF50;
+}
 </style>
 </head>
-<body>
+<body style ="background-color: #2eb8b8;">
 <h1>Hangman Game. Current game session details</h1>
 <p>Current word : ${requestScope.gameSessionObj.puzzledWord}</p>
 <p>Tries left : ${requestScope.gameSessionObj.triesLeft}</p>
@@ -17,8 +30,10 @@ body {
 <h2>Make your guess</h2>
 <form action="${requestScope.gameSessionObj.gameId}"  method="post">
   <label for="enteredLetter">Enter a letter:</label>
-  <input  required type="text" id="enteredLetter" name="enteredLetter"  pattern="[a-z]{1}"><br><br>
-  <input class="custom-btn btn-1" type="submit" value="Submit your guess!">
+  <input  required type="text" id="enteredLetter" name="enteredLetter"  pattern="[a-z]{1}" style="border-radius: 10px; width: 50px;"
+  oninvalid="this.setCustomValidity('Please enter a valid letter. Numbers, special characters or empty strings are not allowed.')"
+  oninput="this.setCustomValidity('')"><br><br>
+  <input class="submit-btn" type="submit" value="Submit letter!">
 </form>
 </body>
 </html>
