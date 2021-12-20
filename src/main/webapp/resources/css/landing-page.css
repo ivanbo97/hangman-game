@@ -5,7 +5,8 @@
 .link-button {
   background: none;
   border: none;
-  color: blue;
+  color: white;
+   font-weight: bold;
   text-decoration: underline;
   cursor: pointer;
   font-size: 1em;
