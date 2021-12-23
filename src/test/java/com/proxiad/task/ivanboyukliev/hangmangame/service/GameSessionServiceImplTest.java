@@ -70,17 +70,19 @@ class GameSessionServiceImplTest {
 
     // given
     GameSession gameSession = new GameSession("interface");
+    int previousLettersToGuessLeft = "___e____e".length() - 2;
     gameSession.setPuzzledWord("___e____e");
-    gameSession.setLettersToGuessLeft("___e____e".length() - 2);
+    gameSession.setLettersToGuessLeft(previousLettersToGuessLeft);
     String userInput = "e";
     int initialTriesLeft = gameSession.getTriesLeft();
     given(servletContext.getAttribute(anyString())).willReturn(gameSession);
 
     // when
-    gameSessionService.makeTry(servletContext, exampleUri, userInput);
-    int lettersToGuessLeft = gameSession.getLettersToGuessLeft();
+    GameSession newSession = gameSessionService.makeTry(servletContext, exampleUri, userInput);
+    int lettersToGuessLeft = newSession.getLettersToGuessLeft();
+
     // then
-    assertThat(lettersToGuessLeft).isEqualTo(7);
+    assertThat(lettersToGuessLeft).isEqualTo(previousLettersToGuessLeft);
     assertThat(gameSession.getTriesLeft()).isLessThan(initialTriesLeft);
 
   }
