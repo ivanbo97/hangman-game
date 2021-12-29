@@ -105,7 +105,7 @@ class GameSessionServiceImplTest {
   void reloadGameTest() throws InvalidGameSessionException {
 
     // given
-    GameSession gameSession = new GameSession("");
+    GameSession gameSession = new GameSession("example");
     given(servletContext.getAttribute(anyString())).willReturn(gameSession);
 
     // when
