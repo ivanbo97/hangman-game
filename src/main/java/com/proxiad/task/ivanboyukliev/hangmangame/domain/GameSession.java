@@ -16,9 +16,9 @@ public class GameSession {
 
   public GameSession(String wordToGuess) {
     this.wordToGuess = wordToGuess;
-    this.triesLeft = wordToGuess.length() + BONUS_TRIES;
     this.lettersToGuessLeft = wordToGuess.length();
-    initPuzzledWord();
+    this.puzzledWord = generatePuzzledWord(wordToGuess);
+    this.triesLeft = this.lettersToGuessLeft + BONUS_TRIES;
   }
 
   public String getWordToGuess() {
@@ -53,8 +53,22 @@ public class GameSession {
     this.puzzledWord = puzzledWord;
   }
 
-  private void initPuzzledWord() {
+  private String generatePuzzledWord(String wordToGuess) {
     puzzledWord = UNKNOWN_LETTER_SYMBOL.repeat(wordToGuess.length());
+    StringBuilder puzzledWordBuilder = new StringBuilder(puzzledWord);
+
+    char firstLetter = wordToGuess.charAt(0);
+    char lastLetter = wordToGuess.charAt(wordToGuess.length() - 1);
+    char letterToCheck;
+
+    for (int i = 0; i < wordToGuess.length(); i++) {
+      letterToCheck = wordToGuess.charAt(i);
+      if (letterToCheck == firstLetter || letterToCheck == lastLetter) {
+        puzzledWordBuilder.setCharAt(i, letterToCheck);
+        lettersToGuessLeft--;
+      }
+    }
+    return puzzledWordBuilder.toString();
   }
 
   public void setGameId(String gameId) {
