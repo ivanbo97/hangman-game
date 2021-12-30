@@ -17,7 +17,7 @@ public class SpringInitializer implements ServletContainerInitializer {
         new AnnotationConfigApplicationContext(SpringContainerConfigurator.class);
 
     GameSessionService gameService =
-        (GameSessionService) springContainer.getBean("gameSessionServiceImpl");
+        (GameSessionService) springContainer.getBean(GameSessionService.class);
 
     ctx.setAttribute("gameService", gameService);
   }
