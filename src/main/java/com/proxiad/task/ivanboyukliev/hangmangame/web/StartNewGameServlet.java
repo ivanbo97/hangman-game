@@ -1,8 +1,8 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.servlet;
+package com.proxiad.task.ivanboyukliev.hangmangame.web;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.util.ApplicationConstants.START_NEW_GAME_URL;
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.START_NEW_GAME_URL;
 import java.io.IOException;
-import com.proxiad.task.ivanboyukliev.hangmangame.domain.GameSession;
+import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSession;
 import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

@@ -4,7 +4,7 @@
 	version="5.0">
 
 	<error-page>
-		<exception-type>com.proxiad.task.ivanboyukliev.hangmangame.exception.InvalidGameSessionException</exception-type>
+		<exception-type>com.proxiad.task.ivanboyukliev.hangmangame.service.InvalidGameSessionException</exception-type>
 		<location>/invalidGameSessionHandler</location>
 	</error-page>
 </web-app>

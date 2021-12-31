@@ -1,7 +1,7 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.domain;
+package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.util.ApplicationConstants.BONUS_TRIES;
-import static com.proxiad.task.ivanboyukliev.hangmangame.util.ApplicationConstants.UNKNOWN_LETTER_SYMBOL;
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.BONUS_TRIES;
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.UNKNOWN_LETTER_SYMBOL;
 import java.util.Objects;
 
 public class GameSession {

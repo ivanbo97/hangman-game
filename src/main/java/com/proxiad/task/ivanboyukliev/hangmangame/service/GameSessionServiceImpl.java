@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.proxiad.task.ivanboyukliev.hangmangame.domain.GameSession;
-import com.proxiad.task.ivanboyukliev.hangmangame.exception.InvalidGameSessionException;
-import com.proxiad.task.ivanboyukliev.hangmangame.repository.WordRepository;
-import com.proxiad.task.ivanboyukliev.hangmangame.validator.UserInputValidator;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 
 @Service
@@ -30,15 +25,10 @@ public class GameSessionServiceImpl implements GameSessionService {
 
 
   @Override
-  public GameSession makeTry(ServletContext servletContext, String requestUri, String userGuess)
-      throws ServletException {
-
-    String gameId = extractGameId(requestUri);
+  public GameSession makeTry(GameSession gameSession, String userGuess) throws ServletException {
 
     inputValidator.validateSingleLetterInput(userGuess);
-    inputValidator.validateGameSessionId(servletContext, gameId);
-
-    GameSession gameSession = (GameSession) servletContext.getAttribute(gameId);
+    inputValidator.validateGameSessionExistance(gameSession);
 
     int numberOfLettersToGuess = gameSession.getLettersToGuessLeft();
     int triesLeft = gameSession.getTriesLeft();
@@ -62,11 +52,8 @@ public class GameSessionServiceImpl implements GameSessionService {
   }
 
   @Override
-  public GameSession reloadGame(ServletContext servletContext, String userRequest)
-      throws InvalidGameSessionException {
-    String gameId = extractGameId(userRequest);
-    inputValidator.validateGameSessionId(servletContext, gameId);
-    return (GameSession) servletContext.getAttribute(gameId);
+  public void validateGameExistance(GameSession gameSession) throws InvalidGameSessionException {
+    inputValidator.validateGameSessionExistance(gameSession);
   }
 
   private int checkForGuessedLetters(GameSession gameSession, char userInputLetter) {
@@ -116,11 +103,6 @@ public class GameSessionServiceImpl implements GameSessionService {
       resultWord = String.valueOf(currentPuzzledChars);
     }
     return resultWord;
-  }
-
-  private String extractGameId(String reqUri) {
-    String uri = reqUri.substring(1);
-    return uri.substring(uri.indexOf("/", uri.indexOf("/") + 1) + 1, uri.length());
   }
 
 }

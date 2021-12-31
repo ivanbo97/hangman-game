@@ -1,8 +1,8 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.servlet;
+package com.proxiad.task.ivanboyukliev.hangmangame.web;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.util.ApplicationConstants.GAME_PLAY_URL;
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.GAME_PLAY_URL;
 import java.io.IOException;
-import com.proxiad.task.ivanboyukliev.hangmangame.domain.GameSession;
+import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSession;
 import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,8 +24,11 @@ public class GamePlayServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
 
-    GameSession currentGameSession =
-        gameSessionService.reloadGame(getServletContext(), req.getRequestURI());
+    String gameId = extractGameId(req.getRequestURI());
+
+    GameSession currentGameSession = (GameSession) getServletContext().getAttribute(gameId);
+
+    gameSessionService.validateGameExistance(currentGameSession);
 
     req.setAttribute("gameSessionObj", currentGameSession);
     req.getRequestDispatcher("/hangmanMainPage.jsp").forward(req, resp);
@@ -36,9 +39,10 @@ public class GamePlayServlet extends HttpServlet {
       throws ServletException, IOException {
 
     String userGuess = req.getParameter("enteredLetter").toLowerCase();
-    String requestUri = req.getRequestURI();
-    GameSession currentGameSession =
-        gameSessionService.makeTry(getServletContext(), requestUri, userGuess);
+    String gameId = extractGameId(req.getRequestURI());
+
+    GameSession gameSession = (GameSession) getServletContext().getAttribute(gameId);
+    GameSession currentGameSession = gameSessionService.makeTry(gameSession, userGuess);
 
     if (currentGameSession.getLettersToGuessLeft() == 0) {
       req.getSession().setAttribute("result", "Well Done! You have seccessfully guessed the word [ "
@@ -59,4 +63,8 @@ public class GamePlayServlet extends HttpServlet {
     resp.sendRedirect("/hangman-game/games/" + currentGameSession.getGameId());
   }
 
+  private String extractGameId(String reqUri) {
+    String uri = reqUri.substring(1);
+    return uri.substring(uri.indexOf("/", uri.indexOf("/") + 1) + 1, uri.length());
+  }
 }

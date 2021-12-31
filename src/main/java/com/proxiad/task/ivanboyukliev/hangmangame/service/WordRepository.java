@@ -1,9 +1,8 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.repository;
+package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
-import com.proxiad.task.ivanboyukliev.hangmangame.util.RandomNumberGenerator;
 
 @Repository
 public class WordRepository {

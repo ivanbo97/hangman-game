@@ -1,6 +1,6 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.servlet;
+package com.proxiad.task.ivanboyukliev.hangmangame.web;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.util.ApplicationConstants.APP_BASE_URL;
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.APP_BASE_URL;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -17,8 +17,9 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import com.proxiad.task.ivanboyukliev.hangmangame.domain.GameSession;
+import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSession;
 import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
+import com.proxiad.task.ivanboyukliev.hangmangame.web.GamePlayServlet;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
@@ -56,6 +57,7 @@ class GamePlayServletTest {
   private HttpSession httpSession;
 
   private static String gameId = "A123D456C";
+  private static String requestURI = "/hangman-game/games/A123D456C";
 
   @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
   @MethodSource("supplyTestParameters")
@@ -69,10 +71,11 @@ class GamePlayServletTest {
     returnedGameSession.setGameId(gameId);
     given(gamePlayServlet.getServletConfig()).willReturn(servletConfig);
     given(gamePlayServlet.getServletContext()).willReturn(servletContext);
+    given(servletRequest.getRequestURI()).willReturn(requestURI);
+    given(servletContext.getAttribute(gameId)).willReturn(new GameSession());
     given(servletContext.getAttribute("gameService")).willReturn(gameSessionService);
     given(servletRequest.getParameter(anyString())).willReturn("a");
-    given(servletRequest.getRequestURI()).willReturn("fakeUrl");
-    given(gameSessionService.makeTry(any(ServletContext.class), anyString(), anyString()))
+    given(gameSessionService.makeTry(any(GameSession.class), anyString()))
         .willReturn(returnedGameSession);
     given(servletRequest.getSession()).willReturn(httpSession);
     // when

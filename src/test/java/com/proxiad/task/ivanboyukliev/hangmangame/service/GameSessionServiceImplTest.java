@@ -2,9 +2,6 @@ package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import java.util.stream.Stream;
@@ -16,11 +13,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.proxiad.task.ivanboyukliev.hangmangame.domain.GameSession;
-import com.proxiad.task.ivanboyukliev.hangmangame.exception.InvalidGameSessionException;
-import com.proxiad.task.ivanboyukliev.hangmangame.repository.WordRepository;
-import com.proxiad.task.ivanboyukliev.hangmangame.validator.UserInputValidator;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,9 +23,6 @@ class GameSessionServiceImplTest {
 
   @Mock
   private UserInputValidator inputValidator;
-
-  @Mock
-  private ServletContext servletContext;
 
   @InjectMocks
   private GameSessionServiceImpl gameSessionService;
@@ -48,10 +37,9 @@ class GameSessionServiceImplTest {
     // given
     GameSession gameSession = new GameSession(wordToGuess);
     int initialTries = gameSession.getTriesLeft();
-    given(servletContext.getAttribute(anyString())).willReturn(gameSession);
 
     // when
-    gameSessionService.makeTry(servletContext, exampleUri, userInputLetter);
+    gameSessionService.makeTry(gameSession, userInputLetter);
 
     int receivedLettersToGuess = gameSession.getLettersToGuessLeft();
 
@@ -61,24 +49,22 @@ class GameSessionServiceImplTest {
   }
 
   private static Stream<Arguments> supplyTestParameters() {
-    return Stream.of(Arguments.of("stack", "j", 5), Arguments.of("storm", "s", 4),
-        Arguments.of("interface", "e", 7), Arguments.of("alaska", "a", 3));
+    return Stream.of(Arguments.of("stack", "j", 3), Arguments.of("storm", "o", 2),
+        Arguments.of("acceptance", "c ", 3));
   }
 
   @Test
   void repetitiveLetterEnteringTest() throws Exception {
 
     // given
-    GameSession gameSession = new GameSession("interface");
-    int previousLettersToGuessLeft = "___e____e".length() - 2;
-    gameSession.setPuzzledWord("___e____e");
-    gameSession.setLettersToGuessLeft(previousLettersToGuessLeft);
+    String wordToGuess = "interface";
+    GameSession gameSession = new GameSession(wordToGuess);
+    int previousLettersToGuessLeft = gameSession.getLettersToGuessLeft();
     String userInput = "e";
     int initialTriesLeft = gameSession.getTriesLeft();
-    given(servletContext.getAttribute(anyString())).willReturn(gameSession);
 
     // when
-    GameSession newSession = gameSessionService.makeTry(servletContext, exampleUri, userInput);
+    GameSession newSession = gameSessionService.makeTry(gameSession, userInput);
     int lettersToGuessLeft = newSession.getLettersToGuessLeft();
 
     // then
@@ -99,20 +85,5 @@ class GameSessionServiceImplTest {
     then(wordRepository).should().getWord();
     assertThat(newSession).isNotNull();
     assertThat(newSession.getWordToGuess()).isEqualTo("example");
-  }
-
-  @Test
-  void reloadGameTest() throws InvalidGameSessionException {
-
-    // given
-    GameSession gameSession = new GameSession("example");
-    given(servletContext.getAttribute(anyString())).willReturn(gameSession);
-
-    // when
-    GameSession newSession = gameSessionService.reloadGame(servletContext, exampleUri);
-
-    // then
-    then(inputValidator).should().validateGameSessionId(any(ServletContext.class), eq("A12BD13D"));
-    assertThat(newSession).isNotNull();
   }
 }

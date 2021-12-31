@@ -1,10 +1,10 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.springconfig;
+package com.proxiad.task.ivanboyukliev.hangmangame;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan("com.proxiad.task.ivanboyukliev.hangmangame")
+@ComponentScan
 public class SpringContainerConfigurator {
 
 }
