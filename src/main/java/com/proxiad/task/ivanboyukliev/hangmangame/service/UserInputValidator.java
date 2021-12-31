@@ -1,23 +1,18 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.validator;
+package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.util.ApplicationConstants.INVALID_USR_INPUT_LEN;
-import static com.proxiad.task.ivanboyukliev.hangmangame.util.ApplicationConstants.INVALID_USR_INPUT_TYPE;
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.INVALID_USR_INPUT_LEN;
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.INVALID_USR_INPUT_TYPE;
 import org.springframework.stereotype.Component;
-import com.proxiad.task.ivanboyukliev.hangmangame.exception.InvalidGameSessionException;
-import com.proxiad.task.ivanboyukliev.hangmangame.exception.InvalidUserInputException;
-import jakarta.servlet.ServletContext;
 
 @Component
 public class UserInputValidator {
 
   public UserInputValidator() {}
 
-  public void validateGameSessionId(ServletContext servletContext, String givenGameId)
-      throws InvalidGameSessionException {
+  public void validateGameSessionExistance(GameSession gameSession) throws InvalidGameSessionException {
 
-    if (servletContext.getAttribute(givenGameId) == null) {
-      throw new InvalidGameSessionException(
-          "Game session with ID : " + givenGameId + " does not exist!");
+    if (gameSession == null) {
+      throw new InvalidGameSessionException("Game session no longer exists!");
     }
   }
 
