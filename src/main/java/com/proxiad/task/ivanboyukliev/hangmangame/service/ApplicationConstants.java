@@ -12,7 +12,10 @@ public final class ApplicationConstants {
   // Application end-points
 
   public static final String APP_BASE_URL = "/hangman-game";
-  public static final String START_NEW_GAME_URL = "/games";
+  public static final String GAME_BASE_URL = "/games";
   public static final String GAME_PLAY_URL = "/games/*";
 
+
+  public static final String SUCCESS_MSG = "Well Done! You have successfully guessed the word [%s]";
+  public static final String FAILURE_MSG = "No more tries left! The word was [%s]";
 }
