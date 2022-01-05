@@ -1,37 +1,28 @@
 package com.proxiad.task.ivanboyukliev.hangmangame.web;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.START_NEW_GAME_URL;
-import java.io.IOException;
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.GAME_BASE_URL;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSession;
 import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-@WebServlet(START_NEW_GAME_URL)
-public class StartNewGameServlet extends HttpServlet {
 
 
+@Controller
+@RequestMapping(GAME_BASE_URL)
+public class StartNewGameController {
+
+  @Autowired
   private GameSessionService gameSessionService;
 
-  @Override
-  public void init() throws ServletException {
-    gameSessionService = (GameSessionService) getServletContext().getAttribute("gameService");
-  }
-
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
+  @PostMapping
+  public String startGame(Model model) {
 
     GameSession newSession = gameSessionService.startNewGame();
-
-    String gameId = req.getSession().getId();
-    newSession.setGameId(gameId);
-
-    getServletContext().setAttribute(gameId, newSession);
-    resp.sendRedirect("games/" + gameId);
+    model.addAttribute("gameSessionObj", newSession);
+    return "redirect:" + GAME_BASE_URL + "/" + newSession.getGameId();
   }
 
 }
