@@ -1,24 +1,25 @@
 package com.proxiad.task.ivanboyukliev.hangmangame;
 
-import java.util.Set;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
-import jakarta.servlet.ServletContainerInitializer;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
-public class WebAppInitializer implements ServletContainerInitializer {
+public class WebAppInitializer implements WebApplicationInitializer {
 
   @Override
-  public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
+  public void onStartup(ServletContext servletContext) throws ServletException {
 
-    AnnotationConfigApplicationContext springContainer =
-        new AnnotationConfigApplicationContext(WebConfiguration.class);
+    AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
+    appContext.register(WebConfiguration.class);
 
-    GameSessionService gameService =
-        (GameSessionService) springContainer.getBean(GameSessionService.class);
+    DispatcherServlet dispatcherServlet = new DispatcherServlet(appContext);
+    ServletRegistration.Dynamic servletRegistrtaion =
+        servletContext.addServlet("applicationServlet", dispatcherServlet);
+    servletRegistrtaion.setLoadOnStartup(1);
+    servletRegistrtaion.addMapping("/");
 
-    ctx.setAttribute("gameService", gameService);
   }
-
 }
