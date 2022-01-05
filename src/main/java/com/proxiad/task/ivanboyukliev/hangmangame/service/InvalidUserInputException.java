@@ -1,6 +1,6 @@
 package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
-import jakarta.servlet.ServletException;
+import javax.servlet.ServletException;
 
 public class InvalidUserInputException extends ServletException {
 
