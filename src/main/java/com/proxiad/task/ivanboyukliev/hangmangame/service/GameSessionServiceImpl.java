@@ -2,31 +2,42 @@ package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import jakarta.servlet.ServletException;
 
 @Service
 public class GameSessionServiceImpl implements GameSessionService {
 
+  @Autowired
   private WordRepository wordRepository;
+
+  @Autowired
   private UserInputValidator inputValidator;
 
   @Autowired
-  public GameSessionServiceImpl(WordRepository wordRepository, UserInputValidator inputValidator) {
-    this.wordRepository = wordRepository;
-    this.inputValidator = inputValidator;
-  }
+  private GameSessionRepository gameSessionsRepo;
 
   @Override
   public String getNewWord() {
     return wordRepository.getWord();
   }
 
+  @Override
+  public GameSession getGameSessionById(String gameId) {
+    return gameSessionsRepo.getGameSessionById(gameId);
+  }
 
   @Override
-  public GameSession makeTry(GameSession gameSession, String userGuess) throws ServletException {
+  public void deleteSessionById(String gameId) {
+    gameSessionsRepo.deleteSessionById(gameId);
+  }
 
+  @Override
+  public GameSession makeTry(String gameId, String userGuess) throws ServletException {
+
+    GameSession gameSession = gameSessionsRepo.getGameSessionById(gameId);
     inputValidator.validateSingleLetterInput(userGuess);
     inputValidator.validateGameSessionExistance(gameSession);
 
@@ -48,7 +59,10 @@ public class GameSessionServiceImpl implements GameSessionService {
   @Override
   public GameSession startNewGame() {
     String wordToGuess = getNewWord();
-    return new GameSession(wordToGuess);
+    GameSession newSession = new GameSession(wordToGuess);
+    newSession.setGameId(UUID.randomUUID().toString());
+    gameSessionsRepo.saveGameSession(newSession);
+    return newSession;
   }
 
   @Override

@@ -1,6 +1,6 @@
 package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
-import jakarta.servlet.ServletException;
+import javax.servlet.ServletException;
 
 public interface GameSessionService {
 
@@ -8,7 +8,11 @@ public interface GameSessionService {
 
   GameSession startNewGame();
 
-  GameSession makeTry(GameSession gameSession, String userGuess) throws ServletException;
+  GameSession makeTry(String gameId, String userGuess) throws ServletException;
+
+  GameSession getGameSessionById(String gameId);
+
+  void deleteSessionById(String gameId);
 
   void validateGameExistance(GameSession gameSession) throws InvalidGameSessionException;
 }
