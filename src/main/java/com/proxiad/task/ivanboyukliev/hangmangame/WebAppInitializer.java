@@ -7,13 +7,13 @@ import jakarta.servlet.ServletContainerInitializer;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 
-public class SpringInitializer implements ServletContainerInitializer {
+public class WebAppInitializer implements ServletContainerInitializer {
 
   @Override
   public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
 
     AnnotationConfigApplicationContext springContainer =
-        new AnnotationConfigApplicationContext(SpringContainerConfigurator.class);
+        new AnnotationConfigApplicationContext(WebConfiguration.class);
 
     GameSessionService gameService =
         (GameSessionService) springContainer.getBean(GameSessionService.class);
