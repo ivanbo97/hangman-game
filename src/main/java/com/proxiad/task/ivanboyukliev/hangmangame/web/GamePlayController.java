@@ -1,70 +1,48 @@
 package com.proxiad.task.ivanboyukliev.hangmangame.web;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.GAME_PLAY_URL;
-import java.io.IOException;
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.GAME_BASE_URL;
+import javax.servlet.ServletException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSession;
 import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(GAME_PLAY_URL)
-public class GamePlayServlet extends HttpServlet {
+@Controller
+@RequestMapping(GAME_BASE_URL)
+public class GamePlayController {
 
+  @Autowired
   private GameSessionService gameSessionService;
 
-  @Override
-  public void init() throws ServletException {
-    gameSessionService = (GameSessionService) getServletContext().getAttribute("gameService");
-  }
 
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
+  @GetMapping("/{gameId}")
+  public String initiateGame(@PathVariable String gameId, Model model) throws ServletException {
 
-    String gameId = extractGameId(req.getRequestURI());
-
-    GameSession currentGameSession = (GameSession) getServletContext().getAttribute(gameId);
-
+    GameSession currentGameSession = gameSessionService.getGameSessionById(gameId);
     gameSessionService.validateGameExistance(currentGameSession);
 
-    req.setAttribute("gameSessionObj", currentGameSession);
-    req.getRequestDispatcher("/hangmanMainPage.jsp").forward(req, resp);
+    model.addAttribute("gameSessionObj", currentGameSession);
+
+    return "hangmanMainPage";
   }
 
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
+  @PostMapping("/{gameId}")
+  public String makeGuess(@RequestParam String enteredLetter, @PathVariable String gameId,
+      Model model) throws ServletException {
 
-    String userGuess = req.getParameter("enteredLetter").toLowerCase();
-    String gameId = extractGameId(req.getRequestURI());
+    GameSession gameSession = gameSessionService.makeTry(gameId, enteredLetter);
 
-    GameSession gameSession = (GameSession) getServletContext().getAttribute(gameId);
-    GameSession currentGameSession = gameSessionService.makeTry(gameSession, userGuess);
-
-    if (currentGameSession.getLettersToGuessLeft() == 0) {
-      req.getSession().setAttribute("result", "Well Done! You have seccessfully guessed the word [ "
-          + currentGameSession.getWordToGuess() + " ]");
-      getServletContext().removeAttribute(currentGameSession.getGameId());
-      resp.sendRedirect("/hangman-game/finalResultPage.jsp");
-      return;
+    if (gameSession.getLettersToGuessLeft() == 0 || gameSession.getTriesLeft() == 0) {
+      return "redirect:" + GAME_BASE_URL + "/" + gameId + "/result";
     }
 
-    if (currentGameSession.getTriesLeft() == 0) {
-      req.getSession().setAttribute("result", "Game Over! No more tries left! The word was [ "
-          + currentGameSession.getWordToGuess() + " ]");
-      getServletContext().removeAttribute(currentGameSession.getGameId());
-      resp.sendRedirect("/hangman-game/finalResultPage.jsp");
-      return;
-    }
-
-    resp.sendRedirect("/hangman-game/games/" + currentGameSession.getGameId());
+    return "redirect:" + GAME_BASE_URL + "/" + gameId;
   }
 
-  private String extractGameId(String reqUri) {
-    String uri = reqUri.substring(1);
-    return uri.substring(uri.indexOf("/", uri.indexOf("/") + 1) + 1, uri.length());
-  }
 }
