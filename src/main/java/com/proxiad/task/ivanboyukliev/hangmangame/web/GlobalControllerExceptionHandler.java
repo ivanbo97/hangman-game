@@ -1,32 +1,37 @@
 package com.proxiad.task.ivanboyukliev.hangmangame.web;
 
-import java.io.IOException;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import com.proxiad.task.ivanboyukliev.hangmangame.service.InvalidGameSessionException;
 
-@WebServlet("/invalidGameSessionHandler")
-public class InvalidGameSessionServlet extends HttpServlet {
+@ControllerAdvice
+public class GlobalControllerExceptionHandler {
 
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
-    processException(req, resp);
+  private Log logger = LogFactory.getLog("ClientError");
+
+  @ExceptionHandler(InvalidGameSessionException.class)
+  @ResponseStatus(HttpStatus.GONE)
+  public String handleInvalidGameSessionException(InvalidGameSessionException exception,
+      Model model) {
+    return processError(exception, model);
   }
 
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
-    processException(req, resp);
+  @ExceptionHandler(ConstraintViolationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public String handleInvalidUserInput(ConstraintViolationException exception, Model model) {
+    return processError(exception, model);
   }
 
-  private void processException(HttpServletRequest req, HttpServletResponse resp)
-      throws IOException {
-    ServletException servletException =
-        (ServletException) req.getAttribute("jakarta.servlet.error.exception");
-    req.getSession().setAttribute("errorMsg", servletException.getMessage());
-    resp.sendRedirect("/hangman-game/invalidGameId.jsp");
+  private String processError(Exception exception, Model model) {
+    String exceptionMessage = exception.getMessage();
+    logger.error(exceptionMessage);
+    model.addAttribute("errorMsg", exceptionMessage);
+    return "error";
   }
 }
