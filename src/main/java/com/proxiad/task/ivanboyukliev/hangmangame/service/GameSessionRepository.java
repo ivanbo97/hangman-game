@@ -11,7 +11,6 @@ public class GameSessionRepository {
   private Map<String, GameSession> gameSessions = new HashMap<>();
 
   public Optional<GameSession> getGameSessionById(String gameId) {
-
     return Optional.ofNullable(gameSessions.get(gameId));
   }
 

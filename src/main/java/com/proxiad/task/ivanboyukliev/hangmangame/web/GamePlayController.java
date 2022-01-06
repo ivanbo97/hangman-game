@@ -25,7 +25,6 @@ public class GamePlayController {
   @Autowired
   private GameSessionService gameSessionService;
 
-
   @GetMapping("/{gameId}")
   public String initiateGame(@PathVariable String gameId, Model model) throws ServletException {
 
