@@ -10,9 +10,8 @@ public interface GameSessionService {
 
   GameSession makeTry(String gameId, String userGuess) throws ServletException;
 
-  GameSession getGameSessionById(String gameId);
+  GameSession getGameSessionById(String gameId) throws InvalidGameSessionException;
 
   void deleteSessionById(String gameId);
 
-  void validateGameExistance(GameSession gameSession) throws InvalidGameSessionException;
 }
