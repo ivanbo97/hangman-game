@@ -15,6 +15,6 @@ body {
 		<button type="submit" 
 			class="link-button">Start New Game</button>
 	</form>
-	<img width="200" height="200" style = "display: block; margin-left: auto; margin-right: auto; margin-top:100px;" src="resources/images/proxiadLogo.png" alt="proxiadLogo">
+	<!--<img width="200" height="200" style = "display: block; margin-left: auto; margin-right: auto; margin-top:100px;" src="/resources/images/proxiadLogo.png" alt="proxiadLogo"/>  -->
 </body>
 </html>
