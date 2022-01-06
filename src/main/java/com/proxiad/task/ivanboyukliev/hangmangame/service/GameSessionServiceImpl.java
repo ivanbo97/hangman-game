@@ -1,34 +1,42 @@
 package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.INVALID_GAME_MSG;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import jakarta.servlet.ServletException;
 
 @Service
 public class GameSessionServiceImpl implements GameSessionService {
 
+  @Autowired
   private WordRepository wordRepository;
-  private UserInputValidator inputValidator;
 
   @Autowired
-  public GameSessionServiceImpl(WordRepository wordRepository, UserInputValidator inputValidator) {
-    this.wordRepository = wordRepository;
-    this.inputValidator = inputValidator;
-  }
+  private GameSessionRepository gameSessionsRepo;
 
   @Override
   public String getNewWord() {
     return wordRepository.getWord();
   }
 
+  @Override
+  public GameSession getGameSessionById(String gameId) throws InvalidGameSessionException {
+    return validateSessionExistence(gameId);
+  }
 
   @Override
-  public GameSession makeTry(GameSession gameSession, String userGuess) throws ServletException {
+  public void deleteSessionById(String gameId) {
+    gameSessionsRepo.deleteSessionById(gameId);
+  }
 
-    inputValidator.validateSingleLetterInput(userGuess);
-    inputValidator.validateGameSessionExistance(gameSession);
+  @Override
+  public GameSession makeTry(String gameId, String userGuess) throws ServletException {
+
+    GameSession gameSession = validateSessionExistence(gameId);
 
     int numberOfLettersToGuess = gameSession.getLettersToGuessLeft();
     int triesLeft = gameSession.getTriesLeft();
@@ -48,12 +56,10 @@ public class GameSessionServiceImpl implements GameSessionService {
   @Override
   public GameSession startNewGame() {
     String wordToGuess = getNewWord();
-    return new GameSession(wordToGuess);
-  }
-
-  @Override
-  public void validateGameExistance(GameSession gameSession) throws InvalidGameSessionException {
-    inputValidator.validateGameSessionExistance(gameSession);
+    GameSession newSession = new GameSession(wordToGuess);
+    newSession.setGameId(UUID.randomUUID().toString());
+    gameSessionsRepo.saveGameSession(newSession);
+    return newSession;
   }
 
   private int checkForGuessedLetters(GameSession gameSession, char userInputLetter) {
@@ -105,4 +111,11 @@ public class GameSessionServiceImpl implements GameSessionService {
     return resultWord;
   }
 
+  private GameSession validateSessionExistence(String gameId) throws InvalidGameSessionException {
+    Optional<GameSession> retrievedSession = gameSessionsRepo.getGameSessionById(gameId);
+    if (retrievedSession.isEmpty()) {
+      throw new InvalidGameSessionException(String.format(INVALID_GAME_MSG, gameId));
+    }
+    return retrievedSession.get();
+  }
 }

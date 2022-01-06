@@ -17,32 +17,37 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<spring-context-version>5.3.13</spring-context-version>
+		<spring-mvc-version>5.3.14</spring-mvc-version>
 		<junit-version>5.8.2</junit-version>
 		<mockito.version>4.1.0</mockito.version>
 		<assertj.version>3.21.0</assertj.version>
+		<hibernate.validator.version>6.2.0.Final</hibernate.validator.version>
 		<mvn.surefire.plugin.version>2.22.2</mvn.surefire.plugin.version>
 	</properties>
 
 	<dependencies>
-		<!-- Servlet API -->
 		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<version>5.0.0</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- JSTL -->
 		<dependency>
-			<groupId>org.glassfish.web</groupId>
-			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
-			<version>2.0.0</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
 		</dependency>
-		<!-- Spring Core -->
+		<!-- Spring MVC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring-context-version}</version>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring-mvc-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring-mvc-version}</version>
 		</dependency>
 		<!-- JUnit 5 -->
 		<dependency>
@@ -70,6 +75,12 @@
 			<artifactId>mockito-junit-jupiter</artifactId>
 			<version>${mockito.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<!-- Hibernate Validator -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate.validator.version}</version>
 		</dependency>
 	</dependencies>
 

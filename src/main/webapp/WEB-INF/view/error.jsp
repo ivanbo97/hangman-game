@@ -11,9 +11,9 @@ body {
 </head>
 
 <body>
-	<p>Could Not Process The Request. Reason : ${sessionScope.errorMsg}
+	<p>Could Not Process The Request. Reason : ${errorMsg}
 	</p>
-	<form method="post" action="index.jsp" class="inline">
+	<form method="post" action="/hangman-game/index.jsp" class="inline">
 		<button type="submit" class="link-button">Back To Main Page</button>
 	</form>
 </body>

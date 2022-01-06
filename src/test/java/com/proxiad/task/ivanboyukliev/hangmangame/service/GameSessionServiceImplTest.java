@@ -2,9 +2,12 @@ package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import java.util.Optional;
 import java.util.stream.Stream;
+import javax.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,7 +16,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import jakarta.servlet.ServletException;
 
 @ExtendWith(MockitoExtension.class)
 class GameSessionServiceImplTest {
@@ -22,12 +24,12 @@ class GameSessionServiceImplTest {
   private WordRepository wordRepository;
 
   @Mock
-  private UserInputValidator inputValidator;
+  private GameSessionRepository gameSessionRepository;
 
   @InjectMocks
   private GameSessionServiceImpl gameSessionService;
 
-  private String exampleUri = "hangman-game/games/A12BD13D";
+  private String exampleGameId = "A12BD13D";
 
   @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
   @MethodSource("supplyTestParameters")
@@ -37,9 +39,11 @@ class GameSessionServiceImplTest {
     // given
     GameSession gameSession = new GameSession(wordToGuess);
     int initialTries = gameSession.getTriesLeft();
+    given(gameSessionRepository.getGameSessionById(anyString()))
+        .willReturn(Optional.of(gameSession));
 
     // when
-    gameSessionService.makeTry(gameSession, userInputLetter);
+    gameSessionService.makeTry(exampleGameId, userInputLetter);
 
     int receivedLettersToGuess = gameSession.getLettersToGuessLeft();
 
@@ -62,9 +66,11 @@ class GameSessionServiceImplTest {
     int previousLettersToGuessLeft = gameSession.getLettersToGuessLeft();
     String userInput = "e";
     int initialTriesLeft = gameSession.getTriesLeft();
+    given(gameSessionRepository.getGameSessionById(anyString()))
+        .willReturn(Optional.of(gameSession));
 
     // when
-    GameSession newSession = gameSessionService.makeTry(gameSession, userInput);
+    GameSession newSession = gameSessionService.makeTry(exampleGameId, userInput);
     int lettersToGuessLeft = newSession.getLettersToGuessLeft();
 
     // then
