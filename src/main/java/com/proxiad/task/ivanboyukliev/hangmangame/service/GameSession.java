@@ -1,6 +1,7 @@
 package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
 import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.BONUS_TRIES;
+import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.SECRET_ENCODE_VAL;
 import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.UNKNOWN_LETTER_SYMBOL;
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ public class GameSession {
 
   private String wordToGuess;
   private String puzzledWord;
+  private String lettersToBeGuessed;
   private int triesLeft;
   private int lettersToGuessLeft;
   private String gameId;
@@ -19,6 +21,7 @@ public class GameSession {
     this.lettersToGuessLeft = wordToGuess.length();
     this.puzzledWord = generatePuzzledWord(wordToGuess);
     this.triesLeft = this.lettersToGuessLeft + BONUS_TRIES;
+    this.lettersToBeGuessed = encodeLettersToBeGuessed();
   }
 
   public String getWordToGuess() {
@@ -51,6 +54,11 @@ public class GameSession {
 
   public void setPuzzledWord(String puzzledWord) {
     this.puzzledWord = puzzledWord;
+  }
+
+
+  public String getLettersToBeGuessed() {
+    return lettersToBeGuessed;
   }
 
   private String generatePuzzledWord(String wordToGuess) {
@@ -101,5 +109,26 @@ public class GameSession {
     GameSession other = (GameSession) obj;
     return lettersToGuessLeft == other.lettersToGuessLeft && triesLeft == other.triesLeft
         && Objects.equals(wordToGuess, other.wordToGuess);
+  }
+
+  private String encodeLettersToBeGuessed() {
+    int idx = 0;
+    StringBuilder lettersToBeGuessedBuilder = new StringBuilder();
+
+    for (char c : puzzledWord.toCharArray()) {
+      if (c == '_') {
+        char letterToGuess = wordToGuess.charAt(idx);
+        lettersToBeGuessedBuilder.append((char) (letterToGuess - SECRET_ENCODE_VAL));
+      }
+      idx++;
+    }
+
+    String lettersToBeGuessedWithDuplicates = lettersToBeGuessedBuilder.toString();
+
+    String allUniqueLettersToBeEntered = lettersToBeGuessedWithDuplicates.chars().distinct()
+        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+        .toString();
+
+    return allUniqueLettersToBeEntered;
   }
 }
