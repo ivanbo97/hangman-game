@@ -13,7 +13,7 @@ body {
 <body>
 	<p>Could Not Process The Request. Reason : ${errorMsg}
 	</p>
-	<form method="post" action="/hangman-game/index.jsp" class="inline">
+	<form action="/hangman-game/index.jsp" class="inline">
 		<button type="submit" class="link-button">Back To Main Page</button>
 	</form>
 </body>
