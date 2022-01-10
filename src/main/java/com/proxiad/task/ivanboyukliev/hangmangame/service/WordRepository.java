@@ -9,7 +9,6 @@ public class WordRepository {
 
   private List<String> dictionary;
 
-
   public WordRepository() {
     dictionary = new ArrayList<>();
     populateWithWords();

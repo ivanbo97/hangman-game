@@ -28,11 +28,9 @@ import com.proxiad.task.ivanboyukliev.hangmangame.web.FinalResultController;
 @WebAppConfiguration
 public class FinalResultControllerTest {
 
-  @Mock
-  private GameSessionService gameSessionService;
+  @Mock private GameSessionService gameSessionService;
 
-  @InjectMocks
-  private FinalResultController finalResultController;
+  @InjectMocks private FinalResultController finalResultController;
 
   private MockMvc mockMvc;
 
@@ -59,9 +57,12 @@ public class FinalResultControllerTest {
     given(gameSessionService.getGameSessionById(anyString())).willReturn(gameSession);
 
     // when, then
-    mockMvc.perform(get(GAME_BASE_URL + "/{gameId}/result", exampleId)).andExpect(status().isOk())
+    mockMvc
+        .perform(get(GAME_BASE_URL + "/{gameId}/result", exampleId))
+        .andExpect(status().isOk())
         .andExpect(model().attributeExists("pageTitle"))
-        .andExpect(model().attributeExists("gameResult")).andExpect(view().name("finalResultPage"));
+        .andExpect(model().attributeExists("gameResult"))
+        .andExpect(view().name("finalResultPage"));
   }
 
   @Test
@@ -76,9 +77,9 @@ public class FinalResultControllerTest {
     given(gameSessionService.getGameSessionById(anyString())).willReturn(gameSession);
 
     // when, then
-    mockMvc.perform(get(GAME_BASE_URL + "/{gameId}/result", exampleId))
+    mockMvc
+        .perform(get(GAME_BASE_URL + "/{gameId}/result", exampleId))
         .andExpect(status().is3xxRedirection())
         .andExpect(view().name("redirect:" + GAME_BASE_URL + "/" + exampleId));
   }
-
 }

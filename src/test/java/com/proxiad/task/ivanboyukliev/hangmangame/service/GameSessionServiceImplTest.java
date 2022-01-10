@@ -21,14 +21,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GameSessionServiceImplTest {
 
-  @Mock
-  private WordRepository wordRepository;
+  @Mock private WordRepository wordRepository;
 
-  @Mock
-  private GameSessionRepository gameSessionRepository;
+  @Mock private GameSessionRepository gameSessionRepository;
 
-  @InjectMocks
-  private GameSessionServiceImpl gameSessionService;
+  @InjectMocks private GameSessionServiceImpl gameSessionService;
 
   private String exampleGameId = "A12BD13D";
   private String exampleUserGuess = "z";
@@ -55,7 +52,9 @@ class GameSessionServiceImplTest {
   }
 
   private static Stream<Arguments> supplyTestParameters() {
-    return Stream.of(Arguments.of("stack", "j", 3), Arguments.of("storm", "o", 2),
+    return Stream.of(
+        Arguments.of("stack", "j", 3),
+        Arguments.of("storm", "o", 2),
         Arguments.of("acceptance", "c ", 3));
   }
 
@@ -78,7 +77,6 @@ class GameSessionServiceImplTest {
     // then
     assertThat(lettersToGuessLeft).isEqualTo(previousLettersToGuessLeft);
     assertThat(gameSession.getTriesLeft()).isLessThan(initialTriesLeft);
-
   }
 
   @Test
@@ -105,7 +103,8 @@ class GameSessionServiceImplTest {
     // when
 
     // then
-    assertThrows(InvalidGameSessionException.class,
+    assertThrows(
+        InvalidGameSessionException.class,
         () -> gameSessionService.makeTry(exampleGameId, exampleUserGuess));
   }
 }

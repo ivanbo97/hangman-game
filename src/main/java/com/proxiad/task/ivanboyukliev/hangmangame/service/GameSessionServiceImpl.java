@@ -12,11 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameSessionServiceImpl implements GameSessionService {
 
-  @Autowired
-  private WordRepository wordRepository;
+  @Autowired private WordRepository wordRepository;
 
-  @Autowired
-  private GameSessionRepository gameSessionsRepo;
+  @Autowired private GameSessionRepository gameSessionsRepo;
 
   @Override
   public String getNewWord() {

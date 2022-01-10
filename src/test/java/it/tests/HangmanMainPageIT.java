@@ -80,7 +80,10 @@ public class HangmanMainPageIT extends WebDriverSetupTest {
   }
 
   private static Stream<Arguments> supplyTestParameters() {
-    return Stream.of(Arguments.of("aaa"), Arguments.of("?"), Arguments.of("1"),
+    return Stream.of(
+        Arguments.of("aaa"),
+        Arguments.of("?"),
+        Arguments.of("1"),
 
         /* Arguments.of(" "), Arguments.of(""), */ Arguments.of("a1b2/"));
   }
@@ -109,10 +112,11 @@ public class HangmanMainPageIT extends WebDriverSetupTest {
 
     String lettersToGuessEncoded = gamePage.getLettersToGuessEncoded();
     String lettersToGuessDecoded =
-        lettersToGuessEncoded.chars().map(character -> character + SECRET_ENCODE_VAL)
+        lettersToGuessEncoded
+            .chars()
+            .map(character -> character + SECRET_ENCODE_VAL)
             .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
             .toString();
-
 
     for (char guessLetter : lettersToGuessDecoded.toCharArray()) {
       gamePage.enterLetter(String.valueOf(guessLetter));

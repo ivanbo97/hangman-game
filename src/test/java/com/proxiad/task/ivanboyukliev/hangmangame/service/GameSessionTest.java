@@ -28,7 +28,9 @@ class GameSessionTest {
   }
 
   private static Stream<Arguments> supplyTestParameters() {
-    return Stream.of(Arguments.of("stack", "s___k"), Arguments.of("kilowatt", "k_____tt"),
+    return Stream.of(
+        Arguments.of("stack", "s___k"),
+        Arguments.of("kilowatt", "k_____tt"),
         Arguments.of("interface", "i__e____e"));
   }
 
@@ -45,5 +47,4 @@ class GameSessionTest {
       assertThat(gameSession.getWordToGuess().contains(String.valueOf(decodedLetter))).isTrue();
     }
   }
-
 }

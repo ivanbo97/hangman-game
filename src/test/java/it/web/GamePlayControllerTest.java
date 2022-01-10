@@ -29,11 +29,9 @@ import com.proxiad.task.ivanboyukliev.hangmangame.web.GamePlayController;
 @WebAppConfiguration
 class GamePlayControllerTest {
 
-  @Mock
-  private GameSessionService gameSessionService;
+  @Mock private GameSessionService gameSessionService;
 
-  @InjectMocks
-  private GamePlayController gamePlayController;
+  @InjectMocks private GamePlayController gamePlayController;
 
   private MockMvc mockMvc;
 
@@ -56,10 +54,11 @@ class GamePlayControllerTest {
     given(gameSessionService.getGameSessionById(anyString())).willReturn(gameSession);
 
     // when, then
-    mockMvc.perform(get(GAME_BASE_URL + "/{gameId}", exampleId)).andExpect(status().isOk())
+    mockMvc
+        .perform(get(GAME_BASE_URL + "/{gameId}", exampleId))
+        .andExpect(status().isOk())
         .andExpect(model().attributeExists("gameSessionObj"))
         .andExpect(view().name("hangmanMainPage"));
-
   }
 
   @Test
@@ -73,11 +72,10 @@ class GamePlayControllerTest {
     given(gameSessionService.makeTry(anyString(), anyString())).willReturn(gameSession);
 
     // when, then
-    mockMvc.perform(post(GAME_BASE_URL + "/{gameId}", exampleId).param("enteredLetter", "a"))
+    mockMvc
+        .perform(post(GAME_BASE_URL + "/{gameId}", exampleId).param("enteredLetter", "a"))
         .andExpect(status().is3xxRedirection())
         .andExpect(view().name("redirect:" + GAME_BASE_URL + "/" + exampleId + "/result"));
-
-
   }
 
   @Test
@@ -90,9 +88,9 @@ class GamePlayControllerTest {
 
     // when, then
     given(gameSessionService.makeTry(anyString(), anyString())).willReturn(gameSession);
-    mockMvc.perform(post(GAME_BASE_URL + "/{gameId}", exampleId).param("enteredLetter", "a"))
+    mockMvc
+        .perform(post(GAME_BASE_URL + "/{gameId}", exampleId).param("enteredLetter", "a"))
         .andExpect(status().is3xxRedirection())
         .andExpect(view().name("redirect:" + GAME_BASE_URL + "/" + exampleId));
   }
-
 }

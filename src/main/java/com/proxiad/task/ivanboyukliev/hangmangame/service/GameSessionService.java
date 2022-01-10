@@ -13,5 +13,4 @@ public interface GameSessionService {
   GameSession getGameSessionById(String gameId) throws InvalidGameSessionException;
 
   void deleteSessionById(String gameId);
-
 }

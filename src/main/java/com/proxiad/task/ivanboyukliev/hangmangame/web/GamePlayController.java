@@ -22,8 +22,7 @@ import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
 @Validated
 public class GamePlayController {
 
-  @Autowired
-  private GameSessionService gameSessionService;
+  @Autowired private GameSessionService gameSessionService;
 
   @GetMapping("/{gameId}")
   public String initiateGame(@PathVariable String gameId, Model model) throws ServletException {
@@ -35,9 +34,10 @@ public class GamePlayController {
 
   @PostMapping("/{gameId}")
   public String makeGuess(
-      @RequestParam @Pattern(regexp = "[a-z]{1}",
-          message = INVALID_LETTER_MSG) String enteredLetter,
-      @PathVariable @NotBlank String gameId) throws ServletException {
+      @RequestParam @Pattern(regexp = "[a-z]{1}", message = INVALID_LETTER_MSG)
+          String enteredLetter,
+      @PathVariable @NotBlank String gameId)
+      throws ServletException {
 
     GameSession gameSession = gameSessionService.makeTry(gameId, enteredLetter);
 
@@ -47,5 +47,4 @@ public class GamePlayController {
 
     return "redirect:" + GAME_BASE_URL + "/" + gameId;
   }
-
 }

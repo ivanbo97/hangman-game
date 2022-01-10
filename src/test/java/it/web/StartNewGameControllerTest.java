@@ -26,11 +26,9 @@ import com.proxiad.task.ivanboyukliev.hangmangame.web.StartNewGameController;
 @WebAppConfiguration
 public class StartNewGameControllerTest {
 
-  @Mock
-  private GameSessionService gameSessionService;
+  @Mock private GameSessionService gameSessionService;
 
-  @InjectMocks
-  private StartNewGameController startNewGameController;
+  @InjectMocks private StartNewGameController startNewGameController;
 
   private GameSession gameSession;
 
@@ -52,7 +50,9 @@ public class StartNewGameControllerTest {
     given(gameSessionService.startNewGame()).willReturn(gameSession);
 
     // when,then
-    mockMvc.perform(post("/games")).andExpect(status().is3xxRedirection())
+    mockMvc
+        .perform(post("/games"))
+        .andExpect(status().is3xxRedirection())
         .andExpect(model().attributeExists("gameSessionObj"))
         .andExpect(view().name("redirect:" + GAME_BASE_URL + "/" + exampleId));
   }

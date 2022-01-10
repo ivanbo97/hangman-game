@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSession;
 import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
 
-
 @Controller
 @RequestMapping(GAME_BASE_URL)
 public class StartNewGameController {
 
-  @Autowired
-   private GameSessionService gameSessionService;
+  @Autowired private GameSessionService gameSessionService;
 
   @PostMapping
   public String startGame(Model model) {
@@ -24,5 +22,4 @@ public class StartNewGameController {
     model.addAttribute("gameSessionObj", newSession);
     return "redirect:" + GAME_BASE_URL + "/" + newSession.getGameId();
   }
-
 }

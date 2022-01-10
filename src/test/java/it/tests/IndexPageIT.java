@@ -22,7 +22,6 @@ public class IndexPageIT extends WebDriverSetupTest {
     indexPage = PageFactory.initElements(webDriver, IndexPage.class);
   }
 
-
   @AfterEach
   public void tearDown() {
     webDriver.close();
@@ -38,7 +37,16 @@ public class IndexPageIT extends WebDriverSetupTest {
   public void urlOnGameStartTest() {
     indexPage.initiateGame();
     String urlAfterGameStart = webDriver.getCurrentUrl();
-    assertThat(urlAfterGameStart).matches(
-        PROTOCOL + "://" + HOST_ADDR + ":" + PORT + APP_BASE_URL + GAME_BASE_URL + "/" + "\\S+");
+    assertThat(urlAfterGameStart)
+        .matches(
+            PROTOCOL
+                + "://"
+                + HOST_ADDR
+                + ":"
+                + PORT
+                + APP_BASE_URL
+                + GAME_BASE_URL
+                + "/"
+                + "\\S+");
   }
 }

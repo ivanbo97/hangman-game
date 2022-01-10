@@ -56,7 +56,6 @@ public class GameSession {
     this.puzzledWord = puzzledWord;
   }
 
-
   public String getLettersToBeGuessed() {
     return lettersToBeGuessed;
   }
@@ -89,8 +88,13 @@ public class GameSession {
 
   @Override
   public String toString() {
-    return "GameSession [wordToGuess=" + wordToGuess + ", triesLeft=" + triesLeft
-        + ", lettersToGuessLeft=" + lettersToGuessLeft + "]";
+    return "GameSession [wordToGuess="
+        + wordToGuess
+        + ", triesLeft="
+        + triesLeft
+        + ", lettersToGuessLeft="
+        + lettersToGuessLeft
+        + "]";
   }
 
   @Override
@@ -100,14 +104,12 @@ public class GameSession {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
     GameSession other = (GameSession) obj;
-    return lettersToGuessLeft == other.lettersToGuessLeft && triesLeft == other.triesLeft
+    return lettersToGuessLeft == other.lettersToGuessLeft
+        && triesLeft == other.triesLeft
         && Objects.equals(wordToGuess, other.wordToGuess);
   }
 
@@ -125,9 +127,12 @@ public class GameSession {
 
     String lettersToBeGuessedWithDuplicates = lettersToBeGuessedBuilder.toString();
 
-    String allUniqueLettersToBeEntered = lettersToBeGuessedWithDuplicates.chars().distinct()
-        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-        .toString();
+    String allUniqueLettersToBeEntered =
+        lettersToBeGuessedWithDuplicates
+            .chars()
+            .distinct()
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
 
     return allUniqueLettersToBeEntered;
   }

@@ -12,7 +12,6 @@ public final class ApplicationConstants {
   public static final String HOST_ADDR = "localhost";
   public static final String PORT = "8080";
 
-
   // Application end-points
   public static final String APP_BASE_URL = "/hangman-game";
   public static final String GAME_BASE_URL = "/games";
@@ -34,5 +33,4 @@ public final class ApplicationConstants {
 
   // Encoding related to integration testing
   public static final int SECRET_ENCODE_VAL = 10;
-
 }

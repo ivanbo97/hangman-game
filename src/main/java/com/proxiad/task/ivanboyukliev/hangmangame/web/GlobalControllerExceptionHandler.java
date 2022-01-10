@@ -17,8 +17,8 @@ public class GlobalControllerExceptionHandler {
 
   @ExceptionHandler(InvalidGameSessionException.class)
   @ResponseStatus(HttpStatus.GONE)
-  public String handleInvalidGameSessionException(InvalidGameSessionException exception,
-      Model model) {
+  public String handleInvalidGameSessionException(
+      InvalidGameSessionException exception, Model model) {
     return processError(exception, model);
   }
 

@@ -11,8 +11,7 @@ body {
 </head>
 
 <body>
-	<p>Could Not Process The Request. Reason : ${errorMsg}
-	</p>
+	<p>Could Not Process The Request. Reason : ${errorMsg}</p>
 	<form action="/hangman-game/index.jsp" class="inline">
 		<button type="submit" class="link-button">Back To Main Page</button>
 	</form>

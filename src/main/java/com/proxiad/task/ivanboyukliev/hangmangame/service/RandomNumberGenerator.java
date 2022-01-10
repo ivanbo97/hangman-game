@@ -8,5 +8,4 @@ public class RandomNumberGenerator {
   public static int generateRandomNumber() {
     return (int) ((Math.random() * (MAX_NUMBER - MIN_NUMBER)) + MIN_NUMBER);
   }
-
 }

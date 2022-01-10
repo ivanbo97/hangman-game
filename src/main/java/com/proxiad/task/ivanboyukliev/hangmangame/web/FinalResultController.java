@@ -20,8 +20,7 @@ import com.proxiad.task.ivanboyukliev.hangmangame.service.InvalidGameSessionExce
 @RequestMapping(GAME_BASE_URL)
 public class FinalResultController {
 
-  @Autowired
-  private GameSessionService gameSessionService;
+  @Autowired private GameSessionService gameSessionService;
 
   @GetMapping("/{gameId}/result")
   public String showFinalResult(@PathVariable @NotBlank String gameId, Model model)
@@ -42,5 +41,4 @@ public class FinalResultController {
     gameSessionService.deleteSessionById(gameId);
     return "finalResultPage";
   }
-
 }

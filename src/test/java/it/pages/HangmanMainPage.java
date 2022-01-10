@@ -53,5 +53,4 @@ public class HangmanMainPage {
   public String getLettersToGuessEncoded() {
     return lettersToGuess.getText();
   }
-
 }
