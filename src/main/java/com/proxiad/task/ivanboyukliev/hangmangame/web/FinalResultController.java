@@ -21,7 +21,6 @@ public class FinalResultController {
   @Autowired
   private GameSessionService gameSessionService;
 
-
   @GetMapping("/{gameId}/result")
   public String showFinalResult(@PathVariable @NotBlank String gameId, Model model)
       throws InvalidGameSessionException {
