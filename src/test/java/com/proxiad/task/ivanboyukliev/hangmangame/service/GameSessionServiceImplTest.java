@@ -1,6 +1,7 @@
 package com.proxiad.task.ivanboyukliev.hangmangame.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -30,6 +31,7 @@ class GameSessionServiceImplTest {
   private GameSessionServiceImpl gameSessionService;
 
   private String exampleGameId = "A12BD13D";
+  private String exampleUserGuess = "z";
 
   @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
   @MethodSource("supplyTestParameters")
@@ -91,5 +93,19 @@ class GameSessionServiceImplTest {
     then(wordRepository).should().getWord();
     assertThat(newSession).isNotNull();
     assertThat(newSession.getWordToGuess()).isEqualTo("example");
+  }
+
+  @Test
+  void validationGameSessionTest() {
+
+    // given
+    given(gameSessionRepository.getGameSessionById(anyString()))
+        .willReturn(Optional.ofNullable(null));
+
+    // when
+
+    // then
+    assertThrows(InvalidGameSessionException.class,
+        () -> gameSessionService.makeTry(exampleGameId, exampleUserGuess));
   }
 }
