@@ -15,7 +15,7 @@ import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
 public class StartNewGameController {
 
   @Autowired
-  private GameSessionService gameSessionService;
+   private GameSessionService gameSessionService;
 
   @PostMapping
   public String startGame(Model model) {
