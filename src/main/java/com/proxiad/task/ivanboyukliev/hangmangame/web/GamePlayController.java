@@ -37,7 +37,7 @@ public class GamePlayController {
   public String makeGuess(
       @RequestParam @Pattern(regexp = "[a-z]{1}",
           message = INVALID_LETTER_MSG) String enteredLetter,
-      @PathVariable @NotBlank String gameId, Model model) throws ServletException {
+      @PathVariable @NotBlank String gameId) throws ServletException {
 
     GameSession gameSession = gameSessionService.makeTry(gameId, enteredLetter);
 
