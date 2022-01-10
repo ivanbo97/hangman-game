@@ -7,7 +7,7 @@ body {
    text-align: center;
 }
 </style>
-<title>Your result</title>
+<title>${pageTitle}</title>
 </head>
 <body>
 	<h1>Game Result : </h1>
