@@ -81,7 +81,7 @@ public class GameSessionServiceImpl implements GameSessionService {
       return 0;
     }
 
-    // Update puzlledWord in servlet context
+    // Update puzlledWord
     gameSession.setPuzzledWord(newPuzzledWord);
 
     // return number of guessed letters
