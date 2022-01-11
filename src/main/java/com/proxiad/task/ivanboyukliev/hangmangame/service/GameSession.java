@@ -127,13 +127,10 @@ public class GameSession {
 
     String lettersToBeGuessedWithDuplicates = lettersToBeGuessedBuilder.toString();
 
-    String allUniqueLettersToBeEntered =
-        lettersToBeGuessedWithDuplicates
-            .chars()
-            .distinct()
-            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-            .toString();
-
-    return allUniqueLettersToBeEntered;
+    return lettersToBeGuessedWithDuplicates
+        .chars()
+        .distinct()
+        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+        .toString();
   }
 }
