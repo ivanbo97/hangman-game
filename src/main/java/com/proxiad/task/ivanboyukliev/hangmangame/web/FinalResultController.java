@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import com.proxiad.task.ivanboyukliev.hangmangame.service.InvalidGameSessionExce
 
 @Controller
 @RequestMapping(GAME_BASE_URL)
+@Validated
 public class FinalResultController {
 
   @Autowired private GameSessionService gameSessionService;
