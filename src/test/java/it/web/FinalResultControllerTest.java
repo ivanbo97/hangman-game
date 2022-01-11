@@ -26,7 +26,7 @@ import com.proxiad.task.ivanboyukliev.hangmangame.web.FinalResultController;
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = WebConfiguration.class)
 @WebAppConfiguration
-public class FinalResultControllerTest {
+class FinalResultControllerTest {
 
   @Mock private GameSessionService gameSessionService;
 

@@ -19,7 +19,7 @@ class GameSessionTest {
     // given
     GameSession gameSession = new GameSession(wordToGuess);
 
-    // assert
+    // when, then
     assertThat(gameSession.getPuzzledWord()).isNotNull();
     assertThat(gameSession.getPuzzledWord()).isEqualTo(expectedPuzzledWord);
     int triesLeft = gameSession.getTriesLeft();

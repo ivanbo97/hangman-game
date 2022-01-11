@@ -100,9 +100,7 @@ class GameSessionServiceImplTest {
     given(gameSessionRepository.getGameSessionById(anyString()))
         .willReturn(Optional.ofNullable(null));
 
-    // when
-
-    // then
+    // when, then
     assertThrows(
         InvalidGameSessionException.class,
         () -> gameSessionService.makeTry(exampleGameId, exampleUserGuess));

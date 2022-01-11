@@ -18,7 +18,7 @@ import org.openqa.selenium.support.PageFactory;
 import it.WebDriverSetupTest;
 import it.pages.HangmanMainPage;
 
-public class HangmanMainPageIT extends WebDriverSetupTest {
+class HangmanMainPageIT extends WebDriverSetupTest {
 
   private HangmanMainPage gamePage;
 
@@ -34,7 +34,7 @@ public class HangmanMainPageIT extends WebDriverSetupTest {
   }
 
   @Test
-  public void firstAndLastLetterAreVisibleTest() {
+  void firstAndLastLetterAreVisibleTest() {
 
     String puzzledWord = gamePage.getPuzzledWord();
     char firstLetter = puzzledWord.charAt(0);
@@ -46,7 +46,8 @@ public class HangmanMainPageIT extends WebDriverSetupTest {
   }
 
   @Test
-  public void triesDecreaseTest() {
+  void triesDecreaseTest() {
+
     int initialTries = Integer.valueOf(gamePage.getTriesLeft());
     gamePage.enterLetter("a");
     gamePage.makeGuess();
@@ -55,11 +56,12 @@ public class HangmanMainPageIT extends WebDriverSetupTest {
   }
 
   @Test
-  public void lettersToGuessTest() {
+  void lettersToGuessTest() {
+
     int initialLettersToGuess = Integer.valueOf(gamePage.getNumOfLettersToGuess());
     char hiddenLetterSymbol = UNKNOWN_LETTER_SYMBOL.charAt(0);
-
     String puzzledWord = gamePage.getPuzzledWord();
+
     long numOfHiddenLetters =
         puzzledWord.chars().filter(letter -> letter == hiddenLetterSymbol).count();
 
@@ -68,7 +70,8 @@ public class HangmanMainPageIT extends WebDriverSetupTest {
 
   @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
   @MethodSource("supplyTestParameters")
-  public void invalidInputTest(String invalidInput) {
+  void invalidInputTest(String invalidInput) {
+
     int intialTries = Integer.valueOf(gamePage.getTriesLeft());
     gamePage.enterLetter(invalidInput);
     gamePage.makeGuess();
@@ -84,12 +87,12 @@ public class HangmanMainPageIT extends WebDriverSetupTest {
         Arguments.of("aaa"),
         Arguments.of("?"),
         Arguments.of("1"),
-
-        /* Arguments.of(" "), Arguments.of(""), */ Arguments.of("a1b2/"));
+        /* Arguments.of(" "), Arguments.of(""), */
+        Arguments.of("a1b2/"));
   }
 
   @Test
-  public void enteringAlreadyKnownLetterTest() {
+  void enteringAlreadyKnownLetterTest() {
 
     String puzzledWord = gamePage.getPuzzledWord();
     int intialTries = Integer.valueOf(gamePage.getTriesLeft());
@@ -108,7 +111,7 @@ public class HangmanMainPageIT extends WebDriverSetupTest {
   }
 
   @Test
-  public void redirectToSuccessPageTest() {
+  void redirectToSuccessPageTest() {
 
     String lettersToGuessEncoded = gamePage.getLettersToGuessEncoded();
     String lettersToGuessDecoded =
@@ -128,7 +131,7 @@ public class HangmanMainPageIT extends WebDriverSetupTest {
   }
 
   @Test
-  public void redirectToFailPageTest() {
+  void redirectToFailPageTest() {
     int numOfLettersToGuess = Integer.valueOf(gamePage.getNumOfLettersToGuess());
 
     for (int i = 0; i < numOfLettersToGuess + BONUS_TRIES; i++) {
