@@ -1,4 +1,4 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.service;
+package com.proxiad.hangmangame.logic;
 
 import javax.servlet.ServletException;
 
@@ -13,5 +13,4 @@ public interface GameSessionService {
   GameSession getGameSessionById(String gameId) throws InvalidGameSessionException;
 
   void deleteSessionById(String gameId);
-
 }

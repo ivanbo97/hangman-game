@@ -1,7 +1,7 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.web;
+package com.proxiad.hangmangame.web;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.GAME_BASE_URL;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.INVALID_LETTER_MSG;
+import static com.proxiad.hangmangame.util.ApplicationConstants.GAME_BASE_URL;
+import static com.proxiad.hangmangame.util.ApplicationConstants.INVALID_LETTER_MSG;
 import javax.servlet.ServletException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -14,16 +14,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSession;
-import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
+import com.proxiad.hangmangame.logic.GameSession;
+import com.proxiad.hangmangame.logic.GameSessionService;
 
 @Controller
 @RequestMapping(GAME_BASE_URL)
 @Validated
 public class GamePlayController {
 
-  @Autowired
-  private GameSessionService gameSessionService;
+  @Autowired private GameSessionService gameSessionService;
 
   @GetMapping("/{gameId}")
   public String initiateGame(@PathVariable String gameId, Model model) throws ServletException {
@@ -35,9 +34,10 @@ public class GamePlayController {
 
   @PostMapping("/{gameId}")
   public String makeGuess(
-      @RequestParam @Pattern(regexp = "[a-z]{1}",
-          message = INVALID_LETTER_MSG) String enteredLetter,
-      @PathVariable @NotBlank String gameId, Model model) throws ServletException {
+      @RequestParam @Pattern(regexp = "[a-z]{1}", message = INVALID_LETTER_MSG)
+          String enteredLetter,
+      @PathVariable @NotBlank String gameId)
+      throws ServletException {
 
     GameSession gameSession = gameSessionService.makeTry(gameId, enteredLetter);
 
@@ -47,5 +47,4 @@ public class GamePlayController {
 
     return "redirect:" + GAME_BASE_URL + "/" + gameId;
   }
-
 }

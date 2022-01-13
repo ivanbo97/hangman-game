@@ -10,7 +10,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>14</java.version>
@@ -22,6 +21,8 @@
 		<mockito.version>4.1.0</mockito.version>
 		<assertj.version>3.21.0</assertj.version>
 		<hibernate.validator.version>6.2.0.Final</hibernate.validator.version>
+		<selenium.version>4.1.1</selenium.version>
+		<spring.mvc.test.verstion>5.3.14</spring.mvc.test.verstion>
 		<mvn.surefire.plugin.version>2.22.2</mvn.surefire.plugin.version>
 	</properties>
 
@@ -56,11 +57,24 @@
 			<version>${junit-version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- Selenium -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>${selenium.version}</version>
+		</dependency>
 		<!-- AssertJ -->
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
 			<version>${assertj.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Hamcrest -->
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest</artifactId>
+			<version>2.2</version>
 			<scope>test</scope>
 		</dependency>
 		<!--Mockito Testing -->
@@ -74,6 +88,13 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-junit-jupiter</artifactId>
 			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Spring MVC Test -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.mvc.test.verstion}</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- Hibernate Validator -->

@@ -1,4 +1,4 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.service;
+package com.proxiad.hangmangame.util;
 
 public final class ApplicationConstants {
 
@@ -7,6 +7,10 @@ public final class ApplicationConstants {
   public static final String UNKNOWN_LETTER_SYMBOL = "_";
   public static final int BONUS_TRIES = 2;
 
+  // URL setup
+  public static final String PROTOCOL = "http";
+  public static final String HOST_ADDR = "localhost";
+  public static final String PORT = "8080";
 
   // Application end-points
   public static final String APP_BASE_URL = "/hangman-game";
@@ -23,4 +27,10 @@ public final class ApplicationConstants {
   public static final String INVALID_LETTER_MSG =
       "Please, enter only a single not capitalized letter!";
 
+  // Page titles
+  public static final String SUCCESS_PAGE_TITLE = "Congratualtions!";
+  public static final String FAILURE_PAGE_TITLE = "Unsuccessful attempt!";
+
+  // Encoding related to integration testing
+  public static final int SECRET_ENCODE_VAL = 10;
 }

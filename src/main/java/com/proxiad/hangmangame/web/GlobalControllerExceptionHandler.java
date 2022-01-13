@@ -1,4 +1,4 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.web;
+package com.proxiad.hangmangame.web;
 
 import javax.validation.ConstraintViolationException;
 import org.apache.commons.logging.Log;
@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import com.proxiad.task.ivanboyukliev.hangmangame.service.InvalidGameSessionException;
+import com.proxiad.hangmangame.logic.InvalidGameSessionException;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
@@ -17,8 +17,8 @@ public class GlobalControllerExceptionHandler {
 
   @ExceptionHandler(InvalidGameSessionException.class)
   @ResponseStatus(HttpStatus.GONE)
-  public String handleInvalidGameSessionException(InvalidGameSessionException exception,
-      Model model) {
+  public String handleInvalidGameSessionException(
+      InvalidGameSessionException exception, Model model) {
     return processError(exception, model);
   }
 

@@ -1,6 +1,6 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.service;
+package com.proxiad.hangmangame.logic;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.INVALID_GAME_MSG;
+import static com.proxiad.hangmangame.util.ApplicationConstants.INVALID_GAME_MSG;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,15 +8,15 @@ import java.util.UUID;
 import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.proxiad.hangmangame.model.GameSessionRepository;
+import com.proxiad.hangmangame.model.WordRepository;
 
 @Service
 public class GameSessionServiceImpl implements GameSessionService {
 
-  @Autowired
-  private WordRepository wordRepository;
+  @Autowired private WordRepository wordRepository;
 
-  @Autowired
-  private GameSessionRepository gameSessionsRepo;
+  @Autowired private GameSessionRepository gameSessionsRepo;
 
   @Override
   public String getNewWord() {
@@ -66,7 +66,6 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     String wordToGuess = gameSession.getWordToGuess();
     long guessedLtrsOccurCnt = wordToGuess.chars().filter(ch -> ch == userInputLetter).count();
-
     String previousPuzzledWord = gameSession.getPuzzledWord();
 
     if (guessedLtrsOccurCnt == 0) {
@@ -83,7 +82,7 @@ public class GameSessionServiceImpl implements GameSessionService {
       return 0;
     }
 
-    // Update puzlledWord in servlet context
+    // Update puzlledWord
     gameSession.setPuzzledWord(newPuzzledWord);
 
     // return number of guessed letters

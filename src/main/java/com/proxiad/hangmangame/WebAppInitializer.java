@@ -1,4 +1,4 @@
-package com.proxiad.task.ivanboyukliev.hangmangame;
+package com.proxiad.hangmangame;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -20,6 +20,5 @@ public class WebAppInitializer implements WebApplicationInitializer {
         servletContext.addServlet("applicationServlet", dispatcherServlet);
     servletRegistrtaion.setLoadOnStartup(1);
     servletRegistrtaion.addMapping("/");
-
   }
 }

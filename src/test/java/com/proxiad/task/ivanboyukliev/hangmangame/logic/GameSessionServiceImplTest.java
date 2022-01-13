@@ -1,6 +1,7 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.service;
+package com.proxiad.task.ivanboyukliev.hangmangame.logic;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -16,20 +17,23 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.proxiad.hangmangame.logic.GameSession;
+import com.proxiad.hangmangame.logic.GameSessionServiceImpl;
+import com.proxiad.hangmangame.logic.InvalidGameSessionException;
+import com.proxiad.hangmangame.model.GameSessionRepository;
+import com.proxiad.hangmangame.model.WordRepository;
 
 @ExtendWith(MockitoExtension.class)
 class GameSessionServiceImplTest {
 
-  @Mock
-  private WordRepository wordRepository;
+  @Mock private WordRepository wordRepository;
 
-  @Mock
-  private GameSessionRepository gameSessionRepository;
+  @Mock private GameSessionRepository gameSessionRepository;
 
-  @InjectMocks
-  private GameSessionServiceImpl gameSessionService;
+  @InjectMocks private GameSessionServiceImpl gameSessionService;
 
   private String exampleGameId = "A12BD13D";
+  private String exampleUserGuess = "z";
 
   @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
   @MethodSource("supplyTestParameters")
@@ -53,7 +57,9 @@ class GameSessionServiceImplTest {
   }
 
   private static Stream<Arguments> supplyTestParameters() {
-    return Stream.of(Arguments.of("stack", "j", 3), Arguments.of("storm", "o", 2),
+    return Stream.of(
+        Arguments.of("stack", "j", 3),
+        Arguments.of("storm", "o", 2),
         Arguments.of("acceptance", "c ", 3));
   }
 
@@ -76,7 +82,6 @@ class GameSessionServiceImplTest {
     // then
     assertThat(lettersToGuessLeft).isEqualTo(previousLettersToGuessLeft);
     assertThat(gameSession.getTriesLeft()).isLessThan(initialTriesLeft);
-
   }
 
   @Test
@@ -91,5 +96,18 @@ class GameSessionServiceImplTest {
     then(wordRepository).should().getWord();
     assertThat(newSession).isNotNull();
     assertThat(newSession.getWordToGuess()).isEqualTo("example");
+  }
+
+  @Test
+  void validationGameSessionTest() {
+
+    // given
+    given(gameSessionRepository.getGameSessionById(anyString()))
+        .willReturn(Optional.ofNullable(null));
+
+    // when, then
+    assertThrows(
+        InvalidGameSessionException.class,
+        () -> gameSessionService.makeTry(exampleGameId, exampleUserGuess));
   }
 }
