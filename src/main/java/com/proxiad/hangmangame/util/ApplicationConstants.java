@@ -1,4 +1,4 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.service;
+package com.proxiad.hangmangame.util;
 
 public final class ApplicationConstants {
 

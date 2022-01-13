@@ -1,4 +1,4 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.service;
+package com.proxiad.hangmangame.logic;
 
 import javax.servlet.ServletException;
 

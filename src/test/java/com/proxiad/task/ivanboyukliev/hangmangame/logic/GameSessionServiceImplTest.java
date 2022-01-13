@@ -1,4 +1,4 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.service;
+package com.proxiad.task.ivanboyukliev.hangmangame.logic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,6 +17,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.proxiad.hangmangame.logic.GameSession;
+import com.proxiad.hangmangame.logic.GameSessionServiceImpl;
+import com.proxiad.hangmangame.logic.InvalidGameSessionException;
+import com.proxiad.hangmangame.model.GameSessionRepository;
+import com.proxiad.hangmangame.model.WordRepository;
 
 @ExtendWith(MockitoExtension.class)
 class GameSessionServiceImplTest {

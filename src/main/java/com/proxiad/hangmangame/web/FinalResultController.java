@@ -1,10 +1,10 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.web;
+package com.proxiad.hangmangame.web;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.FAILURE_MSG;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.FAILURE_PAGE_TITLE;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.GAME_BASE_URL;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.SUCCESS_MSG;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.SUCCESS_PAGE_TITLE;
+import static com.proxiad.hangmangame.util.ApplicationConstants.FAILURE_MSG;
+import static com.proxiad.hangmangame.util.ApplicationConstants.FAILURE_PAGE_TITLE;
+import static com.proxiad.hangmangame.util.ApplicationConstants.GAME_BASE_URL;
+import static com.proxiad.hangmangame.util.ApplicationConstants.SUCCESS_MSG;
+import static com.proxiad.hangmangame.util.ApplicationConstants.SUCCESS_PAGE_TITLE;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,9 +13,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSession;
-import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
-import com.proxiad.task.ivanboyukliev.hangmangame.service.InvalidGameSessionException;
+import com.proxiad.hangmangame.logic.GameSession;
+import com.proxiad.hangmangame.logic.GameSessionService;
+import com.proxiad.hangmangame.logic.InvalidGameSessionException;
 
 @Controller
 @RequestMapping(GAME_BASE_URL)

@@ -1,10 +1,10 @@
 package it.tests;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.APP_BASE_URL;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.GAME_BASE_URL;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.HOST_ADDR;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.PORT;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.PROTOCOL;
+import static com.proxiad.hangmangame.util.ApplicationConstants.APP_BASE_URL;
+import static com.proxiad.hangmangame.util.ApplicationConstants.GAME_BASE_URL;
+import static com.proxiad.hangmangame.util.ApplicationConstants.HOST_ADDR;
+import static com.proxiad.hangmangame.util.ApplicationConstants.PORT;
+import static com.proxiad.hangmangame.util.ApplicationConstants.PROTOCOL;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

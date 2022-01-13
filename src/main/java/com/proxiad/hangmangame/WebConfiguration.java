@@ -1,4 +1,4 @@
-package com.proxiad.task.ivanboyukliev.hangmangame;
+package com.proxiad.hangmangame;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

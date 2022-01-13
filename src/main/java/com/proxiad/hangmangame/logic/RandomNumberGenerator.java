@@ -1,4 +1,4 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.service;
+package com.proxiad.hangmangame.logic;
 
 public class RandomNumberGenerator {
   public static final int MAX_NUMBER = 6;

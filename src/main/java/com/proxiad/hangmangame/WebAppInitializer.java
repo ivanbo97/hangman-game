@@ -1,4 +1,4 @@
-package com.proxiad.task.ivanboyukliev.hangmangame;
+package com.proxiad.hangmangame;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

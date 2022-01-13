@@ -1,7 +1,7 @@
 package it.web;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.BONUS_TRIES;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.GAME_BASE_URL;
+import static com.proxiad.hangmangame.util.ApplicationConstants.BONUS_TRIES;
+import static com.proxiad.hangmangame.util.ApplicationConstants.GAME_BASE_URL;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,10 +19,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import com.proxiad.task.ivanboyukliev.hangmangame.WebConfiguration;
-import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSession;
-import com.proxiad.task.ivanboyukliev.hangmangame.service.GameSessionService;
-import com.proxiad.task.ivanboyukliev.hangmangame.web.GamePlayController;
+import com.proxiad.hangmangame.WebConfiguration;
+import com.proxiad.hangmangame.logic.GameSession;
+import com.proxiad.hangmangame.logic.GameSessionService;
+import com.proxiad.hangmangame.web.GamePlayController;
 
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = WebConfiguration.class)

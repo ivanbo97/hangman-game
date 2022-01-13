@@ -1,9 +1,10 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.service;
+package com.proxiad.hangmangame.model;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
+import com.proxiad.hangmangame.logic.GameSession;
 
 @Repository
 public class GameSessionRepository {

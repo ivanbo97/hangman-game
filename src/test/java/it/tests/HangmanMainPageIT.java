@@ -1,10 +1,10 @@
 package it.tests;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.BONUS_TRIES;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.FAILURE_PAGE_TITLE;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.SECRET_ENCODE_VAL;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.SUCCESS_PAGE_TITLE;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.UNKNOWN_LETTER_SYMBOL;
+import static com.proxiad.hangmangame.util.ApplicationConstants.BONUS_TRIES;
+import static com.proxiad.hangmangame.util.ApplicationConstants.FAILURE_PAGE_TITLE;
+import static com.proxiad.hangmangame.util.ApplicationConstants.SECRET_ENCODE_VAL;
+import static com.proxiad.hangmangame.util.ApplicationConstants.SUCCESS_PAGE_TITLE;
+import static com.proxiad.hangmangame.util.ApplicationConstants.UNKNOWN_LETTER_SYMBOL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import java.util.stream.Stream;
@@ -68,7 +68,7 @@ class HangmanMainPageIT extends WebDriverSetupTest {
     assertThat(initialLettersToGuess).isEqualTo(numOfHiddenLetters);
   }
 
-  @ParameterizedTest(name = ARGUMENTS_PLACEHOLDER)
+  @ParameterizedTest()
   @MethodSource("supplyTestParameters")
   void invalidInputTest(String invalidInput) {
 
@@ -87,7 +87,8 @@ class HangmanMainPageIT extends WebDriverSetupTest {
         Arguments.of("aaa"),
         Arguments.of("?"),
         Arguments.of("1"),
-        /* Arguments.of(" "), Arguments.of(""), */
+        Arguments.of(" "),
+        Arguments.of(""),
         Arguments.of("a1b2/"));
   }
 

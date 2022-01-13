@@ -1,8 +1,8 @@
-package com.proxiad.task.ivanboyukliev.hangmangame.service;
+package com.proxiad.hangmangame.logic;
 
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.BONUS_TRIES;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.SECRET_ENCODE_VAL;
-import static com.proxiad.task.ivanboyukliev.hangmangame.service.ApplicationConstants.UNKNOWN_LETTER_SYMBOL;
+import static com.proxiad.hangmangame.util.ApplicationConstants.BONUS_TRIES;
+import static com.proxiad.hangmangame.util.ApplicationConstants.SECRET_ENCODE_VAL;
+import static com.proxiad.hangmangame.util.ApplicationConstants.UNKNOWN_LETTER_SYMBOL;
 import java.util.Objects;
 
 public class GameSession {
