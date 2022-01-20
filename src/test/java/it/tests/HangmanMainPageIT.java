@@ -6,7 +6,6 @@ import static com.proxiad.hangmangame.util.ApplicationConstants.SECRET_ENCODE_VA
 import static com.proxiad.hangmangame.util.ApplicationConstants.SUCCESS_PAGE_TITLE;
 import static com.proxiad.hangmangame.util.ApplicationConstants.UNKNOWN_LETTER_SYMBOL;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
