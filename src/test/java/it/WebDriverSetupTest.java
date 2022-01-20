@@ -17,7 +17,7 @@ public class WebDriverSetupTest {
 
   static {
     hangmanGameContainer =
-        new GenericContainer(DockerImageName.parse("hangman-game:init")).withExposedPorts(8080);
+        new GenericContainer(DockerImageName.parse("hangman-game:latest")).withExposedPorts(8080);
   }
 
   @BeforeEach
