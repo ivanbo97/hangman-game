@@ -1,7 +1,7 @@
 package com.proxiad.hangmangame.logic;
 
-import static com.proxiad.hangmangame.util.ApplicationConstants.BONUS_TRIES;
-import static com.proxiad.hangmangame.util.ApplicationConstants.SECRET_ENCODE_VAL;
+import static com.proxiad.hangmangame.logic.GameConstants.BONUS_TRIES;
+import static com.proxiad.hangmangame.logic.GameConstants.SECRET_ENCODE_VAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import java.util.stream.Stream;

@@ -1,10 +1,10 @@
 package com.proxiad.hangmangame.web;
 
-import static com.proxiad.hangmangame.util.ApplicationConstants.FAILURE_MSG;
-import static com.proxiad.hangmangame.util.ApplicationConstants.FAILURE_PAGE_TITLE;
-import static com.proxiad.hangmangame.util.ApplicationConstants.GAME_BASE_URL;
-import static com.proxiad.hangmangame.util.ApplicationConstants.SUCCESS_MSG;
-import static com.proxiad.hangmangame.util.ApplicationConstants.SUCCESS_PAGE_TITLE;
+import static com.proxiad.hangmangame.web.ControllerConstants.FAILURE_MSG;
+import static com.proxiad.hangmangame.web.ControllerConstants.FAILURE_PAGE_TITLE;
+import static com.proxiad.hangmangame.web.ControllerConstants.GAME_BASE_URL;
+import static com.proxiad.hangmangame.web.ControllerConstants.SUCCESS_MSG;
+import static com.proxiad.hangmangame.web.ControllerConstants.SUCCESS_PAGE_TITLE;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.proxiad.hangmangame.logic.GameSession;
 import com.proxiad.hangmangame.logic.GameSessionService;
 import com.proxiad.hangmangame.web.StartNewGameController;
-import static com.proxiad.hangmangame.util.ApplicationConstants.GAME_BASE_URL;
+import static com.proxiad.hangmangame.web.ControllerConstants.GAME_BASE_URL;
 
 @ExtendWith(MockitoExtension.class)
 class StartNewGameControllerIT {
