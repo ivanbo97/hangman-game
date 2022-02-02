@@ -3,6 +3,7 @@ package com.proxiad.hangmangame.logic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -18,12 +19,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.proxiad.hangmangame.model.GameSessionRepository;
-import com.proxiad.hangmangame.model.WordRepository;
+import com.proxiad.hangmangame.model.HangmanWord;
+import com.proxiad.hangmangame.model.HangmanWordRepository;
 
 @ExtendWith(MockitoExtension.class)
 class GameSessionServiceImplTest {
 
-  @Mock private WordRepository wordRepository;
+  @Mock private HangmanWordRepository wordRepository;
 
   @Mock private GameSessionRepository gameSessionRepository;
 
@@ -84,13 +86,13 @@ class GameSessionServiceImplTest {
   @Test
   void startNewGameTest() {
     // given
-    given(wordRepository.getWord()).willReturn("example");
+    given(wordRepository.getWordById(anyInt())).willReturn(new HangmanWord("example"));
 
     // when
     GameSession newSession = gameSessionService.startNewGame();
 
     // then
-    then(wordRepository).should().getWord();
+    then(wordRepository).should().getWordById(anyInt());
     assertThat(newSession).isNotNull();
     assertThat(newSession.getWordToGuess()).isEqualTo("example");
   }
