@@ -1,27 +1,42 @@
-package com.proxiad.hangmangame.logic;
+package com.proxiad.hangmangame.model;
 
 import static com.proxiad.hangmangame.logic.GameConstants.BONUS_TRIES;
-import static com.proxiad.hangmangame.logic.GameConstants.SECRET_ENCODE_VAL;
-import static com.proxiad.hangmangame.logic.GameConstants.UNKNOWN_LETTER_SYMBOL;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
+@Entity
+@Table(name = "game_session")
 public class GameSession {
 
-  private String wordToGuess;
-  private String puzzledWord;
-  private String lettersToBeGuessed;
-  private int triesLeft;
-  private int lettersToGuessLeft;
+  @Id
+  @Column(name = "id")
   private String gameId;
+
+  @Column(name = "word_to_guess")
+  private String wordToGuess;
+
+  @Column(name = "puzzled_word")
+  private String puzzledWord;
+
+  @Column(name = "tries_left")
+  private int triesLeft;
+
+  @Column(name = "letters_to_guess_left")
+  private int lettersToGuessLeft;
+
+  @Column(name = "guess_letters_encoded")
+  private String lettersToBeGuessedEncoded;
 
   public GameSession() {}
 
   public GameSession(String wordToGuess) {
     this.wordToGuess = wordToGuess;
     this.lettersToGuessLeft = wordToGuess.length();
-    this.puzzledWord = generatePuzzledWord(wordToGuess);
     this.triesLeft = this.lettersToGuessLeft + BONUS_TRIES;
-    this.lettersToBeGuessed = encodeLettersToBeGuessed();
   }
 
   public String getWordToGuess() {
@@ -56,34 +71,20 @@ public class GameSession {
     this.puzzledWord = puzzledWord;
   }
 
-  public String getLettersToBeGuessed() {
-    return lettersToBeGuessed;
-  }
-
-  private String generatePuzzledWord(String wordToGuess) {
-    puzzledWord = UNKNOWN_LETTER_SYMBOL.repeat(wordToGuess.length());
-    StringBuilder puzzledWordBuilder = new StringBuilder(puzzledWord);
-
-    char firstLetter = wordToGuess.charAt(0);
-    char lastLetter = wordToGuess.charAt(wordToGuess.length() - 1);
-    char letterToCheck;
-
-    for (int i = 0; i < wordToGuess.length(); i++) {
-      letterToCheck = wordToGuess.charAt(i);
-      if (letterToCheck == firstLetter || letterToCheck == lastLetter) {
-        puzzledWordBuilder.setCharAt(i, letterToCheck);
-        lettersToGuessLeft--;
-      }
-    }
-    return puzzledWordBuilder.toString();
-  }
-
   public void setGameId(String gameId) {
     this.gameId = gameId;
   }
 
   public String getGameId() {
     return gameId;
+  }
+
+  public String getLettersToBeGuessedEncoded() {
+    return lettersToBeGuessedEncoded;
+  }
+
+  public void setLettersToBeGuessedEncoded(String lettersToBeGuessedEncoded) {
+    this.lettersToBeGuessedEncoded = lettersToBeGuessedEncoded;
   }
 
   @Override
@@ -111,26 +112,5 @@ public class GameSession {
     return lettersToGuessLeft == other.lettersToGuessLeft
         && triesLeft == other.triesLeft
         && Objects.equals(wordToGuess, other.wordToGuess);
-  }
-
-  private String encodeLettersToBeGuessed() {
-    int idx = 0;
-    StringBuilder lettersToBeGuessedBuilder = new StringBuilder();
-
-    for (char c : puzzledWord.toCharArray()) {
-      if (c == '_') {
-        char letterToGuess = wordToGuess.charAt(idx);
-        lettersToBeGuessedBuilder.append((char) (letterToGuess - SECRET_ENCODE_VAL));
-      }
-      idx++;
-    }
-
-    String lettersToBeGuessedWithDuplicates = lettersToBeGuessedBuilder.toString();
-
-    return lettersToBeGuessedWithDuplicates
-        .chars()
-        .distinct()
-        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-        .toString();
   }
 }
