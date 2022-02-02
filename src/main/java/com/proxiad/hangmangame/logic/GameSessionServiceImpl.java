@@ -1,6 +1,5 @@
 package com.proxiad.hangmangame.logic;
 
-import static com.proxiad.hangmangame.util.ApplicationConstants.INVALID_GAME_MSG;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +16,8 @@ public class GameSessionServiceImpl implements GameSessionService {
   @Autowired private WordRepository wordRepository;
 
   @Autowired private GameSessionRepository gameSessionsRepo;
+
+  private static final String INVALID_GAME_MSG = "Game Session [%s] no longer exists!";
 
   @Override
   public String getNewWord() {

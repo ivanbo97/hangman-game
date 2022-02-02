@@ -1,7 +1,7 @@
 package com.proxiad.hangmangame.web;
 
-import static com.proxiad.hangmangame.util.ApplicationConstants.GAME_BASE_URL;
-import static com.proxiad.hangmangame.util.ApplicationConstants.INVALID_LETTER_MSG;
+import static com.proxiad.hangmangame.web.ControllerConstants.GAME_BASE_URL;
+import static com.proxiad.hangmangame.web.ControllerConstants.INVALID_LETTER_MSG;
 import javax.servlet.ServletException;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

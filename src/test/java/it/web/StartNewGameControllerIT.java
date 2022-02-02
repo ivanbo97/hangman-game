@@ -1,30 +1,27 @@
 package it.web;
 
-import static com.proxiad.hangmangame.util.ApplicationConstants.GAME_BASE_URL;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.web.WebAppConfiguration;
+import static org.mockito.BDDMockito.given;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import com.proxiad.hangmangame.WebConfiguration;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import com.proxiad.hangmangame.logic.GameSession;
 import com.proxiad.hangmangame.logic.GameSessionService;
 import com.proxiad.hangmangame.web.StartNewGameController;
+import static com.proxiad.hangmangame.web.ControllerConstants.GAME_BASE_URL;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration(classes = WebConfiguration.class)
-@WebAppConfiguration
-public class StartNewGameControllerTest {
+class StartNewGameControllerIT {
 
   @Mock private GameSessionService gameSessionService;
 
@@ -38,9 +35,10 @@ public class StartNewGameControllerTest {
 
   @BeforeEach
   void startUp() {
+
+    this.mockMvc = MockMvcBuilders.standaloneSetup(startNewGameController).build();
     gameSession = new GameSession("exampleWord");
     gameSession.setGameId(exampleId);
-    this.mockMvc = MockMvcBuilders.standaloneSetup(startNewGameController).build();
   }
 
   @Test

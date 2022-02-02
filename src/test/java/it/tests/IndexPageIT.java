@@ -1,10 +1,7 @@
 package it.tests;
 
-import static com.proxiad.hangmangame.util.ApplicationConstants.APP_BASE_URL;
-import static com.proxiad.hangmangame.util.ApplicationConstants.GAME_BASE_URL;
-import static com.proxiad.hangmangame.util.ApplicationConstants.HOST_ADDR;
-import static com.proxiad.hangmangame.util.ApplicationConstants.PORT;
-import static com.proxiad.hangmangame.util.ApplicationConstants.PROTOCOL;
+import static com.proxiad.hangmangame.web.ControllerConstants.APP_BASE_URL;
+import static com.proxiad.hangmangame.web.ControllerConstants.GAME_BASE_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +13,10 @@ import it.pages.IndexPage;
 public class IndexPageIT extends WebDriverSetupTest {
 
   private IndexPage indexPage;
+
+  private static final String HOST_ADDR = "localhost";
+  private static final String PORT = "8080";
+  private static final String PROTOCOL = "http";
 
   @BeforeEach
   public void initIndexPage() {

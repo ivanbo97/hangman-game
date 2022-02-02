@@ -1,12 +1,11 @@
 package it.tests;
 
-import static com.proxiad.hangmangame.util.ApplicationConstants.BONUS_TRIES;
-import static com.proxiad.hangmangame.util.ApplicationConstants.FAILURE_PAGE_TITLE;
-import static com.proxiad.hangmangame.util.ApplicationConstants.SECRET_ENCODE_VAL;
-import static com.proxiad.hangmangame.util.ApplicationConstants.SUCCESS_PAGE_TITLE;
-import static com.proxiad.hangmangame.util.ApplicationConstants.UNKNOWN_LETTER_SYMBOL;
+import static com.proxiad.hangmangame.logic.GameConstants.BONUS_TRIES;
+import static com.proxiad.hangmangame.web.ControllerConstants.FAILURE_PAGE_TITLE;
+import static com.proxiad.hangmangame.logic.GameConstants.SECRET_ENCODE_VAL;
+import static com.proxiad.hangmangame.web.ControllerConstants.SUCCESS_PAGE_TITLE;
+import static com.proxiad.hangmangame.logic.GameConstants.UNKNOWN_LETTER_SYMBOL;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
