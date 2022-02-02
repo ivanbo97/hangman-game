@@ -8,12 +8,12 @@ import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.proxiad.hangmangame.model.GameSessionRepository;
-import com.proxiad.hangmangame.model.WordRepository;
+import com.proxiad.hangmangame.model.HangmanWordRepository;
 
 @Service
 public class GameSessionServiceImpl implements GameSessionService {
 
-  @Autowired private WordRepository wordRepository;
+  @Autowired private HangmanWordRepository wordRepository;
 
   @Autowired private GameSessionRepository gameSessionsRepo;
 
@@ -21,7 +21,7 @@ public class GameSessionServiceImpl implements GameSessionService {
 
   @Override
   public String getNewWord() {
-    return wordRepository.getWord();
+    return wordRepository.getWordById(RandomNumberGenerator.generateRandomNumber()).getContent();
   }
 
   @Override
