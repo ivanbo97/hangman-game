@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import com.proxiad.hangmangame.logic.InvalidGameSessionException;
+import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {

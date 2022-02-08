@@ -1,4 +1,4 @@
-package com.proxiad.hangmangame.logic;
+package com.proxiad.hangmangame.logic.game;
 
 public final class GameConstants {
 
