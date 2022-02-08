@@ -1,6 +1,7 @@
-package com.proxiad.hangmangame.logic;
+package com.proxiad.hangmangame.logic.game;
 
 import javax.servlet.ServletException;
+import com.proxiad.hangmangame.model.GameSession;
 
 public interface GameSessionService {
 

@@ -1,12 +1,11 @@
 package com.proxiad.hangmangame.model;
 
-import static com.proxiad.hangmangame.logic.GameConstants.BONUS_TRIES;
+import static com.proxiad.hangmangame.logic.game.GameConstants.BONUS_TRIES;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "game_session")
