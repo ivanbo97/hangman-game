@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import com.proxiad.hangmangame.HangmanApplication;
 
 @Entity
 @Table(name = "game_word")

@@ -13,9 +13,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.proxiad.hangmangame.logic.GameSession;
-import com.proxiad.hangmangame.logic.GameSessionService;
-import com.proxiad.hangmangame.logic.InvalidGameSessionException;
+import com.proxiad.hangmangame.logic.game.GameSessionService;
+import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
+import com.proxiad.hangmangame.logic.ranking.RankingService;
+import com.proxiad.hangmangame.model.GameSession;
 
 @Controller
 @RequestMapping(GAME_BASE_URL)
@@ -23,6 +24,8 @@ import com.proxiad.hangmangame.logic.InvalidGameSessionException;
 public class FinalResultController {
 
   @Autowired private GameSessionService gameSessionService;
+
+  @Autowired RankingService rankingService;
 
   @GetMapping("/{gameId}/result")
   public String showFinalResult(@PathVariable @NotBlank String gameId, Model model)
@@ -40,7 +43,18 @@ public class FinalResultController {
       model.addAttribute("pageTitle", FAILURE_PAGE_TITLE);
       model.addAttribute("gameResult", String.format(FAILURE_MSG, gameSession.getWordToGuess()));
     }
-    gameSessionService.deleteSessionById(gameId);
-    return "finalResultPage";
+
+    String inputFieldForPlayerName =
+        "<form method=\"post\" action=\"/hangman-game/stats\""
+            + " class=\"inline\">"
+            + "<label for=\"gamerName\">You can enter name for keeping statistics:</label><br>"
+            + "<input type=\"text\" id=\"gamerName\" name=\"gamerName\">"
+            + "<input type=\"hidden\" id=\"gameId\" name=\"gameId\" value="
+            + gameId
+            + "><br>"
+            + "<button type=\"submit\" class=\"link-button\">Send Name</button></form>";
+    model.addAttribute("inputFieldForPlayerName", inputFieldForPlayerName);
+    model.addAttribute("topPlayers", rankingService.getTop10Players());
+    return "rankingPage";
   }
 }
