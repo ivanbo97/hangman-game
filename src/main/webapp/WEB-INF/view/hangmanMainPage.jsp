@@ -67,6 +67,6 @@ h1, h2, p, label, div {
 		class="inline">
 		<button type="submit" id="startGameBtn">Start New Game</button>
 	</form>
-	<p id="secret-letters" class="maskWithBackground">${gameSessionObj.lettersToBeGuessed}</p>
+	<p id="secret-letters" class="maskWithBackground">${gameSessionObj.lettersToBeGuessedEncoded}</p>
 </body>
 </html>
