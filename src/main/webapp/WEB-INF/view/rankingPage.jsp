@@ -5,29 +5,30 @@
 
 <%@include file="/resources/css/landing-page.css"%>
 
-body {
-  font-family: 'Brush Script MT', cursive;
-   text-align: center;
-}
+
 </style>
 <title>${pageTitle}</title>
 </head>
-<body style="background-color: #2eb8b8;">
+<body>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-	<div>
+	<main class = "page-content">
+	<div class="player-stat-input">
 		<h2 style="color: #ffffff;">${gameResult}</h2>
-		<div>${inputFieldForPlayerName}</div>
+		${inputFieldForPlayerName}
 	</div>
-	<form method="post" action="/hangman-game/games" class="inline">
-		<button type="submit" id="startGameBtn"
-			class="link-button">Start New Game</button>
-	</form>
 	
-	<div id="ranking-table-top-10">
-	<h3>${tableName}</h3>
+	<section class="start-btn-area">
+		<form method="post" action="/hangman-game/games" class="inline">
+			<button type="submit" id="startGameBtn"
+				class="section--start-btn">New Game</button>
+		</form>
+	</section>
+	
+	<div class="ranking-table">
+	<h3 class="ranking-table-name">${tableName}</h3>
 		<br><br>
-	<table id="customers" class="center" border="1" width="90%">
-		<tr>
+	<table  class="top-players-table-borderless" >
+		<tr class="table-headers">
 			<th>Player Name</th>
 			<th>Total Wins</th>
 		</tr>
@@ -39,6 +40,8 @@ body {
 		</c:forEach>
 	</table>
 	</div>
-	<a href=${urlForAdditionalStats}>${urlElementName}</a>
+	
+	<a class= "new-ranking-url" href=${urlForAdditionalStats}>${urlElementName}</a>
+	</main>
 </body>
 </html>
