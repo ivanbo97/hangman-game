@@ -50,6 +50,11 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+		<!-- Flyway DB Migration -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 		<!-- JPA Metamodel -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
