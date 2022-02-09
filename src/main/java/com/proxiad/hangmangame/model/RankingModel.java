@@ -1,9 +1,18 @@
 package com.proxiad.hangmangame.model;
 
+import java.util.Map.Entry;
+
 public class RankingModel {
 
   private String playerName;
   private int totalWins;
+
+  public RankingModel() {}
+
+  public RankingModel(String playerName, int totalWins) {
+    this.playerName = playerName;
+    this.totalWins = totalWins;
+  }
 
   public String getPlayerName() {
     return playerName;
@@ -34,6 +43,12 @@ public class RankingModel {
     model.setPlayerName(gameRanking.getGamerName());
     model.setTotalWins(gameRanking.getTotalWins());
     return model;
+  }
+
+  public static RankingModel setRankings(Entry<String, Integer> playerAndWinsEntry) {
+    String playerName = playerAndWinsEntry.getKey();
+    Integer totalWins = playerAndWinsEntry.getValue();
+    return new RankingModel(playerName, totalWins);
   }
 
   @Override
