@@ -1,8 +1,6 @@
 package com.proxiad.hangmangame.logic.ranking;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.proxiad.hangmangame.logic.game.GameSessionDao;
 import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
@@ -13,10 +11,14 @@ import com.proxiad.hangmangame.model.GameSession;
 import com.proxiad.hangmangame.model.GameStatistic;
 import com.proxiad.hangmangame.model.RankingModel;
 import java.sql.Date;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import static com.proxiad.hangmangame.logic.game.GameConstants.UNKNOWN_LETTER_SYMBOL;
-import static com.proxiad.hangmangame.logic.ranking.GameRankingSpecifications.havePlayedForTheLastNDays;
+import static com.proxiad.hangmangame.logic.statistic.GameStatisticSpecifications.haveWonGamesForLastNDays;
 import static com.proxiad.hangmangame.web.ControllerConstants.INVALID_GAME_MSG;
 
 @Service
@@ -76,9 +78,30 @@ public class RankingServiceImpl implements RankingService {
   @Override
   public List<RankingModel> getTopNPlayersForLastNDays(int totalPlayers, int lastNDays) {
 
-    Pageable page = PageRequest.of(0, totalPlayers);
-    return gameStatRepo.findAll(havePlayedForTheLastNDays(lastNDays), page).stream()
+    List<GameStatistic> gameStats = gameStatRepo.findAll(haveWonGamesForLastNDays(lastNDays));
+    Map<String, Integer> playersAndWinsMap = getTotalWinsForEachPlayer(gameStats);
+
+    return playersAndWinsMap.entrySet().stream()
+        .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
+        .limit(totalPlayers)
         .map(RankingModel::setRankings)
         .collect(Collectors.toList());
+  }
+
+  private Map<String, Integer> getTotalWinsForEachPlayer(List<GameStatistic> gameStats) {
+
+    Map<String, Integer> playersAndWinsMap = new HashMap<>();
+
+    for (GameStatistic stat : gameStats) {
+
+      String playerName = stat.getGameRanking().getGamerName();
+      Integer winsCount = playersAndWinsMap.get(playerName);
+      if (winsCount == null) {
+        playersAndWinsMap.put(playerName, 1);
+        continue;
+      }
+      playersAndWinsMap.put(playerName, winsCount + 1);
+    }
+    return playersAndWinsMap;
   }
 }
