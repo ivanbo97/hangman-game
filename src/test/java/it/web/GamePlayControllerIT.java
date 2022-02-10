@@ -15,11 +15,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import com.proxiad.hangmangame.logic.GameSession;
-import com.proxiad.hangmangame.logic.GameSessionService;
+import com.proxiad.hangmangame.logic.game.GameSessionService;
+import com.proxiad.hangmangame.model.GameSession;
 import com.proxiad.hangmangame.web.GamePlayController;
-import static com.proxiad.hangmangame.logic.GameConstants.BONUS_TRIES;
+import static com.proxiad.hangmangame.logic.game.GameConstants.BONUS_TRIES;
 import static com.proxiad.hangmangame.web.ControllerConstants.GAME_BASE_URL;
 
 @ExtendWith(MockitoExtension.class)
