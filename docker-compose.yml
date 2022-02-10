@@ -1,0 +1,26 @@
+version: "3"
+services:
+  hangman-game-app:
+    container_name: hangman-game-app
+    image: hangman-game:latest
+    restart: always
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      -  hangman-game-mysql
+ 
+  mysqldb:
+    image: mysql:latest
+    environment:
+      - MYSQL_USER=ivanb
+      - MYSQL_PASSWORD=ivanbproxiad
+      - MYSQL_ROOT_PASSWORD=ivanbproxiad
+      - MYSQL_DATABASE=hangman-game-db
+    ports:
+      - 3307:3306
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 20s
+      retries: 10
