@@ -65,7 +65,7 @@ public class GameSessionServiceImpl implements GameSessionService {
     newSession.setGameId(UUID.randomUUID().toString());
 
     String puzzledWord = generatePuzzledWord(wordToGuess);
-    newSession.setPuzzledWord(generatePuzzledWord(puzzledWord));
+    newSession.setPuzzledWord(puzzledWord);
 
     int unknownLettersCount =
         (int) puzzledWord.chars().filter(c -> c == UNKNOWN_LETTER_SYMBOL.charAt(0)).count();
