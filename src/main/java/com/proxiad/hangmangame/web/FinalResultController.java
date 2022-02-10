@@ -47,12 +47,12 @@ public class FinalResultController {
     String inputFieldForPlayerName =
         "<form method=\"post\" action=\"/hangman-game/stats\""
             + " class=\"inline\">"
-            + "<label for=\"gamerName\">You can enter name for keeping statistics:</label><br>"
+            + "<label for=\"gamerName\">You can enter name for keeping statistics:</label><br><br><br>"
             + "<input type=\"text\" id=\"gamerName\" name=\"gamerName\">"
             + "<input type=\"hidden\" id=\"gameId\" name=\"gameId\" value="
             + gameId
-            + "><br>"
-            + "<button type=\"submit\" class=\"link-button\">Send Name</button></form>";
+            + "><br><br>"
+            + "<button class = \"send-name-btn\" type=\"submit\" class=\"link-button\">Send Name</button></form>";
     model.addAttribute("inputFieldForPlayerName", inputFieldForPlayerName);
     model.addAttribute("topPlayers", rankingService.getTop10Players());
     return "rankingPage";
