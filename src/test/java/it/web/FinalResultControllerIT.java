@@ -15,17 +15,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import com.proxiad.hangmangame.logic.GameSession;
-import com.proxiad.hangmangame.logic.GameSessionService;
+import com.proxiad.hangmangame.logic.game.GameSessionService;
+import com.proxiad.hangmangame.logic.ranking.RankingService;
+import com.proxiad.hangmangame.model.GameSession;
 import com.proxiad.hangmangame.web.FinalResultController;
-import static com.proxiad.hangmangame.logic.GameConstants.BONUS_TRIES;
+import static com.proxiad.hangmangame.logic.game.GameConstants.BONUS_TRIES;
 import static com.proxiad.hangmangame.web.ControllerConstants.GAME_BASE_URL;
 
 @ExtendWith(MockitoExtension.class)
 class FinalResultControllerIT {
 
   @Mock private GameSessionService gameSessionService;
+
+  @Mock private RankingService rankingService;
 
   @InjectMocks private FinalResultController finalResultController;
 
@@ -60,7 +62,9 @@ class FinalResultControllerIT {
         .andExpect(status().isOk())
         .andExpect(model().attributeExists("pageTitle"))
         .andExpect(model().attributeExists("gameResult"))
-        .andExpect(view().name("finalResultPage"));
+        .andExpect(model().attributeExists("inputFieldForPlayerName"))
+        .andExpect(model().attributeExists("topPlayers"))
+        .andExpect(view().name("rankingPage"));
   }
 
   @Test
