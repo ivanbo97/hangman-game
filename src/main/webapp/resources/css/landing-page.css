@@ -91,3 +91,9 @@ td {
 	justify-content: center;
 	flex-direction: column;
 }
+
+input[type="text"]
+{
+   border-radius: 10px;
+   font-family: 'Press Start 2P';
+}
