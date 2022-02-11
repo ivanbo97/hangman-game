@@ -11,7 +11,7 @@ services:
       - MYSQL_CONTAINER=mysqldb
       - MYSQL_CONTAINER_PORT=3306
     depends_on:
-      -  hangman-game-mysql
+      -  mysqldb
  
   mysqldb:
     image: mysql:latest
