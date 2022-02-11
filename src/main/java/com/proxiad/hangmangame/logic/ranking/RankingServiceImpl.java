@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.proxiad.hangmangame.logic.game.GameSessionDao;
 import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
-import com.proxiad.hangmangame.logic.statistic.GameStatisticRepositorty;
+import com.proxiad.hangmangame.logic.statistic.GameStatisticRepository;
 import com.proxiad.hangmangame.model.GameRanking;
 import com.proxiad.hangmangame.model.GameResult;
 import com.proxiad.hangmangame.model.GameSession;
@@ -24,7 +24,7 @@ import static com.proxiad.hangmangame.web.ControllerConstants.INVALID_GAME_MSG;
 @Service
 public class RankingServiceImpl implements RankingService {
 
-  @Autowired private GameStatisticRepositorty gameStatRepo;
+  @Autowired private GameStatisticRepository gameStatRepo;
 
   @Autowired private GameSessionDao gameSessionDao;
 
@@ -49,6 +49,7 @@ public class RankingServiceImpl implements RankingService {
 
     if (!isGameLost) {
       newGameStatistic.setGameResult(GameResult.WIN);
+      finalRanking.setTotalWins(1);
     }
 
     if (isGamerPresentInDB) {
