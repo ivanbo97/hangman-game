@@ -2,6 +2,7 @@ package com.proxiad.hangmangame.logic.game;
 
 import java.util.Optional;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -26,7 +27,13 @@ public class GameSessionDaoImpl implements GameSessionDao {
     cq.where(cb.equal(gameSession.get(GameSession_.GAME_ID), gameId));
 
     TypedQuery<GameSession> typedQuery = entityManager.createQuery(cq);
-    return Optional.of(typedQuery.getSingleResult());
+    GameSession retrievedSession = null;
+    try {
+      retrievedSession = typedQuery.getSingleResult();
+    } catch (NoResultException exc) {
+      return Optional.ofNullable(null);
+    }
+    return Optional.of(retrievedSession);
   }
 
   @Override
