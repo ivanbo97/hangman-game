@@ -1,7 +1,7 @@
 package com.proxiad.hangmangame.logic.game;
 
 public class RandomNumberGenerator {
-  public static final int MAX_NUMBER = 6;
+  public static final int MAX_NUMBER = 17;
 
   public static final int MIN_NUMBER = 1;
 
