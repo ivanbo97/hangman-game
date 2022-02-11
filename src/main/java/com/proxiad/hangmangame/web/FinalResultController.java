@@ -5,6 +5,7 @@ import static com.proxiad.hangmangame.web.ControllerConstants.FAILURE_PAGE_TITLE
 import static com.proxiad.hangmangame.web.ControllerConstants.GAME_BASE_URL;
 import static com.proxiad.hangmangame.web.ControllerConstants.SUCCESS_MSG;
 import static com.proxiad.hangmangame.web.ControllerConstants.SUCCESS_PAGE_TITLE;
+import java.util.Optional;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.proxiad.hangmangame.logic.game.GameSessionService;
 import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
 import com.proxiad.hangmangame.logic.ranking.RankingService;
+import com.proxiad.hangmangame.logic.statistic.GameStatisticService;
 import com.proxiad.hangmangame.model.GameSession;
+import com.proxiad.hangmangame.model.GameStatistic;
 
 @Controller
 @RequestMapping(GAME_BASE_URL)
@@ -27,12 +30,22 @@ public class FinalResultController {
 
   @Autowired RankingService rankingService;
 
+  @Autowired GameStatisticService gameStatService;
+
   @GetMapping("/{gameId}/result")
   public String showFinalResult(@PathVariable @NotBlank String gameId, Model model)
       throws InvalidGameSessionException {
 
+    model.addAttribute("topPlayers", rankingService.getTop10Players());
     GameSession gameSession = gameSessionService.getGameSessionById(gameId);
+    Optional<GameStatistic> gameStatistic = gameStatService.findStatisticByGameSession(gameSession);
 
+    if (gameStatistic.isPresent()) {
+      /*Game Cheat Prevention - if user tries to
+       * accumulate wins based on single game
+       */
+      return "rankingPage";
+    }
     if (gameSession.getLettersToGuessLeft() == 0) {
       model.addAttribute("pageTitle", SUCCESS_PAGE_TITLE);
       model.addAttribute("gameResult", String.format(SUCCESS_MSG, gameSession.getWordToGuess()));
@@ -54,7 +67,6 @@ public class FinalResultController {
             + "><br><br>"
             + "<button class = \"send-name-btn\" type=\"submit\" class=\"link-button\">Send Name</button></form>";
     model.addAttribute("inputFieldForPlayerName", inputFieldForPlayerName);
-    model.addAttribute("topPlayers", rankingService.getTop10Players());
     return "rankingPage";
   }
 }
