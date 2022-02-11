@@ -44,6 +44,10 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     GameSession gameSession = validateSessionExistence(gameId);
 
+    if (gameSession.getLettersToGuessLeft() == 0 || gameSession.getTriesLeft() == 0) {
+      throw new InvalidGameSessionException(String.format(INVALID_GAME_MSG, gameId));
+    }
+
     int numberOfLettersToGuess = gameSession.getLettersToGuessLeft();
     int triesLeft = gameSession.getTriesLeft();
     char userInputLetter = userGuess.charAt(0);
