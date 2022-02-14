@@ -1,6 +1,7 @@
 package com.proxiad.hangmangame.model.statistic;
 
 import java.sql.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -35,7 +36,7 @@ public class GameStatistic {
   @JoinColumn(name = "id_game")
   private GameSession gameSession;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "gamer_id")
   private GameRanking gameRanking;
 

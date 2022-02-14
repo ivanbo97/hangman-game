@@ -55,8 +55,6 @@ public class RankingServiceImpl implements RankingService {
 
     if (isGamerPresentInDB) {
       finalRanking = rankingRepository.getRankingByGamerName(playerName).get();
-    } else {
-      rankingRepository.save(finalRanking);
     }
 
     if (!isGameLost && isGamerPresentInDB) {
