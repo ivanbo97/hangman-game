@@ -44,7 +44,7 @@ public class IndexPageIT extends WebDriverSetupTest {
                 + "://"
                 + HOST_ADDR
                 + ":"
-                + PORT
+                + "[0-9]{1,5}"
                 + APP_BASE_URL
                 + GAME_BASE_URL
                 + "/"

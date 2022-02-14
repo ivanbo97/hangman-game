@@ -1,27 +1,33 @@
-package com.proxiad.hangmangame.logic;
+package com.proxiad.hangmangame.logic.game;
 
+import static com.proxiad.hangmangame.logic.game.GameConstants.BONUS_TRIES;
+import static com.proxiad.hangmangame.logic.game.GameConstants.SECRET_ENCODE_VAL;
+import static com.proxiad.hangmangame.logic.game.GameConstants.UNKNOWN_LETTER_SYMBOL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.servlet.ServletException;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.proxiad.hangmangame.model.GameSessionRepository;
-import com.proxiad.hangmangame.model.WordRepository;
+import com.proxiad.hangmangame.model.game.GameSession;
+import com.proxiad.hangmangame.model.game.GameSessionDao;
+import com.proxiad.hangmangame.model.word.HangmanWordRepository;
 
 @Service
+@Transactional
 public class GameSessionServiceImpl implements GameSessionService {
 
-  @Autowired private WordRepository wordRepository;
+  @Autowired private HangmanWordRepository wordRepository;
 
-  @Autowired private GameSessionRepository gameSessionsRepo;
+  @Autowired private GameSessionDao gameSessionsDao;
 
   private static final String INVALID_GAME_MSG = "Game Session [%s] no longer exists!";
 
   @Override
   public String getNewWord() {
-    return wordRepository.getWord();
+    return wordRepository.getWordById(RandomNumberGenerator.generateRandomNumber()).getContent();
   }
 
   @Override
@@ -31,13 +37,17 @@ public class GameSessionServiceImpl implements GameSessionService {
 
   @Override
   public void deleteSessionById(String gameId) {
-    gameSessionsRepo.deleteSessionById(gameId);
+    gameSessionsDao.deleteById(gameId);
   }
 
   @Override
   public GameSession makeTry(String gameId, String userGuess) throws ServletException {
 
     GameSession gameSession = validateSessionExistence(gameId);
+
+    if (gameSession.getLettersToGuessLeft() == 0 || gameSession.getTriesLeft() == 0) {
+      throw new InvalidGameSessionException(String.format(INVALID_GAME_MSG, gameId));
+    }
 
     int numberOfLettersToGuess = gameSession.getLettersToGuessLeft();
     int triesLeft = gameSession.getTriesLeft();
@@ -50,7 +60,6 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     triesLeft -= 1;
     gameSession.setTriesLeft(triesLeft);
-
     return gameSession;
   }
 
@@ -59,7 +68,18 @@ public class GameSessionServiceImpl implements GameSessionService {
     String wordToGuess = getNewWord();
     GameSession newSession = new GameSession(wordToGuess);
     newSession.setGameId(UUID.randomUUID().toString());
-    gameSessionsRepo.saveGameSession(newSession);
+
+    String puzzledWord = generatePuzzledWord(wordToGuess);
+    newSession.setPuzzledWord(puzzledWord);
+
+    int unknownLettersCount =
+        (int) puzzledWord.chars().filter(c -> c == UNKNOWN_LETTER_SYMBOL.charAt(0)).count();
+    newSession.setLettersToGuessLeft(unknownLettersCount);
+    newSession.setTriesLeft(unknownLettersCount + BONUS_TRIES);
+
+    String lettersToBeGuessedEncoded = encodeLettersToBeGuessed(puzzledWord, wordToGuess);
+    newSession.setLettersToBeGuessedEncoded(lettersToBeGuessedEncoded);
+    gameSessionsDao.save(newSession);
     return newSession;
   }
 
@@ -112,10 +132,48 @@ public class GameSessionServiceImpl implements GameSessionService {
   }
 
   private GameSession validateSessionExistence(String gameId) throws InvalidGameSessionException {
-    Optional<GameSession> retrievedSession = gameSessionsRepo.getGameSessionById(gameId);
+    Optional<GameSession> retrievedSession = gameSessionsDao.get(gameId);
     if (retrievedSession.isEmpty()) {
       throw new InvalidGameSessionException(String.format(INVALID_GAME_MSG, gameId));
     }
     return retrievedSession.get();
+  }
+
+  private String generatePuzzledWord(String wordToGuess) {
+
+    String puzzledWord = UNKNOWN_LETTER_SYMBOL.repeat(wordToGuess.length());
+    StringBuilder puzzledWordBuilder = new StringBuilder(puzzledWord);
+
+    char firstLetter = wordToGuess.charAt(0);
+    char lastLetter = wordToGuess.charAt(wordToGuess.length() - 1);
+    char letterToCheck;
+
+    for (int i = 0; i < wordToGuess.length(); i++) {
+      letterToCheck = wordToGuess.charAt(i);
+      if (letterToCheck == firstLetter || letterToCheck == lastLetter) {
+        puzzledWordBuilder.setCharAt(i, letterToCheck);
+      }
+    }
+    return puzzledWordBuilder.toString();
+  }
+
+  private String encodeLettersToBeGuessed(String puzzledWord, String wordToGuess) {
+    int idx = 0;
+    StringBuilder lettersToBeGuessedBuilder = new StringBuilder();
+
+    for (char c : puzzledWord.toCharArray()) {
+      if (c == '_') {
+        char letterToGuess = wordToGuess.charAt(idx);
+        lettersToBeGuessedBuilder.append((char) (letterToGuess - SECRET_ENCODE_VAL));
+      }
+      idx++;
+    }
+
+    String lettersToBeGuessedWithDuplicates = lettersToBeGuessedBuilder.toString();
+    return lettersToBeGuessedWithDuplicates
+        .chars()
+        .distinct()
+        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+        .toString();
   }
 }

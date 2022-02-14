@@ -2,7 +2,7 @@
 spring:
   datasource:
     username: ivanb
-    url: jdbc:mysql://${MYSQL_CONTAINER:localhost}:${MYSQL_CONTAINER_PORT:3306}/hangman-game-db
+    url: jdbc:mysql://host.docker.internal:3306/hangman-game-db
     password: ${hangman_db_pass}
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
