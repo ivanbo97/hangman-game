@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.proxiad.hangmangame.logic.game.GameSessionService;
 import com.proxiad.hangmangame.logic.ranking.RankingService;
-import com.proxiad.hangmangame.model.GameSession;
+import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.web.FinalResultController;
 import static com.proxiad.hangmangame.logic.game.GameConstants.BONUS_TRIES;
 import static com.proxiad.hangmangame.web.ControllerConstants.GAME_BASE_URL;

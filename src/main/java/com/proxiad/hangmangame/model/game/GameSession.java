@@ -1,4 +1,4 @@
-package com.proxiad.hangmangame.model;
+package com.proxiad.hangmangame.model.game;
 
 import static com.proxiad.hangmangame.logic.game.GameConstants.BONUS_TRIES;
 import java.util.Objects;

@@ -1,7 +1,6 @@
-package com.proxiad.hangmangame.logic.game;
+package com.proxiad.hangmangame.model.game;
 
 import java.util.Optional;
-import com.proxiad.hangmangame.model.GameSession;
 
 public interface GameSessionDao {
 

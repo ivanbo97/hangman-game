@@ -1,4 +1,4 @@
-package com.proxiad.hangmangame.model;
+package com.proxiad.hangmangame.model.statistic;
 
 import java.sql.Date;
 import javax.persistence.Column;
@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import com.proxiad.hangmangame.model.game.GameSession;
+import com.proxiad.hangmangame.model.ranking.GameRanking;
 
 @Entity
 @Table(name = "game_statistic")

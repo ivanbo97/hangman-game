@@ -2,7 +2,7 @@ package com.proxiad.hangmangame.logic.ranking;
 
 import java.util.List;
 import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
-import com.proxiad.hangmangame.model.RankingModel;
+import com.proxiad.hangmangame.model.ranking.RankingModel;
 
 public interface RankingService {
 

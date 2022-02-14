@@ -1,6 +1,7 @@
-package com.proxiad.hangmangame.model;
+package com.proxiad.hangmangame.model.ranking;
 
 import java.util.Map.Entry;
+import com.proxiad.hangmangame.model.statistic.GameStatistic;
 
 public class RankingModel {
 

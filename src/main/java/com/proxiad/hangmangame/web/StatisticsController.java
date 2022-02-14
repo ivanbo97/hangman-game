@@ -10,8 +10,8 @@ import com.proxiad.hangmangame.logic.game.GameSessionService;
 import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
 import com.proxiad.hangmangame.logic.ranking.RankingService;
 import com.proxiad.hangmangame.logic.statistic.GameStatisticService;
-import com.proxiad.hangmangame.model.GameSession;
-import com.proxiad.hangmangame.model.GameStatistic;
+import com.proxiad.hangmangame.model.game.GameSession;
+import com.proxiad.hangmangame.model.statistic.GameStatistic;
 
 @Controller
 @RequestMapping("/stats")

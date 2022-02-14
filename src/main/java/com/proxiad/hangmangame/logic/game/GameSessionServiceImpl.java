@@ -11,8 +11,9 @@ import javax.servlet.ServletException;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.proxiad.hangmangame.logic.word.HangmanWordRepository;
-import com.proxiad.hangmangame.model.GameSession;
+import com.proxiad.hangmangame.model.game.GameSession;
+import com.proxiad.hangmangame.model.game.GameSessionDao;
+import com.proxiad.hangmangame.model.word.HangmanWordRepository;
 
 @Service
 @Transactional

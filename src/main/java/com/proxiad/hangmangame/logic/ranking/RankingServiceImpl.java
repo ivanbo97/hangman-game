@@ -2,14 +2,15 @@ package com.proxiad.hangmangame.logic.ranking;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.proxiad.hangmangame.logic.game.GameSessionDao;
 import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
-import com.proxiad.hangmangame.logic.statistic.GameStatisticRepository;
-import com.proxiad.hangmangame.model.GameRanking;
-import com.proxiad.hangmangame.model.GameResult;
-import com.proxiad.hangmangame.model.GameSession;
-import com.proxiad.hangmangame.model.GameStatistic;
-import com.proxiad.hangmangame.model.RankingModel;
+import com.proxiad.hangmangame.model.game.GameSession;
+import com.proxiad.hangmangame.model.game.GameSessionDao;
+import com.proxiad.hangmangame.model.ranking.GameRanking;
+import com.proxiad.hangmangame.model.ranking.RankingModel;
+import com.proxiad.hangmangame.model.ranking.RankingRepository;
+import com.proxiad.hangmangame.model.statistic.GameResult;
+import com.proxiad.hangmangame.model.statistic.GameStatistic;
+import com.proxiad.hangmangame.model.statistic.GameStatisticRepository;
 import java.sql.Date;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import static com.proxiad.hangmangame.logic.game.GameConstants.UNKNOWN_LETTER_SYMBOL;
-import static com.proxiad.hangmangame.logic.statistic.GameStatisticSpecifications.haveWonGamesForLastNDays;
+import static com.proxiad.hangmangame.model.statistic.GameStatisticSpecifications.haveWonGamesForLastNDays;
 import static com.proxiad.hangmangame.web.ControllerConstants.INVALID_GAME_MSG;
 
 @Service

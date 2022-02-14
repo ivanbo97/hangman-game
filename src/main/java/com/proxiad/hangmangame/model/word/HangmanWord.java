@@ -1,4 +1,4 @@
-package com.proxiad.hangmangame.model;
+package com.proxiad.hangmangame.model.word;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

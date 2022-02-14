@@ -1,4 +1,4 @@
-package com.proxiad.hangmangame.logic.statistic;
+package com.proxiad.hangmangame.model.statistic;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -7,8 +7,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
-import com.proxiad.hangmangame.model.GameResult;
-import com.proxiad.hangmangame.model.GameStatistic;
 import com.proxiad.hangmangame.model.GameStatistic_;
 
 public class GameStatisticSpecifications {

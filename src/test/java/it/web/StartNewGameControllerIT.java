@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import com.proxiad.hangmangame.logic.game.GameSessionService;
-import com.proxiad.hangmangame.model.GameSession;
+import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.web.StartNewGameController;
 import static com.proxiad.hangmangame.web.ControllerConstants.GAME_BASE_URL;
 

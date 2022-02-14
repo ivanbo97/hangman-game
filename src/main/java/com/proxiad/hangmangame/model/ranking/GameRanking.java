@@ -1,4 +1,4 @@
-package com.proxiad.hangmangame.model;
+package com.proxiad.hangmangame.model.ranking;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import com.proxiad.hangmangame.model.statistic.GameStatistic;
 
 @Entity
 @Table(name = "game_ranking")

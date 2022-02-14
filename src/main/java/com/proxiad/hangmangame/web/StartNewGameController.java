@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.proxiad.hangmangame.logic.game.GameSessionService;
-import com.proxiad.hangmangame.model.GameSession;
+import com.proxiad.hangmangame.model.game.GameSession;
 
 @Controller
 @RequestMapping(GAME_BASE_URL)

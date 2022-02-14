@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.proxiad.hangmangame.logic.game.GameSessionService;
 import com.proxiad.hangmangame.logic.ranking.RankingService;
-import com.proxiad.hangmangame.model.GameSession;
+import com.proxiad.hangmangame.model.game.GameSession;
 
 @Controller
 @RequestMapping(GAME_BASE_URL)
