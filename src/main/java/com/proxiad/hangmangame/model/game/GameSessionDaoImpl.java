@@ -10,7 +10,6 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
-import com.proxiad.hangmangame.model.GameSession_;
 
 @Repository
 public class GameSessionDaoImpl implements GameSessionDao {
