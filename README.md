@@ -12,4 +12,4 @@ Every new topic of the learning path can be found on separate branch of this rep
 
 * **Spring Boot, Docker basics, Dockerfile -> spring-boot-intro branch**
 
-* **Spring Data JPA, Hibernate, Specifications, Criteria API, Flyway(DB migartions), Docker Compose-> jpa-intro branch**
+* **Spring Data JPA, Hibernate, Specifications, Criteria API, Flyway(DB migrations), Docker Compose-> jpa-intro branch**
