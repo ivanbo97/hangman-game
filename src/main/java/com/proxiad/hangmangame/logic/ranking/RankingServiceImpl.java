@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import static com.proxiad.hangmangame.logic.game.GameConstants.UNKNOWN_LETTER_SYMBOL;
 import static com.proxiad.hangmangame.model.statistic.GameStatisticSpecifications.haveWonGamesForLastNDays;
 import static com.proxiad.hangmangame.web.ControllerConstants.INVALID_GAME_MSG;
@@ -31,6 +32,7 @@ public class RankingServiceImpl implements RankingService {
 
   @Autowired private RankingRepository rankingRepository;
 
+  @Transactional
   @Override
   public void createRankingForPlayer(String gameId, String playerName)
       throws InvalidGameSessionException {
