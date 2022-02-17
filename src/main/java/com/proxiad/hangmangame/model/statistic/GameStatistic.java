@@ -15,9 +15,17 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.model.ranking.GameRanking;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "game_statistic")
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class GameStatistic {
 
   @Id
@@ -40,44 +48,7 @@ public class GameStatistic {
   @JoinColumn(name = "gamer_id")
   private GameRanking gameRanking;
 
-  public GameStatistic() {}
-
   public GameStatistic(GameResult gameResult) {
     this.gameResult = gameResult;
-  }
-
-  public void setGameResult(GameResult gameResult) {
-    this.gameResult = gameResult;
-  }
-
-  public void setGameCompletionDate(Date gameCompletionDate) {
-    this.gameCompletionDate = gameCompletionDate;
-  }
-
-  public void setGameSession(GameSession gameSession) {
-    this.gameSession = gameSession;
-  }
-
-  public void setGameRanking(GameRanking gameRanking) {
-    this.gameRanking = gameRanking;
-  }
-
-  public GameRanking getGameRanking() {
-    return gameRanking;
-  }
-
-  public GameResult getGameResult() {
-    return gameResult;
-  }
-
-  @Override
-  public String toString() {
-    return "GameStatistic [id="
-        + id
-        + ", "
-        + gameRanking.getGamerName()
-        + " , "
-        + gameRanking.getTotalWins()
-        + "]";
   }
 }
