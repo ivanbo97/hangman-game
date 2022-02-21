@@ -81,29 +81,13 @@ public class RankingServiceImpl implements RankingService {
   public List<RankingModel> getTopNPlayersForLastNDays(int totalPlayers, int lastNDays) {
 
     List<GameStatistic> gameStats = gameStatRepo.findAll(haveWonGamesForLastNDays(lastNDays));
-    Map<String, Integer> playersAndWinsMap = getTotalWinsForEachPlayer(gameStats);
+    Map<String, Integer> playersAndWinsMap =
+        GameStatsDataExtractor.getTotalWinsForEachPlayer(gameStats);
 
     return playersAndWinsMap.entrySet().stream()
         .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
         .limit(totalPlayers)
         .map(RankingModel::setRankings)
         .collect(Collectors.toList());
-  }
-
-  private Map<String, Integer> getTotalWinsForEachPlayer(List<GameStatistic> gameStats) {
-
-    Map<String, Integer> playersAndWinsMap = new HashMap<>();
-
-    for (GameStatistic stat : gameStats) {
-
-      String playerName = stat.getGameRanking().getGamerName();
-      Integer winsCount = playersAndWinsMap.get(playerName);
-      if (winsCount == null) {
-        playersAndWinsMap.put(playerName, 1);
-        continue;
-      }
-      playersAndWinsMap.put(playerName, winsCount + 1);
-    }
-    return playersAndWinsMap;
   }
 }
