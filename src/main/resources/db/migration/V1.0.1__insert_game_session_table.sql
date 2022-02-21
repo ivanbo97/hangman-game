@@ -30,6 +30,8 @@ INSERT INTO game_session (id,word_to_guess,puzzled_word,tries_left,letters_to_gu
 			('55be0f18-baa5-4032-9095-dd71be479feb','kilobyte','kilobyte',1,0,'_beXoj'),
 			('567bdd16-0f4c-45d0-9920-1d5287deda00','kilobyte','kilobyte',1,0,'_beXoj'),
 			('5748390d-6ff2-4e1c-81f8-599f832c79c5','class','class',1,0,'bW'),
-			('6333ecbc-1edd-41c5-b43b-6c4234510eda','class','class',1,0,'bW');
+			('6333ecbc-1edd-41c5-b43b-6c4234510eda','class','class',1,0,'bW'),
+			('48ed1d3e-f9b2-446f-b02e-517b8781ab4e45','stack','stack',2,0,'jWY'),
+			('4b76377e-19f9-4b5b-a66b-692bd051527145','stack','stack',2,0,'jWY');
 			
 			

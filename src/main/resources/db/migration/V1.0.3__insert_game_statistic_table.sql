@@ -30,5 +30,7 @@ INSERT INTO game_statistic (id_game,game_result,game_date,gamer_id) VALUES
             ('55be0f18-baa5-4032-9095-dd71be479feb','WIN','2022-01-01','xpert'),
             ('567bdd16-0f4c-45d0-9920-1d5287deda00','WIN','2022-01-01','xpert'),
             ('5748390d-6ff2-4e1c-81f8-599f832c79c5','WIN','2022-01-01','xpert'),
-            ('6333ecbc-1edd-41c5-b43b-6c4234510eda','WIN','2022-01-01','xpert');
+            ('6333ecbc-1edd-41c5-b43b-6c4234510eda','WIN','2022-01-01','xpert'),
+            ('48ed1d3e-f9b2-446f-b02e-517b8781ab4e45','WIN','2022-02-20','mac'),
+            ('4b76377e-19f9-4b5b-a66b-692bd051527145','WIN','2022-02-20','mac');
            
