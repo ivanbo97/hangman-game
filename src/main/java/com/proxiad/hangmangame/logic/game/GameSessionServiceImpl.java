@@ -9,19 +9,20 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.model.game.GameSessionDao;
 import com.proxiad.hangmangame.model.word.HangmanWordRepository;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 @Transactional
 public class GameSessionServiceImpl implements GameSessionService {
 
-  @Autowired private HangmanWordRepository wordRepository;
+  private final HangmanWordRepository wordRepository;
 
-  @Autowired private GameSessionDao gameSessionsDao;
+  private final GameSessionDao gameSessionsDao;
 
   private static final String INVALID_GAME_MSG = "Game Session [%s] no longer exists!";
 
