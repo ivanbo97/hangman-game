@@ -14,10 +14,12 @@ import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.model.game.GameSessionDao;
 import com.proxiad.hangmangame.model.word.HangmanWordRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class GameSessionServiceImpl implements GameSessionService {
 
   private final HangmanWordRepository wordRepository;
@@ -44,6 +46,7 @@ public class GameSessionServiceImpl implements GameSessionService {
   @Override
   public GameSession makeTry(String gameId, String userGuess) throws ServletException {
 
+    log.info("User is making a guess with letter [{}] on game session [{}]", userGuess, gameId);
     GameSession gameSession = validateSessionExistence(gameId);
 
     if (gameSession.getLettersToGuessLeft() == 0 || gameSession.getTriesLeft() == 0) {
@@ -61,6 +64,7 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     triesLeft -= 1;
     gameSession.setTriesLeft(triesLeft);
+    log.info("Game Session details after user guess ->  " + gameSession);
     return gameSession;
   }
 
@@ -81,6 +85,7 @@ public class GameSessionServiceImpl implements GameSessionService {
     String lettersToBeGuessedEncoded = encodeLettersToBeGuessed(puzzledWord, wordToGuess);
     newSession.setLettersToBeGuessedEncoded(lettersToBeGuessedEncoded);
     gameSessionsDao.save(newSession);
+    log.info("New game started, Game Details ->  " + newSession);
     return newSession;
   }
 
@@ -135,6 +140,7 @@ public class GameSessionServiceImpl implements GameSessionService {
   private GameSession validateSessionExistence(String gameId) throws InvalidGameSessionException {
     Optional<GameSession> retrievedSession = gameSessionsDao.get(gameId);
     if (retrievedSession.isEmpty()) {
+      log.error("Game Session with id [" + gameId + "] provided by client is invalid");
       throw new InvalidGameSessionException(String.format(INVALID_GAME_MSG, gameId));
     }
     return retrievedSession.get();
