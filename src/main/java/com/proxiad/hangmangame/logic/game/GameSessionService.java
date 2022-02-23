@@ -1,6 +1,6 @@
 package com.proxiad.hangmangame.logic.game;
 
-import javax.servlet.ServletException;
+import java.util.List;
 import com.proxiad.hangmangame.model.game.GameSession;
 
 public interface GameSessionService {
@@ -9,9 +9,11 @@ public interface GameSessionService {
 
   GameSession startNewGame();
 
-  GameSession makeTry(String gameId, String userGuess) throws ServletException;
+  GameSession makeTry(String gameId, String userGuess);
 
-  GameSession getGameSessionById(String gameId) throws InvalidGameSessionException;
+  GameSession getGameSessionById(String gameId);
+
+  List<GameSession> getOnGoingGames();
 
   void deleteSessionById(String gameId);
 }

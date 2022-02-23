@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.servlet.ServletException;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import com.proxiad.hangmangame.model.game.GameSession;
@@ -34,7 +33,7 @@ public class GameSessionServiceImpl implements GameSessionService {
   }
 
   @Override
-  public GameSession getGameSessionById(String gameId) throws InvalidGameSessionException {
+  public GameSession getGameSessionById(String gameId) {
     return validateSessionExistence(gameId);
   }
 
@@ -44,7 +43,7 @@ public class GameSessionServiceImpl implements GameSessionService {
   }
 
   @Override
-  public GameSession makeTry(String gameId, String userGuess) throws ServletException {
+  public GameSession makeTry(String gameId, String userGuess) {
 
     log.info("User is making a guess with letter [{}] on game session [{}]", userGuess, gameId);
     GameSession gameSession = validateSessionExistence(gameId);
@@ -87,6 +86,11 @@ public class GameSessionServiceImpl implements GameSessionService {
     gameSessionsDao.save(newSession);
     log.info("New game started, Game Details ->  " + newSession);
     return newSession;
+  }
+
+  @Override
+  public List<GameSession> getOnGoingGames() {
+    return gameSessionsDao.getOngoingGames();
   }
 
   private int checkForGuessedLetters(GameSession gameSession, char userInputLetter) {
