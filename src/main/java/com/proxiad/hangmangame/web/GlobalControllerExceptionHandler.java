@@ -18,7 +18,7 @@ public class GlobalControllerExceptionHandler {
   private Log logger = LogFactory.getLog("ClientError");
 
   @ExceptionHandler(InvalidGameSessionException.class)
-  @ResponseStatus(HttpStatus.GONE)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
   public String handleInvalidGameSessionException(
       InvalidGameSessionException exception, Model model) {
     return processError(exception, model);
