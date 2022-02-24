@@ -167,7 +167,11 @@
 			<artifactId>modelmapper</artifactId>
 			<version>${modelmapper.version}</version>
 		</dependency>
-
+		<!-- Webflux -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
