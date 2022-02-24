@@ -36,7 +36,6 @@ public class GameSessionApi {
   public ResponseEntity<CollectionModel<GameSessionInfo>> getOongoingGames() {
 
     List<GameSession> ongoingGames = gameService.getOnGoingGames();
-
     return ResponseEntity.ok(gameInfoAssembler.toCollectionModel(ongoingGames));
   }
 
@@ -44,6 +43,7 @@ public class GameSessionApi {
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Get game by its id")
   public GameSessionInfo getGame(@PathVariable String gameId) {
+
     GameSession game = gameService.getGameSessionById(gameId);
     return gameInfoAssembler.toModel(game);
   }
@@ -55,13 +55,14 @@ public class GameSessionApi {
 
     GameSession updateGameSession =
         gameService.makeTry(makeTryRequest.getGameId(), makeTryRequest.getGuessLetter());
-
     return ResponseEntity.ok(gameInfoAssembler.toModel(updateGameSession));
   }
 
   @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
   @Operation(summary = "Start new game")
   public ResponseEntity<GameSessionInfo> startNewGame() {
+
     GameSession newGame = gameService.startNewGame();
     GameSessionInfo gameInfo = gameInfoAssembler.toModel(newGame);
     URI selfUri = gameInfo.getLink(IanaLinkRelations.SELF).get().toUri();
