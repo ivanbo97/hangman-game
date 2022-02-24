@@ -1,4 +1,4 @@
-package it.webservice;
+package it.com.proxiad.hangman.logic.ranking;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
