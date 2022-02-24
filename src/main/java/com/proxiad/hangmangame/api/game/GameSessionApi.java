@@ -33,7 +33,7 @@ public class GameSessionApi {
       value = "/ongoing",
       produces = {"application/hal+json"})
   @Operation(summary = "Lists all ongoing games")
-  public ResponseEntity<CollectionModel<GameSessionInfo>> getOongoingGames() {
+  public ResponseEntity<CollectionModel<GameSessionInfo>> getOngoingGames() {
 
     List<GameSession> ongoingGames = gameService.getOnGoingGames();
     return ResponseEntity.ok(gameInfoAssembler.toCollectionModel(ongoingGames));
