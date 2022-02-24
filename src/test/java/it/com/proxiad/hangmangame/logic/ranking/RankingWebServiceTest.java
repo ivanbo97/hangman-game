@@ -1,4 +1,4 @@
-package it.com.proxiad.hangman.logic.ranking;
+package it.com.proxiad.hangmangame.logic.ranking;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
