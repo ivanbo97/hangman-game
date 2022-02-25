@@ -29,7 +29,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
 
 @SpringBootTest(classes = HangmanApplication.class, webEnvironment = WebEnvironment.DEFINED_PORT)
-class GameSessionApiTest {
+class GameSessionApiIT {
 
   @Autowired WebClient.Builder webClientBuilder;
 

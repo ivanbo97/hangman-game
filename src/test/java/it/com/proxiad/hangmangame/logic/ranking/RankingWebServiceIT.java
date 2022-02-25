@@ -14,7 +14,7 @@ import com.proxiad.hangmangame.soap.consumer.RankingWebServiceImplService;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = HangmanApplication.class, webEnvironment = WebEnvironment.DEFINED_PORT)
-class RankingWebServiceTest {
+class RankingWebServiceIT {
 
   private HangmanGameRankingWS webService;
 
