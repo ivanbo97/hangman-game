@@ -75,7 +75,7 @@ class GameSessionApiIT {
   }
 
   @Test
-  @DisplayName("Test if we get game by its id (using alreadey retrieved ongoing games)")
+  @DisplayName("Test if we get game by its id (using alreаdy retrieved ongoing games)")
   void getGameByIdTest() {
     // Take random gameId from ongoing games
     String gameId = getRandomGameId(ongoingGamesResponse.getBody().getContent());
@@ -109,7 +109,7 @@ class GameSessionApiIT {
   }
 
   @Test
-  @DisplayName("Test if we make try on game that is ongoing")
+  @DisplayName("Test if we can make try on game that is ongoing")
   void makeTryTest() throws JsonProcessingException {
 
     GameMakeTryRequest gameTry = new GameMakeTryRequest();
