@@ -119,7 +119,6 @@ class GameSessionApiIT {
     Collection<GameSessionInfo> ongoingGames = ongoingGamesResponse.getBody().getContent();
 
     String randomOngoingGameId = getRandomGameId(ongoingGames);
-    gameTry.setGameId(randomOngoingGameId);
     gameTry.setGuessLetter("a");
 
     Response response =

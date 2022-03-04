@@ -26,6 +26,12 @@ public class GameSessionInfoAssembler
     gameSessionInfo.add(
         linkTo(methodOn(GameSessionApi.class).getGame(gameSessionInfo.getGameId())).withSelfRel());
 
+    if (gameSession.getTriesLeft() != 0 && gameSession.getLettersToGuessLeft() != 0) {
+      gameSessionInfo.add(
+          linkTo(methodOn(GameSessionApi.class).makeTry(gameSession.getGameId(), null))
+              .withRel("makeTry"));
+    }
+
     return gameSessionInfo;
   }
 }

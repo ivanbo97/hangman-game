@@ -1,6 +1,7 @@
 package com.proxiad.hangmangame.logic.game;
 
 import java.util.List;
+import com.proxiad.hangmangame.model.game.GameMakeTryRequest;
 import com.proxiad.hangmangame.model.game.GameSession;
 
 public interface GameSessionService {
@@ -9,7 +10,7 @@ public interface GameSessionService {
 
   GameSession startNewGame();
 
-  GameSession makeTry(String gameId, String userGuess);
+  GameSession makeTry(String gameId, GameMakeTryRequest userGuess);
 
   GameSession getGameSessionById(String gameId);
 

@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.proxiad.hangmangame.model.game.GameMakeTryRequest;
 import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.model.game.GameSessionDao;
 import com.proxiad.hangmangame.model.word.HangmanWord;
@@ -86,8 +87,10 @@ class GameSessionServiceImplTest {
     given(wordRepository.getWordById(anyInt())).willReturn(hangmanWord);
     GameSession newSession = gameSessionService.startNewGame();
     int intialTiresLeft = newSession.getTriesLeft();
+    GameMakeTryRequest gameTry = new GameMakeTryRequest();
+    gameTry.setGuessLetter(userInputLetter);
     given(gameSessionDao.get(anyString())).willReturn(Optional.of(newSession));
-    GameSession sessionAfterGuess = gameSessionService.makeTry(wordToGuess, userInputLetter);
+    GameSession sessionAfterGuess = gameSessionService.makeTry("12312sdfvsd", gameTry);
 
     // then
     assertThat(sessionAfterGuess.getLettersToGuessLeft()).isEqualTo(expectedHiddenLettersCount);
@@ -114,10 +117,12 @@ class GameSessionServiceImplTest {
     int intialCountOfLettersToGuess = gameSession.getLettersToGuessLeft();
     String userInput = "e";
     int initialTriesLeft = gameSession.getTriesLeft();
+    GameMakeTryRequest gameTry = new GameMakeTryRequest();
+    gameTry.setGuessLetter(userInput);
     given(gameSessionDao.get(anyString())).willReturn(Optional.of(gameSession));
 
     // when
-    GameSession newSession = gameSessionService.makeTry(exampleGameId, userInput);
+    GameSession newSession = gameSessionService.makeTry(exampleGameId, gameTry);
     int lettersToGuessLeft = newSession.getLettersToGuessLeft();
 
     // then
@@ -130,13 +135,15 @@ class GameSessionServiceImplTest {
 
     String exampleGameId = "A12BD13D";
     String exampleUserGuess = "q";
+    GameMakeTryRequest gameTry = new GameMakeTryRequest();
+    gameTry.setGuessLetter(exampleUserGuess);
     // given
     given(gameSessionDao.get(anyString())).willReturn(Optional.ofNullable(null));
 
     // when, then
     assertThrows(
         InvalidGameSessionException.class,
-        () -> gameSessionService.makeTry(exampleGameId, exampleUserGuess));
+        () -> gameSessionService.makeTry(exampleGameId, gameTry));
   }
 
   @Test

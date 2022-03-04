@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import com.proxiad.hangmangame.model.game.GameMakeTryRequest;
 import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.model.game.GameSessionDao;
 import com.proxiad.hangmangame.model.word.HangmanWordRepository;
@@ -43,9 +44,12 @@ public class GameSessionServiceImpl implements GameSessionService {
   }
 
   @Override
-  public GameSession makeTry(String gameId, String userGuess) {
+  public GameSession makeTry(String gameId, GameMakeTryRequest userGuess) {
 
-    log.info("User is making a guess with letter [{}] on game session [{}]", userGuess, gameId);
+    log.info(
+        "User is making a guess with letter [{}] on game session [{}]",
+        userGuess.getGuessLetter(),
+        gameId);
     GameSession gameSession = validateSessionExistence(gameId);
 
     if (gameSession.getLettersToGuessLeft() == 0 || gameSession.getTriesLeft() == 0) {
@@ -54,7 +58,7 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     int numberOfLettersToGuess = gameSession.getLettersToGuessLeft();
     int triesLeft = gameSession.getTriesLeft();
-    char userInputLetter = userGuess.charAt(0);
+    char userInputLetter = userGuess.getGuessLetter().charAt(0);
 
     int lettersGuessedInThisAttempt = checkForGuessedLetters(gameSession, userInputLetter);
 

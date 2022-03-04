@@ -3,6 +3,7 @@ package it.com.proxiad.hangmangame.web;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
@@ -65,7 +66,7 @@ class GamePlayControllerIT {
     gameSession.setTriesLeft(0);
     gameSession.setLettersToGuessLeft(0);
 
-    given(gameSessionService.makeTry(anyString(), anyString())).willReturn(gameSession);
+    given(gameSessionService.makeTry(anyString(), any())).willReturn(gameSession);
 
     // when, then
     mockMvc
@@ -83,7 +84,7 @@ class GamePlayControllerIT {
     gameSession.setLettersToGuessLeft(6);
 
     // when, then
-    given(gameSessionService.makeTry(anyString(), anyString())).willReturn(gameSession);
+    given(gameSessionService.makeTry(anyString(), any())).willReturn(gameSession);
     mockMvc
         .perform(post(GAME_BASE_URL + "/{gameId}", exampleId).param("enteredLetter", "a"))
         .andExpect(status().is3xxRedirection())

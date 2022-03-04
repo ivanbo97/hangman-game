@@ -17,8 +17,11 @@ import java.util.List;
 import javax.validation.Valid;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.Link;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.core.DummyInvocationUtils.methodOn;
 
 @RestController
 @RequestMapping("/api/v1/games")
@@ -36,7 +39,10 @@ public class GameSessionApi {
   public ResponseEntity<CollectionModel<GameSessionInfo>> getOngoingGames() {
 
     List<GameSession> ongoingGames = gameService.getOnGoingGames();
-    return ResponseEntity.ok(gameInfoAssembler.toCollectionModel(ongoingGames));
+    Link startNewGameLink =
+        linkTo(methodOn(GameSessionApi.class).startNewGame()).withRel("startNewGame");
+    return ResponseEntity.ok(
+        gameInfoAssembler.toCollectionModel(ongoingGames).add(startNewGameLink));
   }
 
   @GetMapping(value = "/{gameId}", produces = "application/hal+json")
@@ -51,10 +57,9 @@ public class GameSessionApi {
   @PostMapping(value = "/{gameId}", produces = "application/hal+json")
   @Operation(summary = "Make a guess on a particular game with a particular letter")
   public ResponseEntity<GameSessionInfo> makeTry(
-      @Valid @RequestBody GameMakeTryRequest makeTryRequest) {
+      @PathVariable String gameId, @Valid @RequestBody GameMakeTryRequest makeTryRequest) {
 
-    GameSession updateGameSession =
-        gameService.makeTry(makeTryRequest.getGameId(), makeTryRequest.getGuessLetter());
+    GameSession updateGameSession = gameService.makeTry(gameId, makeTryRequest);
     return ResponseEntity.ok(gameInfoAssembler.toModel(updateGameSession));
   }
 
