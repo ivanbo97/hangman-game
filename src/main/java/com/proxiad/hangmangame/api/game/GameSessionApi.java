@@ -17,12 +17,12 @@ import java.util.List;
 import javax.validation.Valid;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.IanaLinkRelations;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/v1/games")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GameSessionApi {
 
   private final GameSessionService gameService;
