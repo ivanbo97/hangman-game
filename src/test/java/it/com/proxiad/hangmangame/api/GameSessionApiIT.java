@@ -24,11 +24,14 @@ import com.proxiad.hangmangame.model.game.GameMakeTryRequest;
 import com.proxiad.hangmangame.model.game.GameSession_;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import it.WebClientConfig;
 import static io.restassured.RestAssured.post;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
 
-@SpringBootTest(classes = HangmanApplication.class, webEnvironment = WebEnvironment.DEFINED_PORT)
+@SpringBootTest(
+    classes = {HangmanApplication.class, WebClientConfig.class},
+    webEnvironment = WebEnvironment.DEFINED_PORT)
 class GameSessionApiIT {
 
   @Autowired WebClient.Builder webClientBuilder;
