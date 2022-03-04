@@ -13,3 +13,5 @@ Every new topic of the learning path can be found on separate branch of this rep
 * **Spring Boot, Docker basics, Dockerfile -> spring-boot-intro branch**
 
 * **Spring Data JPA, Hibernate, Specifications, Criteria API, Flyway(DB migrations), Docker Compose-> jpa-intro branch**
+
+* **Web Services - SOAP (xml, wsdl files, messages, JAX-WS), REST (json, PayPal standards, TolerantReader pattern, HATEOAS, OpenAPI), List of tools used : ApacheCXF, Jackson, Swagger-UI, WebClient(for testing), RestAssured(for testing) -> web-services branch**
