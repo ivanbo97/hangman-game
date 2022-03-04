@@ -1,4 +1,4 @@
-package com.proxiad.hangmangame;
+package it;
 
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.context.annotation.Bean;
