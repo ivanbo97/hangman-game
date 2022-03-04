@@ -1,4 +1,4 @@
-package it.web;
+package it.com.proxiad.hangmangame.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

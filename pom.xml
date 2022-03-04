@@ -24,14 +24,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<spring-mvc-version>5.3.14</spring-mvc-version>
-		<junit-version>5.8.2</junit-version>
-		<mockito.version>4.1.0</mockito.version>
-		<assertj.version>3.21.0</assertj.version>
-		<hibernate.validator.version>6.2.0.Final</hibernate.validator.version>
-		<selenium.version>4.1.1</selenium.version>
-		<spring.mvc.test.verstion>5.3.14</spring.mvc.test.verstion>
 		<mvn.surefire.plugin.version>2.22.2</mvn.surefire.plugin.version>
+		<openapi.version>1.6.6</openapi.version>
+		<apachecxf.version>3.5.0</apachecxf.version>
+		<modelmapper.version>2.4.5</modelmapper.version>
 	</properties>
 
 	<dependencies>
@@ -141,6 +137,39 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- Apache CXF -->
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+			<version>${apachecxf.version}</version>
+		</dependency>
+		<!-- OpenAPI -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>${openapi.version}</version>
+		</dependency>
+		<!-- Spring HATEOS -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
+		<!-- ModelMapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>${modelmapper.version}</version>
+		</dependency>
+		<!-- Webflux -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<!-- RestAssured -->
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			</dependency>
 	</dependencies>
 
 	<build>
@@ -152,6 +181,11 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${mvn.surefire.plugin.version}</version><!--$NO-MVN-MAN-VER$ -->
+				<configuration>
+					<excludes>
+						<exclude>it/**</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -181,6 +215,25 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- tag::jaxws-maven-plugin[] -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<wsdlDirectory>${basedir}/src/main/resources/wsdl/</wsdlDirectory>
+					<packageName>com.proxiad.hangmangame.soap.consumer</packageName>
+					<sourceDestDir>src/main/java</sourceDestDir>
+				</configuration>
+			</plugin>
+			<!-- end::jaxws-maven-plugin[] -->
 		</plugins>
 	</build>
 </project>

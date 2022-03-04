@@ -11,5 +11,6 @@ INSERT INTO game_ranking (gamer_name,total_wins) VALUES
            ('zigzag',3),
            ('machine_gun',1),
            ('^^phantom',2),
-           ('xpert',8);
+           ('xpert',8),
+           ('mac',2);
         

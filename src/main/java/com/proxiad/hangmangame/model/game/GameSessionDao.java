@@ -1,5 +1,6 @@
 package com.proxiad.hangmangame.model.game;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GameSessionDao {
@@ -11,4 +12,6 @@ public interface GameSessionDao {
   void delete(GameSession gameSession);
 
   void deleteById(String gameId);
+
+  List<GameSession> getOngoingGames();
 }

@@ -7,21 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.servlet.ServletException;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.model.game.GameSessionDao;
 import com.proxiad.hangmangame.model.word.HangmanWordRepository;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@AllArgsConstructor
 @Transactional
+@Slf4j
 public class GameSessionServiceImpl implements GameSessionService {
 
-  @Autowired private HangmanWordRepository wordRepository;
+  private final HangmanWordRepository wordRepository;
 
-  @Autowired private GameSessionDao gameSessionsDao;
+  private final GameSessionDao gameSessionsDao;
 
   private static final String INVALID_GAME_MSG = "Game Session [%s] no longer exists!";
 
@@ -31,7 +33,7 @@ public class GameSessionServiceImpl implements GameSessionService {
   }
 
   @Override
-  public GameSession getGameSessionById(String gameId) throws InvalidGameSessionException {
+  public GameSession getGameSessionById(String gameId) {
     return validateSessionExistence(gameId);
   }
 
@@ -41,8 +43,9 @@ public class GameSessionServiceImpl implements GameSessionService {
   }
 
   @Override
-  public GameSession makeTry(String gameId, String userGuess) throws ServletException {
+  public GameSession makeTry(String gameId, String userGuess) {
 
+    log.info("User is making a guess with letter [{}] on game session [{}]", userGuess, gameId);
     GameSession gameSession = validateSessionExistence(gameId);
 
     if (gameSession.getLettersToGuessLeft() == 0 || gameSession.getTriesLeft() == 0) {
@@ -60,6 +63,7 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     triesLeft -= 1;
     gameSession.setTriesLeft(triesLeft);
+    log.info("Game Session details after user guess ->  " + gameSession);
     return gameSession;
   }
 
@@ -80,7 +84,13 @@ public class GameSessionServiceImpl implements GameSessionService {
     String lettersToBeGuessedEncoded = encodeLettersToBeGuessed(puzzledWord, wordToGuess);
     newSession.setLettersToBeGuessedEncoded(lettersToBeGuessedEncoded);
     gameSessionsDao.save(newSession);
+    log.info("New game started, Game Details ->  " + newSession);
     return newSession;
+  }
+
+  @Override
+  public List<GameSession> getOnGoingGames() {
+    return gameSessionsDao.getOngoingGames();
   }
 
   private int checkForGuessedLetters(GameSession gameSession, char userInputLetter) {
@@ -134,6 +144,7 @@ public class GameSessionServiceImpl implements GameSessionService {
   private GameSession validateSessionExistence(String gameId) throws InvalidGameSessionException {
     Optional<GameSession> retrievedSession = gameSessionsDao.get(gameId);
     if (retrievedSession.isEmpty()) {
+      log.error("Game Session with id [" + gameId + "] provided by client is invalid");
       throw new InvalidGameSessionException(String.format(INVALID_GAME_MSG, gameId));
     }
     return retrievedSession.get();
