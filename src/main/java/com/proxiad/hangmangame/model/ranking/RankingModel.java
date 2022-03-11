@@ -1,18 +1,15 @@
 package com.proxiad.hangmangame.model.ranking;
 
 import java.util.Map.Entry;
-import com.proxiad.hangmangame.model.statistic.GameStatistic;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@ToString
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class RankingModel {
 
   private String playerName;

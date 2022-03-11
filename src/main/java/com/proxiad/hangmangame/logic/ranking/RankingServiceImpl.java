@@ -1,6 +1,7 @@
 package com.proxiad.hangmangame.logic.ranking;
 
 import org.springframework.stereotype.Service;
+import com.proxiad.hangmangame.logic.game.GameSessionServiceImpl;
 import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
 import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.model.game.GameSessionDao;
@@ -11,6 +12,7 @@ import com.proxiad.hangmangame.model.statistic.GameResult;
 import com.proxiad.hangmangame.model.statistic.GameStatistic;
 import com.proxiad.hangmangame.model.statistic.GameStatisticRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Date;
 import java.util.Comparator;
 import java.util.List;
@@ -24,6 +26,7 @@ import static com.proxiad.hangmangame.web.ControllerConstants.INVALID_GAME_MSG;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class RankingServiceImpl implements RankingService {
 
   private final GameStatisticRepository gameStatRepo;
@@ -72,6 +75,7 @@ public class RankingServiceImpl implements RankingService {
 
   @Override
   public List<RankingModel> getTop10Players() {
+    log.info("Initiated ranking requested for top 10 players->  ");
     return rankingRepository.findTop10ByOrderByTotalWinsDescGamerNameAsc().stream()
         .map(RankingModel::setRankings)
         .collect(Collectors.toList());
