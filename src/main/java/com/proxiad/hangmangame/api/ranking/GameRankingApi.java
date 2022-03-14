@@ -24,4 +24,12 @@ public class GameRankingApi {
   public ResponseEntity<List<RankingModel>> getTop10PlayersEver() {
     return ResponseEntity.ok(rankingService.getTop10Players());
   }
+
+  @GetMapping(
+      value = "/top10-last-month",
+      produces = {"application/json"})
+  @Operation(summary = "Get top 10 players for last month")
+  public ResponseEntity<List<RankingModel>> getTop10PlayersForLastMonth() {
+    return ResponseEntity.ok(rankingService.getTopNPlayersForLastNDays(10, 30));
+  }
 }

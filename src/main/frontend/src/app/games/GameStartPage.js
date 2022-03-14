@@ -1,12 +1,11 @@
 import StartGameBtn from "./StartGameBtn";
-import TopPlayersList from "../rankings/TopPlayersTable";
+import TopPlayersTable from "../rankings/TopPlayersTable";
 
 const GameStartPage = () => {
   return (
     <>
       <StartGameBtn />
-      <h3 className="ranking-table-name">Top 10 Players Ever</h3>
-      <TopPlayersList />
+      <TopPlayersTable showTop10Ever={true} />
     </>
   );
 };

@@ -1,10 +1,20 @@
-import { useTop10Players } from "../api/RankingApi";
+import { useRanking } from "../api/RankingApi";
 import Table from "react-bootstrap/Table";
 import "./TopPlayersTable.css";
 import TopPlayerTableRow from "./TopPlayerTableRow";
+import { useState } from "react";
 
-const TopPlayersTable = () => {
-  const { data: playersList } = useTop10Players();
+const TopPlayersTable = ({ showTop10Ever }) => {
+  const [shouldDisplayTop10List, setDisplayTop10List] = useState(showTop10Ever);
+  const { data: playersList } = useRanking(shouldDisplayTop10List);
+  const urlStyle = {
+    color: "blue",
+    textDecoration: "underline",
+    cursor: "pointer",
+  };
+  const handleShowRankingClick = () => {
+    setDisplayTop10List(!shouldDisplayTop10List);
+  };
 
   if (typeof playersList === "undefined") {
     return null;
@@ -12,6 +22,9 @@ const TopPlayersTable = () => {
   return (
     <>
       <div className="ranking-table">
+        <h3 className="ranking-table-name">
+          Top 10 Players {shouldDisplayTop10List ? "Ever" : "For Last Month"}
+        </h3>
         <Table>
           <thead>
             <tr>
@@ -25,6 +38,14 @@ const TopPlayersTable = () => {
             })}
           </tbody>
         </Table>
+      </div>
+      <div className="alternative-ranking-url">
+        {/* <button onClick={}>
+          Show Top 10 {displayTop10List ? "For Last Month" : "Ever"}
+        </button> */}
+        <p style={urlStyle} onClick={handleShowRankingClick}>
+          Show Top 10 {shouldDisplayTop10List ? "For Last Month" : "Ever"}
+        </p>
       </div>
     </>
   );
