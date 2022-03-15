@@ -26,7 +26,7 @@ public class GameSessionServiceImpl implements GameSessionService {
 
   private final GameSessionDao gameSessionsDao;
 
-  private static final String INVALID_GAME_MSG = "Game Session [%s] no longer exists!";
+  private static final String INVALID_GAME_MSG = "Game Session with ID [%s] is not valid!";
 
   @Override
   public String getNewWord() {

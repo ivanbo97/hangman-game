@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import com.proxiad.hangmangame.api.BadRequestException;
 import com.proxiad.hangmangame.logic.game.GameSessionService;
-import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
 import com.proxiad.hangmangame.model.game.GameMakeTryRequest;
 import com.proxiad.hangmangame.model.game.GameSession;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,12 +60,8 @@ public class GameSessionApi {
   public ResponseEntity<GameSessionInfo> makeTry(
       @PathVariable String gameId, @Valid @RequestBody GameMakeTryRequest makeTryRequest) {
 
-    try {
-      GameSession updateGameSession = gameService.makeTry(gameId, makeTryRequest);
-      return ResponseEntity.ok(gameInfoAssembler.toModel(updateGameSession));
-    } catch (InvalidGameSessionException e) {
-      throw new BadRequestException(e.getMessage());
-    }
+    GameSession updateGameSession = gameService.makeTry(gameId, makeTryRequest);
+    return ResponseEntity.ok(gameInfoAssembler.toModel(updateGameSession));
   }
 
   @PostMapping
