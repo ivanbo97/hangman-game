@@ -2,6 +2,7 @@ const fetchClientInternal = async (url, options = {}) => {
   const init = {
     ...options,
   };
+
   const response = await fetch(url, init);
 
   if (!response.ok) {
@@ -26,6 +27,15 @@ const fetchClient = {
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf8",
+        ...(options?.headers || {}),
+      },
+      ...options,
+    }),
+  put: (url, options) =>
+    fetchClientInternal(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json;",
         ...(options?.headers || {}),
       },
       ...options,

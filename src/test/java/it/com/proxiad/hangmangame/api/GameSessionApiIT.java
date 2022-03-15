@@ -125,7 +125,7 @@ class GameSessionApiIT {
         given()
             .header("Content-Type", ContentType.JSON)
             .body(objectMapper.writeValueAsString(gameTry))
-            .post(GAME_API_BASE_URL + "/" + randomOngoingGameId);
+            .put(GAME_API_BASE_URL + "/" + randomOngoingGameId);
 
     String responseBody = response.getBody().asString();
     assertThat(responseBody).isNotBlank();

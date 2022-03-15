@@ -4,11 +4,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import com.proxiad.hangmangame.api.BadRequestException;
 import com.proxiad.hangmangame.logic.game.GameSessionService;
+import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
 import com.proxiad.hangmangame.model.game.GameMakeTryRequest;
 import com.proxiad.hangmangame.model.game.GameSession;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,13 +57,17 @@ public class GameSessionApi {
     return gameInfoAssembler.toModel(game);
   }
 
-  @PostMapping(value = "/{gameId}", produces = "application/hal+json")
+  @PutMapping(value = "/{gameId}", produces = "application/hal+json")
   @Operation(summary = "Make a guess on a particular game with a particular letter")
   public ResponseEntity<GameSessionInfo> makeTry(
       @PathVariable String gameId, @Valid @RequestBody GameMakeTryRequest makeTryRequest) {
 
-    GameSession updateGameSession = gameService.makeTry(gameId, makeTryRequest);
-    return ResponseEntity.ok(gameInfoAssembler.toModel(updateGameSession));
+    try {
+      GameSession updateGameSession = gameService.makeTry(gameId, makeTryRequest);
+      return ResponseEntity.ok(gameInfoAssembler.toModel(updateGameSession));
+    } catch (InvalidGameSessionException e) {
+      throw new BadRequestException(e.getMessage());
+    }
   }
 
   @PostMapping

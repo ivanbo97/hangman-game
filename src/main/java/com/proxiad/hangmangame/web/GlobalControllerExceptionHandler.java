@@ -17,28 +17,28 @@ public class GlobalControllerExceptionHandler {
 
   private Log logger = LogFactory.getLog("ClientError");
 
-  @ExceptionHandler(InvalidGameSessionException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public String handleInvalidGameSessionException(
-      InvalidGameSessionException exception, Model model) {
-    return processError(exception, model);
-  }
-
-  @ExceptionHandler(ConstraintViolationException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public String handleInvalidUserInput(ConstraintViolationException exception, Model model) {
-    return processError(exception, model);
-  }
-
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<Void> handleMethodArgumentNotValidException(Exception e) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-  }
-
-  private String processError(Exception exception, Model model) {
-    String exceptionMessage = exception.getMessage();
-    logger.error(exceptionMessage);
-    model.addAttribute("errorMsg", exceptionMessage);
-    return "error";
-  }
+  //  @ExceptionHandler(InvalidGameSessionException.class)
+  //  @ResponseStatus(HttpStatus.NOT_FOUND)
+  //  public String handleInvalidGameSessionException(
+  //      InvalidGameSessionException exception, Model model) {
+  //    return processError(exception, model);
+  //  }
+  //
+  //  @ExceptionHandler(ConstraintViolationException.class)
+  //  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  //  public String handleInvalidUserInput(ConstraintViolationException exception, Model model) {
+  //    return processError(exception, model);
+  //  }
+  //
+  //  @ExceptionHandler(MethodArgumentNotValidException.class)
+  //  public ResponseEntity<Void> handleMethodArgumentNotValidException(Exception e) {
+  //    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+  //  }
+  //
+  //  private String processError(Exception exception, Model model) {
+  //    String exceptionMessage = exception.getMessage();
+  //    logger.error(exceptionMessage);
+  //    model.addAttribute("errorMsg", exceptionMessage);
+  //    return "error";
+  //  }
 }

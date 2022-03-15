@@ -17,7 +17,7 @@ const TopPlayersTable = ({ showTop10Ever }) => {
   };
 
   if (typeof playersList === "undefined") {
-    return null;
+    return <p>Loading...</p>;
   }
   return (
     <>
@@ -34,15 +34,12 @@ const TopPlayersTable = ({ showTop10Ever }) => {
           </thead>
           <tbody>
             {playersList.map((player, index) => {
-              return <TopPlayerTableRow key={index} player={player} />;
+              return <TopPlayerTableRow key={player.playerName} {...player} />;
             })}
           </tbody>
         </Table>
       </div>
       <div className="alternative-ranking-url">
-        {/* <button onClick={}>
-          Show Top 10 {displayTop10List ? "For Last Month" : "Ever"}
-        </button> */}
         <p style={urlStyle} onClick={handleShowRankingClick}>
           Show Top 10 {shouldDisplayTop10List ? "For Last Month" : "Ever"}
         </p>

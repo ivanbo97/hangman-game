@@ -1,9 +1,9 @@
-const TopPlayerTableRow = ({ player }) => {
+const TopPlayerTableRow = ({ playerName, totalWins }) => {
   return (
     <>
       <tr>
-        <td>{player.playerName}</td>
-        <td>{player.totalWins}</td>
+        <td>{playerName}</td>
+        <td>{totalWins}</td>
       </tr>
     </>
   );
