@@ -4,15 +4,20 @@ import GameGuess from "./GameGuess";
 import { getGameById } from "../api/GameApi";
 import { useParams } from "react-router-dom";
 import { Redirect } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const GamePlayPage = () => {
   const { gameId } = useParams();
   const [gameData, setGameData] = useState({});
 
   useEffect(() => {
-    getGameById(gameId).then((data) => {
-      setGameData(data);
-    });
+    getGameById(gameId)
+      .then((data) => {
+        setGameData(data);
+      })
+      .catch((e) => {
+        toast.error(e.message);
+      });
   }, [gameId]);
 
   if (gameData.lettersToGuessLeft === 0 || gameData.triesLeft === 0) {

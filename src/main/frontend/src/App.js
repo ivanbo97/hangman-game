@@ -11,6 +11,7 @@ function App() {
           <Route exact path="/" component={GameStartPage} />
           <Route path="/games/:gameId" component={GamePlayPage} />
           <Route path="/stats" component={StatisticFrom} />
+          <Route path="*" component={GameStartPage} />
         </Switch>
       </Router>
     </div>

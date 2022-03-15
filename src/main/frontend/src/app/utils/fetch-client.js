@@ -7,7 +7,8 @@ const fetchClientInternal = async (url, options = {}) => {
 
   if (!response.ok) {
     const body = await response.json();
-    throw new Error(body.message);
+    console.log(body.error_message);
+    throw new Error(body.error_message);
   }
 
   const contentLength = response.headers.get("content-length");
