@@ -2,17 +2,21 @@ import { Button, Form } from "react-bootstrap";
 import { useForm, useFormState } from "react-hook-form";
 import { createStatForGame } from "../api/StatisticApi";
 import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const StatisticFrom = ({ location }) => {
   const gameData = location.state;
-
   const { register, control, handleSubmit } = useForm();
   const { isSubmitting } = useFormState({ control });
   const history = useHistory();
 
+  if (typeof gameData === "undefined") {
+    return <Link to="/">There is no game data. Return to main page</Link>;
+  }
+
   const handleStatSubmit = async (userInput) => {
     createStatForGame({ ...userInput, gameId: gameData.gameId });
-    history.push("/");
+    history.replace("/");
   };
   return (
     <>
@@ -38,6 +42,7 @@ const StatisticFrom = ({ location }) => {
           Send name
         </Button>
       </Form>
+      <Link to="/">Back to main page</Link>
     </>
   );
 };

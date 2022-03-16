@@ -5,10 +5,12 @@ import { getGameById } from "../api/GameApi";
 import { useParams } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useHistory } from "react-router-dom";
 
 const GamePlayPage = () => {
   const { gameId } = useParams();
   const [gameData, setGameData] = useState({});
+  const history = useHistory();
 
   useEffect(() => {
     getGameById(gameId)
@@ -17,11 +19,12 @@ const GamePlayPage = () => {
       })
       .catch((e) => {
         toast.error(e.message);
+        history.push("/");
       });
-  }, [gameId]);
+  }, [gameId,history]);
 
   if (gameData.lettersToGuessLeft === 0 || gameData.triesLeft === 0) {
-    return <Redirect push to={{ pathname: "/stats", state: gameData }} />;
+    return <Redirect push={false} to={{ pathname: "/stats", state: gameData }} />;
   }
 
   return (

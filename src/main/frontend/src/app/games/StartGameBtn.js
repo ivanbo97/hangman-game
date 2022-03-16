@@ -20,7 +20,7 @@ const StartGameBtn = () => {
       <Button
         className="game-btn"
         disabled={isGameLoading}
-        onClick={ handleOnClick}
+        onClick={handleOnClick}
       >
         {isGameLoading ? "Game Loading..." : "New Game"}
       </Button>
