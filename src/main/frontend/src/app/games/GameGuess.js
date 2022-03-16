@@ -8,7 +8,9 @@ const GameGuess = ({ setGameData, gameId }) => {
     marginTop: "20px",
   };
 
-  const { register, control, handleSubmit, reset } = useForm();
+  const { register, control, handleSubmit, reset } = useForm({
+    defaultValues: { guessLetter: "" },
+  });
 
   const { isSubmitting } = useFormState({ control });
 
