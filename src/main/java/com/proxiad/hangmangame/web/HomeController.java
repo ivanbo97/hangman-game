@@ -8,7 +8,6 @@ public class HomeController {
 
   @GetMapping("/")
   public String index() {
-    System.out.println("Hello from homecontroller");
     return "forward:/index.html";
   }
 }
