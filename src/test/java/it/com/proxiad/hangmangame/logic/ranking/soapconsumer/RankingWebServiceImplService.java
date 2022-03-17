@@ -1,5 +1,5 @@
 
-package com.proxiad.hangmangame.soap.consumer;
+package it.com.proxiad.hangmangame.logic.ranking.soapconsumer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "RankingWebServiceImplService", targetNamespace = "http://ranking.logic.hangmangame.proxiad.com/", wsdlLocation = "file:/C:/JavaTraineeTasks/hangman-game/src/main/resources/wsdl/HangmanGameRankingWS.wsdl")
+@WebServiceClient(name = "RankingWebServiceImplService", targetNamespace = "http://ranking.logic.hangmangame.proxiad.com/", wsdlLocation = "file:/C:/JavaTraineeTasks/hangman-game/src/test/java/it/resources/HangmanGameRankingWS.wsdl")
 public class RankingWebServiceImplService
     extends Service
 {
@@ -30,7 +30,7 @@ public class RankingWebServiceImplService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/C:/JavaTraineeTasks/hangman-game/src/main/resources/wsdl/HangmanGameRankingWS.wsdl");
+            url = new URL("file:/C:/JavaTraineeTasks/hangman-game/src/test/java/it/resources/HangmanGameRankingWS.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

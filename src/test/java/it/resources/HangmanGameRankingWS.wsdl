@@ -111,7 +111,7 @@
 			binding="tns:RankingWebServiceImplServiceSoapBinding"
 			name="RankingWebServiceImplPort">
 			<soap:address
-				location="http://localhost:8080/hangman-game/soap-services/HangmanGameRankingWS" />
+				location="http://localhost:8080/soap-services/HangmanGameRankingWS" />
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>

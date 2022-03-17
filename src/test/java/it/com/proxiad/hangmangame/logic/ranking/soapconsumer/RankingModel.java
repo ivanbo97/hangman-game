@@ -1,5 +1,5 @@
 
-package com.proxiad.hangmangame.soap.consumer;
+package it.com.proxiad.hangmangame.logic.ranking.soapconsumer;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

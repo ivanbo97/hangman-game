@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.proxiad.hangmangame.soap.consumer.HangmanGameRankingWS;
-import com.proxiad.hangmangame.soap.consumer.RankingModel;
-import com.proxiad.hangmangame.soap.consumer.RankingWebServiceImplService;
+import it.com.proxiad.hangmangame.logic.ranking.soapconsumer.HangmanGameRankingWS;
+import it.com.proxiad.hangmangame.logic.ranking.soapconsumer.RankingModel;
+import it.com.proxiad.hangmangame.logic.ranking.soapconsumer.RankingWebServiceImplService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

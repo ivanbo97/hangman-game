@@ -1,2 +1,2 @@
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://ranking.logic.hangmangame.proxiad.com/")
-package com.proxiad.hangmangame.soap.consumer;
+package it.com.proxiad.hangmangame.logic.ranking.soapconsumer;
