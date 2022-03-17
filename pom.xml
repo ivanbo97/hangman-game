@@ -189,7 +189,8 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<!-- --> <plugin>
+			<!-- -->
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
@@ -201,26 +202,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
-		<!--  	<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>-->
-			
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -250,12 +232,13 @@
 						<goals>
 							<goal>wsimport</goal>
 						</goals>
+						  <phase>generate-test-sources</phase>
 					</execution>
 				</executions>
 				<configuration>
-					<wsdlDirectory>${basedir}/src/main/resources/wsdl/</wsdlDirectory>
-					<packageName>com.proxiad.hangmangame.soap.consumer</packageName>
-					<sourceDestDir>src/main/java</sourceDestDir>
+					<wsdlDirectory>${basedir}/src/test/java/it/resources</wsdlDirectory>
+					<packageName>it.com.proxiad.hangmangame.logic.ranking.soapconsumer</packageName>
+					<sourceDestDir>src/test/java</sourceDestDir>
 				</configuration>
 			</plugin>
 			<!-- end::jaxws-maven-plugin[] -->
