@@ -42,7 +42,7 @@ class GameSessionApiIT {
 
   private ResponseEntity<CollectionModel<GameSessionInfo>> ongoingGamesResponse;
 
-  private static final String GAME_API_BASE_URL = "http://localhost:8080/hangman-game/api/v1/games";
+  private static final String GAME_API_BASE_URL = "http://localhost:8080/api/v1/games";
 
   @PostConstruct
   public void init() {
