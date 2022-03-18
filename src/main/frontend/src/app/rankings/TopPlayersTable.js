@@ -7,6 +7,7 @@ import { useState } from "react";
 const TopPlayersTable = ({ showTop10Ever }) => {
   const [shouldDisplayTop10List, setDisplayTop10List] = useState(showTop10Ever);
   const { data: playersList } = useRanking(shouldDisplayTop10List);
+
   const urlStyle = {
     color: "blue",
     textDecoration: "underline",

@@ -1,13 +1,9 @@
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useForm, useFormState } from "react-hook-form";
 import { makeGuess } from "../api/GameApi";
+import GameBtn from "./GameBtn";
 
 const GameGuess = ({ setGameData, gameId }) => {
-  const submitGuessBtnStyle = {
-    fontSize: "15px",
-    marginTop: "20px",
-  };
-
   const { register, control, handleSubmit, reset } = useForm({
     defaultValues: { guessLetter: "" },
   });
@@ -33,14 +29,12 @@ const GameGuess = ({ setGameData, gameId }) => {
           title="Enter a valid letter. Numbers, special characters or empty strings are not allowed."
           pattern="[a-z]{1}"
         />
-        <Button
-          className="game-btn "
-          type="submit"
-          style={submitGuessBtnStyle}
-          disabled={isSubmitting}
-        >
-          Submit!
-        </Button>
+        <GameBtn
+          size={"small"}
+          btnTextInit="Submit!"
+          btnTextClicked="......."
+          btnDisabled={isSubmitting}
+        ></GameBtn>
       </Form>
     </>
   );

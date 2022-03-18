@@ -15,7 +15,15 @@
   box-shadow: 0 0.2em gray;
   cursor: pointer;
   font-family: "Press Start 2p";
+}
+
+.game-btn--large {
   font-size: 60px;
+}
+
+.game-btn--small {
+  font-size: 15px;
+  padding: 2px 2px;
 }
 
 .game-btn:active {

@@ -7,7 +7,5 @@ export function useRanking(shouldDisplayTop10EverList) {
   const apiUrl = shouldDisplayTop10EverList
     ? top10PlayersEverUrl
     : top10PlayersLastMonthUrl;
-  return useSWR(apiUrl, {
-    refreshInterval: 3 * 60 * 1000,
-  });
+  return useSWR(apiUrl);
 }

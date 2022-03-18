@@ -7,7 +7,6 @@ const fetchClientInternal = async (url, options = {}) => {
 
   if (!response.ok) {
     const body = await response.json();
-    console.log(body.error_message);
     throw new Error(body.error_message);
   }
 
