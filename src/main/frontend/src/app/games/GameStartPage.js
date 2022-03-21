@@ -22,12 +22,10 @@ const GameStartPage = () => {
       </Dropdown.Item>
     ));
 
-  const startGameOnClick = () => {
+  const startGameOnClick = async () => {
     setGameLoading(true);
-    startNewGame().then((gameInfo) => {
-      setGameLoading(false);
-      history.push(`/games/${gameInfo.gameId}`, gameInfo);
-    });
+    const newGame = await startNewGame();
+    history.push(`/games/${newGame.gameId}`, newGame);
   };
 
   console.log(availableLangs);
