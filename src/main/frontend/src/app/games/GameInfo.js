@@ -1,11 +1,24 @@
+import { FormattedMessage } from "react-intl";
+
 const GameInfo = ({ gameData }) => {
   return (
     <>
-      <h1>Current game session details</h1>
+      <h1>
+        <FormattedMessage id="gameInfo.title" />
+      </h1>
       <div className="game-info">
-        <p>{`Current word: ${gameData.puzzledWord}`}</p>
-        <p>{`Tries left: ${gameData.triesLeft}`}</p>
-        <p>{`Number of letters to guess: ${gameData.lettersToGuessLeft}`}</p>
+        <p>
+          <FormattedMessage id="gameInfo.word" />
+          {gameData.puzzledWord}
+        </p>
+        <p>
+          <FormattedMessage id="gameInfo.tries" />
+          {gameData.triesLeft}
+        </p>
+        <p>
+          <FormattedMessage id="gameInfo.lettersToGuess" />
+          {gameData.lettersToGuessLeft}
+        </p>
       </div>
     </>
   );

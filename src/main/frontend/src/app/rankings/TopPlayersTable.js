@@ -3,6 +3,7 @@ import Table from "react-bootstrap/Table";
 import "./TopPlayersTable.css";
 import TopPlayerTableRow from "./TopPlayerTableRow";
 import { useState } from "react";
+import { FormattedMessage } from "react-intl";
 
 const TopPlayersTable = ({ showTop10Ever }) => {
   const [shouldDisplayTop10List, setDisplayTop10List] = useState(showTop10Ever);
@@ -24,17 +25,26 @@ const TopPlayersTable = ({ showTop10Ever }) => {
     <>
       <div className="ranking-table">
         <h3 className="ranking-table-name">
-          Top 10 Players {shouldDisplayTop10List ? "Ever" : "For Last Month"}
+          <FormattedMessage id="topPlayersTable.name" />
+          {shouldDisplayTop10List ? (
+            <FormattedMessage id="topPlayersTable.name.ever" />
+          ) : (
+            <FormattedMessage id="topPlayersTable.name.lastmonth" />
+          )}
         </h3>
         <Table>
           <thead>
             <tr>
-              <th>Player Name</th>
-              <th>Total Wins</th>
+              <th>
+                <FormattedMessage id="topPlayersTable.th.playerName" />
+              </th>
+              <th>
+                <FormattedMessage id="topPlayersTable.th.totalWins" />
+              </th>
             </tr>
           </thead>
           <tbody>
-            {playersList.map((player, index) => {
+            {playersList.map((player) => {
               return <TopPlayerTableRow key={player.playerName} {...player} />;
             })}
           </tbody>
@@ -42,7 +52,12 @@ const TopPlayersTable = ({ showTop10Ever }) => {
       </div>
       <div className="alternative-ranking-url">
         <p style={urlStyle} onClick={handleShowRankingClick}>
-          Show Top 10 {shouldDisplayTop10List ? "For Last Month" : "Ever"}
+          <FormattedMessage id="topPlayersTable.rankingType" />
+          {shouldDisplayTop10List ? (
+            <FormattedMessage id="topPlayersTable.name.lastmonth" />
+          ) : (
+            <FormattedMessage id="topPlayersTable.name.ever" />
+          )}
         </p>
       </div>
     </>

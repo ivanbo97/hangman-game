@@ -1,5 +1,8 @@
 import { Toaster } from "react-hot-toast";
 import { SWRConfig } from "swr";
+import { IntlProvider } from "react-intl";
+
+import useLocale, { LocaleProvider } from "./i18n/LocaleProvider";
 
 export const apiFetch = async (url, init) => {
   const headers = new Headers();
@@ -27,24 +30,44 @@ export const apiFetch = async (url, init) => {
 
 export default function AppConfig({ children }) {
   return (
-    <SWRConfig
-      value={{
-        fetcher: apiFetch,
-      }}
-    >
-      <Toaster
-        gutter={8}
-        toastOptions={{
-          duration: 8000,
-          success: {
-            duration: 3000,
-          },
-          style: {
-            maxWidth: 1000,
-          },
+    <LocaleProvider>
+      <LocalizedConfig>
+        <SWRConfig
+          value={{
+            fetcher: apiFetch,
+          }}
+        >
+          <Toaster
+            gutter={8}
+            toastOptions={{
+              duration: 8000,
+              success: {
+                duration: 3000,
+              },
+              style: {
+                maxWidth: 1000,
+              },
+            }}
+          />
+          {children}
+        </SWRConfig>
+      </LocalizedConfig>
+    </LocaleProvider>
+  );
+}
+
+function LocalizedConfig({ children }) {
+  const { locale, messages } = useLocale();
+
+  return (
+    <IntlProvider {...{ defaultLocale: "en", locale, messages }}>
+      <SWRConfig
+        value={{
+          fetcher: apiFetch,
         }}
-      />
-      {children}
-    </SWRConfig>
+      >
+        {children}
+      </SWRConfig>
+    </IntlProvider>
   );
 }

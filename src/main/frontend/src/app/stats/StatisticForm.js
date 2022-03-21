@@ -7,6 +7,7 @@ import { StatInputStyle } from "./StatInputStyle";
 
 import GameBtn from "../games/GameBtn";
 import { useRanking } from "../api/RankingApi";
+import { FormattedMessage } from "react-intl";
 
 const StatisticFrom = ({ location }) => {
   const gameData = location.state;
@@ -21,7 +22,7 @@ const StatisticFrom = ({ location }) => {
   if (typeof gameData === "undefined") {
     return <Link to="/">There is no game data. Return to main page</Link>;
   }
-  console.log(playersList);
+
   const isWinner = gameData.lettersToGuessLeft === 0;
   const handleStatSubmit = (userInput) => {
     createStatForGame({ ...userInput, gameId: gameData.gameId });
@@ -40,17 +41,18 @@ const StatisticFrom = ({ location }) => {
 
   return (
     <>
-      {isWinner ? (
-        <h3>
-          Well Done! You have successfully guessed the word [
-          {gameData.wordToGuess}]
-        </h3>
-      ) : (
-        <h3>No more tries left! The word was [{gameData.wordToGuess}]</h3>
-      )}
-      <h3>You can enter name for keeping statistics:</h3>
+      <h3>
+        {isWinner ? (
+          <FormattedMessage id="statisticForm.titleWin" />
+        ) : (
+          <FormattedMessage id="statisticForm.titleLoss" />
+        )}
+        {gameData.wordToGuess}
+      </h3>
+      <h3>
+        <FormattedMessage id="statisticForm.nameEnterMsg" />
+      </h3>
       <Form onSubmit={handleSubmit(handleStatSubmit)}>
-        {/* Should be refactored with FormattedMessage intl compliance */}
         <Form.Control
           style={StatInputStyle}
           className="stat-input"
@@ -58,7 +60,6 @@ const StatisticFrom = ({ location }) => {
           required
           name="gamerName"
           type="text"
-          placeholder="Enter your name..."
         />
 
         <GameBtn
@@ -66,9 +67,13 @@ const StatisticFrom = ({ location }) => {
           btnTextInit=" Send name"
           btnTextClicked="......."
           btnDisabled={isSubmitting}
-        ></GameBtn>
+        >
+          <FormattedMessage id="statisticForm.btn" />
+        </GameBtn>
       </Form>
-      <Link to="/">Back to main page</Link>
+      <Link to="/">
+        <FormattedMessage id="statisticForm.mainPageLink" />
+      </Link>
     </>
   );
 };

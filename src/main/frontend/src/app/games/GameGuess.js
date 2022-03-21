@@ -1,5 +1,6 @@
 import { Form } from "react-bootstrap";
 import { useForm, useFormState } from "react-hook-form";
+import { FormattedMessage } from "react-intl";
 import { makeGuess } from "../api/GameApi";
 import GameBtn from "./GameBtn";
 
@@ -19,22 +20,25 @@ const GameGuess = ({ setGameData, gameId }) => {
     <>
       <Form onSubmit={handleSubmit(handleLetterSubmit)}>
         {/* Should be refactored with FormattedMessage intl compliance */}
-        <Form.Label>Make your guess: </Form.Label>
+        <Form.Label>
+          <FormattedMessage id="gameGuess.labelName" />
+        </Form.Label>
         <Form.Control
           {...register("guessLetter")}
           required
           name="guessLetter"
           type="text"
-          placeholder="Guess letter"
           title="Enter a valid letter. Numbers, special characters or empty strings are not allowed."
           pattern="[a-z]{1}"
         />
         <GameBtn
           size={"small"}
-          btnTextInit="Submit!"
-          btnTextClicked="......."
+          // btnTextInit={<FormattedMessage id="gameGuess.btn.initTxt" />}
+          // btnTextClicked={<FormattedMessage id="gameGuess.btn.onClickTxt" />}
           btnDisabled={isSubmitting}
-        ></GameBtn>
+        >
+          <FormattedMessage id="gameGuess.btn.initTxt" />
+        </GameBtn>
       </Form>
     </>
   );

@@ -1,0 +1,22 @@
+{
+  "gameStartPage.gameBtn.initTxt": "New Game",
+  "gameStartPage.gameBtn.onClickTxt": "Loading...",
+  "topPlayersTable.name": "Top 10 Players",
+  "topPlayersTable.name.ever": " Ever",
+  "topPlayersTable.name.lastmonth": "For Last Month",
+  "topPlayersTable.th.playerName": "Player Name",
+  "topPlayersTable.th.totalWins": "Total Wins",
+  "topPlayersTable.rankingType": "Top 10 ",
+  "gameInfo.title": "Current game session details",
+  "gameInfo.word": "Current word:",
+  "gameInfo.tries": "Tries left:",
+  "gameInfo.lettersToGuess": "Number of letters to guess:",
+  "gameGuess.labelName": "Make your guess: ",
+  "gameGuess.inputPlaceholder": "Eneter a letter...",
+  "gameGuess.btn.initTxt": "Submit!",
+  "statisticForm.btn": "Send name",
+  "statisticForm.titleWin": "Well Done! You have successfully guessed the word ",
+  "statisticForm.titleLoss": "No more tries left! The word was ",
+  "statisticForm.nameEnterMsg": "You can enter name for keeping statistics: ",
+  "statisticForm.mainPageLink":"Back to main page"
+}

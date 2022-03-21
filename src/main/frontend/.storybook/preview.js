@@ -1,3 +1,11 @@
+import { IntlProvider } from "react-intl";
+
+const intl = (Story) => (
+  <IntlProvider defaultLocale="en">
+    <Story />
+  </IntlProvider>
+);
+
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
@@ -6,4 +14,6 @@ export const parameters = {
       date: /Date$/,
     },
   },
-}
+};
+
+export const decorators = [intl];

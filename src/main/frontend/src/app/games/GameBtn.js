@@ -8,6 +8,7 @@ const GameBtn = ({
   btnTextClicked,
   onClickHandler,
   btnDisabled,
+  children,
 }) => {
   return (
     <>
@@ -17,7 +18,7 @@ const GameBtn = ({
         type="submit"
         className={["game-btn", `game-btn--${size}`].join(" ")}
       >
-        {btnDisabled ? btnTextClicked : btnTextInit}
+        {children}
       </Button>
     </>
   );
