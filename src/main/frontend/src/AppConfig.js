@@ -32,11 +32,6 @@ export default function AppConfig({ children }) {
   return (
     <LocaleProvider>
       <LocalizedConfig>
-        <SWRConfig
-          value={{
-            fetcher: apiFetch,
-          }}
-        >
           <Toaster
             gutter={8}
             toastOptions={{
@@ -50,7 +45,6 @@ export default function AppConfig({ children }) {
             }}
           />
           {children}
-        </SWRConfig>
       </LocalizedConfig>
     </LocaleProvider>
   );
