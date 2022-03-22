@@ -5,9 +5,9 @@ import TopPlayerTableRow from "./TopPlayerTableRow";
 import { useState } from "react";
 import { FormattedMessage } from "react-intl";
 
-const TopPlayersTable = ({ showTop10Ever }) => {
+const TopPlayersTable =  ({ showTop10Ever }) => {
   const [shouldDisplayTop10List, setDisplayTop10List] = useState(showTop10Ever);
-  const { data: playersList } = useRanking(shouldDisplayTop10List);
+  const { data: playersList } =  useRanking(shouldDisplayTop10List);
 
   const urlStyle = {
     color: "blue",

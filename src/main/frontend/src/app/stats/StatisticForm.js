@@ -24,6 +24,7 @@ const StatisticFrom = ({ location }) => {
   }
 
   const isWinner = gameData.lettersToGuessLeft === 0;
+
   const handleStatSubmit = (userInput) => {
     createStatForGame({ ...userInput, gameId: gameData.gameId });
 
@@ -61,7 +62,6 @@ const StatisticFrom = ({ location }) => {
           name="gamerName"
           type="text"
         />
-
         <GameBtn
           size={"small"}
           btnTextInit=" Send name"

@@ -21,16 +21,18 @@ const GamePlayPage = () => {
         toast.error(e.message);
         history.push("/");
       });
-  }, [gameId,history]);
+  }, [gameId, history]);
 
   if (gameData.lettersToGuessLeft === 0 || gameData.triesLeft === 0) {
-    return <Redirect push={false} to={{ pathname: "/stats", state: gameData }} />;
+    return (
+      <Redirect push={false} to={{ pathname: "/stats", state: gameData }} />
+    );
   }
 
   return (
     <>
       {gameData.gameId ? (
-        <div>
+        <div className="game-main-content">
           <GameInfo gameData={gameData} />
           <GameGuess setGameData={setGameData} gameId={gameData.gameId} />
         </div>

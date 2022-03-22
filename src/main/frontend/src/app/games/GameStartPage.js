@@ -26,10 +26,9 @@ const GameStartPage = () => {
   const startGameOnClick = async () => {
     setGameLoading(true);
     const newGame = await startNewGame();
-    history.push(`/games/${newGame.gameId}`, newGame);
+    history.push(`/games/${newGame.gameId}`);
   };
 
-  console.log(availableLangs);
   return (
     <>
       <div className="lang-dropdown">

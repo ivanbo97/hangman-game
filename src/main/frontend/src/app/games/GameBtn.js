@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 
 const GameBtn = ({
   size,
-  btnTextInit,
-  btnTextClicked,
   onClickHandler,
   btnDisabled,
   children,
@@ -25,8 +23,6 @@ const GameBtn = ({
 };
 
 GameBtn.propTypes = {
-  btnTextInit: PropTypes.string,
-  btnTextClicked: PropTypes.string,
   onClickHandler: PropTypes.func,
   btnDisabled: PropTypes.bool,
   size: PropTypes.oneOf(["large", "small"]),

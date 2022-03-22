@@ -19,7 +19,6 @@ const GameGuess = ({ setGameData, gameId }) => {
   return (
     <>
       <Form onSubmit={handleSubmit(handleLetterSubmit)}>
-        {/* Should be refactored with FormattedMessage intl compliance */}
         <Form.Label>
           <FormattedMessage id="gameGuess.labelName" />
         </Form.Label>
@@ -31,12 +30,7 @@ const GameGuess = ({ setGameData, gameId }) => {
           title="Enter a valid letter. Numbers, special characters or empty strings are not allowed."
           pattern="[a-z]{1}"
         />
-        <GameBtn
-          size={"small"}
-          // btnTextInit={<FormattedMessage id="gameGuess.btn.initTxt" />}
-          // btnTextClicked={<FormattedMessage id="gameGuess.btn.onClickTxt" />}
-          btnDisabled={isSubmitting}
-        >
+        <GameBtn size={"small"} btnDisabled={isSubmitting}>
           <FormattedMessage id="gameGuess.btn.initTxt" />
         </GameBtn>
       </Form>
