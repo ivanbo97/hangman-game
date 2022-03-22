@@ -8,6 +8,7 @@ import { Dropdown, NavItem, NavLink } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { dbLang } from "../icons/icons";
 import { FormattedMessage } from "react-intl";
+import "./GameStartPage.css";
 
 const GameStartPage = () => {
   const [isGameLoading, setGameLoading] = useState(false);
@@ -31,13 +32,16 @@ const GameStartPage = () => {
   console.log(availableLangs);
   return (
     <>
-      <Dropdown as={NavItem}>
-        <Dropdown.Toggle as={NavLink}>
-          <FontAwesomeIcon icon={dbLang} />
-        </Dropdown.Toggle>
-        <Dropdown.Menu align={{ lg: "right" }}>{availableLangs}</Dropdown.Menu>
-      </Dropdown>
-
+      <div className="lang-dropdown">
+        <Dropdown as={NavItem}>
+          <Dropdown.Toggle as={NavLink}>
+            <FontAwesomeIcon icon={dbLang} />
+          </Dropdown.Toggle>
+          <Dropdown.Menu align={{ lg: "right" }}>
+            {availableLangs}
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
       <GameBtn
         size="large"
         btnTextInit="New Game"
