@@ -18,7 +18,6 @@ const GamePlayPage = () => {
         setGameData(data);
       })
       .catch((e) => {
-        //
         toast.error(e.message);
         history.push("/");
       });
