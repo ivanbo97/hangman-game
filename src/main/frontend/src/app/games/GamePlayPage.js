@@ -21,7 +21,7 @@ const GamePlayPage = () => {
         toast.error(e.message);
         history.push("/");
       });
-  }, [gameId, history]);
+  });
 
   if (gameData.lettersToGuessLeft === 0 || gameData.triesLeft === 0) {
     return (
