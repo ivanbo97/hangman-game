@@ -1,0 +1,21 @@
+{
+  "gameStartPage.gameBtn.initTxt": "Започни игра",
+  "gameStartPage.gameBtn.onClickTxt": "Играта стартира...",
+  "topPlayersTable.name": "Топ 10 Играчи",
+  "topPlayersTable.name.ever": " За Всички Времена",
+  "topPlayersTable.name.lastmonth": " За Последния Месец",
+  "topPlayersTable.th.playerName": "Име на играч",
+  "topPlayersTable.th.totalWins": "Общо победи",
+  "topPlayersTable.rankingType": "Топ 10 ",
+  "gameInfo.title": "Състояние на текущата игра",
+  "gameInfo.word": "Текуща дума: ",
+  "gameInfo.tries": "Оставащи опити: ",
+  "gameInfo.lettersToGuess": "Оставащи букви за разпознаване: ",
+  "gameGuess.labelName": "Предположи буква: ",
+  "gameGuess.btn.initTxt": "Изпрати предположение!",
+  "statisticForm.btn": "Изпрати статистика",
+  "statisticForm.titleWin": "Поздравления! Разпознахте скритата дума ",
+  "statisticForm.titleLoss": "Опитите Ви свършиха. Скритата дума беше ",
+  "statisticForm.nameEnterMsg": "Може да въведете името си за запазване на статистика:",
+  "statisticForm.mainPageLink": "Обратно към началана страница"
+}

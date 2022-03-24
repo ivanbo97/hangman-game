@@ -10,9 +10,6 @@ spring:
     view:
       prefix: /WEB-INF/view/
       suffix: .jsp
-server:
-  servlet:
-    context-path: /hangman-game
 cxf:
   path: /soap-services 
 ...

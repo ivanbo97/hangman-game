@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -54,7 +55,7 @@ public class GameSessionApi {
     return gameInfoAssembler.toModel(game);
   }
 
-  @PostMapping(value = "/{gameId}", produces = "application/hal+json")
+  @PutMapping(value = "/{gameId}", produces = "application/hal+json")
   @Operation(summary = "Make a guess on a particular game with a particular letter")
   public ResponseEntity<GameSessionInfo> makeTry(
       @PathVariable String gameId, @Valid @RequestBody GameMakeTryRequest makeTryRequest) {

@@ -1,0 +1,17 @@
+table {
+  border-spacing: 0 15px;
+}
+
+td,
+th {
+  text-align: center;
+  padding: 0 35px;
+}
+
+.ranking-table {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}

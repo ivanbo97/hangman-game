@@ -42,7 +42,7 @@ class GameSessionApiIT {
 
   private ResponseEntity<CollectionModel<GameSessionInfo>> ongoingGamesResponse;
 
-  private static final String GAME_API_BASE_URL = "http://localhost:8080/hangman-game/api/v1/games";
+  private static final String GAME_API_BASE_URL = "http://localhost:8080/api/v1/games";
 
   @PostConstruct
   public void init() {
@@ -125,7 +125,7 @@ class GameSessionApiIT {
         given()
             .header("Content-Type", ContentType.JSON)
             .body(objectMapper.writeValueAsString(gameTry))
-            .post(GAME_API_BASE_URL + "/" + randomOngoingGameId);
+            .put(GAME_API_BASE_URL + "/" + randomOngoingGameId);
 
     String responseBody = response.getBody().asString();
     assertThat(responseBody).isNotBlank();
