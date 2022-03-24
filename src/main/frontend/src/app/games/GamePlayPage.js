@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import GameInfo from "./GameInfo";
 import GameGuess from "./GameGuess";
 import { getGameById } from "../api/GameApi";
-import { useParams } from "react-router-dom";
-import { Redirect } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
 
