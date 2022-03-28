@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.proxiad.hangmangame.logic.game.GameSessionService;
+import com.proxiad.hangmangame.logic.security.HangmanSecurityHelper;
 import com.proxiad.hangmangame.model.game.GameMakeTryRequest;
 import com.proxiad.hangmangame.model.game.GameSession;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +33,18 @@ public class GameSessionApi {
   private final GameSessionService gameService;
 
   private final GameSessionInfoAssembler gameInfoAssembler;
+
+  @GetMapping("/test")
+  public void test() {
+    System.out.println("Loging xpert user...");
+    HangmanSecurityHelper.loginUser("xpert", "123456");
+  }
+
+  @GetMapping("/test2")
+  public void test2() {
+    boolean isAuthc = HangmanSecurityHelper.isAuthenticated();
+    System.out.println("User is authenticated: " + isAuthc);
+  }
 
   @GetMapping(
       value = "/ongoing",

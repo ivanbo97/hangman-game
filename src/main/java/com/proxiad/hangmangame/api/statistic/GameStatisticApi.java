@@ -2,7 +2,10 @@ package com.proxiad.hangmangame.api.statistic;
 
 import java.util.Optional;
 import javax.validation.Valid;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +15,7 @@ import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
 import com.proxiad.hangmangame.logic.ranking.RankingService;
 import com.proxiad.hangmangame.logic.statistic.GameStatisticService;
 import com.proxiad.hangmangame.model.game.GameSession;
+import com.proxiad.hangmangame.model.security.Permissions;
 import com.proxiad.hangmangame.model.statistic.GameStatRequest;
 import com.proxiad.hangmangame.model.statistic.GameStatistic;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,10 +30,14 @@ public class GameStatisticApi {
   private final RankingService rankingService;
   private final GameSessionService gameSessionService;
 
-  @PostMapping()
+  @PostMapping
+  // @RequiresPermissions({Permissions.STAT_CREATE})
+  @RequiresAuthentication
   @Operation(summary = "Attach statistic with gamer name to specific game")
   public ResponseEntity<Void> generateStatisticForGame(
       @Valid @RequestBody GameStatRequest statRequest) {
+
+    System.out.println("In generateStatisticForGame method");
 
     String gameId = statRequest.getGameId();
     GameSession retrievedSession = gameSessionService.getGameSessionById(gameId);
