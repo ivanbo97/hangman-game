@@ -1,10 +1,12 @@
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { useForm, useFormState } from "react-hook-form";
 import { registerUser } from "./api/UserApi";
-import "bootstrap/dist/css/bootstrap.min.css";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
 import { createStatForGame } from "./api/StatisticApi";
+import { signUpUser } from "./api/SecurityApi";
+import "./RegisterForm.css";
+import "./games/GameBtn.css";
 
 const RegisterForm = ({ location }) => {
   const { register, control, handleSubmit, reset, getValues } = useForm();
@@ -13,37 +15,41 @@ const RegisterForm = ({ location }) => {
   const gameId = location.state;
 
   const handleRegistrationSubmit = async (userInput) => {
-    registerUser(userInput)
-      .then(async () => {
-        console.log("GamerName " + userInput.username);
-        console.log("GameId " + gameId);
+    try {
+      await registerUser(userInput);
+      await signUpUser({
+        username: userInput.username,
+        password: userInput.password,
+      });
+      if (gameId) {
         await createStatForGame({
           gamerName: userInput.username,
           gameId: gameId,
         });
-        toast.success(
-          "You have successfully registered. Now you are logged in!!!"
-        );
-        history.push("/");
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        reset({ ...getValues(), username: "", password: "" });
-      });
+      }
+      toast.success("Registration success! Now you are logged in!");
+      history.push("/");
+    } catch (error) {
+      toast.error(error.message);
+      reset({ ...getValues(), username: "", password: "" });
+    }
   };
   return (
-    <>
+    <div className="reg-form-area">
       <Container fluid>
         <Row className="vh-100 justify-content-center align-items-center">
           <Col md="5">
             <Card>
               <Card.Header>
-                <strong>Plase, fill out the fields bellow</strong>
+                <strong>Please, fill out the registration form</strong>
               </Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit(handleRegistrationSubmit)}>
-                  <Form.Group controlId="formBasicFName">
-                    <Form.Label>First Name</Form.Label>
+                  <Form.Group
+                    controlId="formBasicFName"
+                    className="reg-form-input"
+                  >
+                    <Form.Label>First Name </Form.Label>
                     <Form.Control
                       {...register("firstName")}
                       type="text"
@@ -51,8 +57,11 @@ const RegisterForm = ({ location }) => {
                       placeholder="..."
                     />
                   </Form.Group>
-                  <Form.Group controlId="formBasicLName">
-                    <Form.Label>Last Name</Form.Label>
+                  <Form.Group
+                    controlId="formBasicLName"
+                    className="reg-form-input"
+                  >
+                    <Form.Label>Last Name </Form.Label>
                     <Form.Control
                       {...register("lastName")}
                       type="text"
@@ -60,8 +69,11 @@ const RegisterForm = ({ location }) => {
                       placeholder="..."
                     />
                   </Form.Group>
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Username</Form.Label>
+                  <Form.Group
+                    controlId="formBasicUsername"
+                    className="reg-form-input"
+                  >
+                    <Form.Label>Username </Form.Label>
                     <Form.Control
                       {...register("username")}
                       type="text"
@@ -69,8 +81,11 @@ const RegisterForm = ({ location }) => {
                       placeholder="..."
                     />
                   </Form.Group>
-                  <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
+                  <Form.Group
+                    controlId="formBasicPassword"
+                    className="reg-form-input"
+                  >
+                    <Form.Label>Password </Form.Label>
                     <Form.Control
                       {...register("password")}
                       type="password"
@@ -80,6 +95,7 @@ const RegisterForm = ({ location }) => {
                   </Form.Group>
                   <br />
                   <Button
+                    className="game-btn  game-btn--small"
                     disabled={isSubmitting}
                     variant="primary"
                     type="submit"
@@ -92,7 +108,7 @@ const RegisterForm = ({ location }) => {
           </Col>
         </Row>
       </Container>
-    </>
+    </div>
   );
 };
 

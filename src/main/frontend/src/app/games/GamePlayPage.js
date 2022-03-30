@@ -1,22 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import GameInfo from "./GameInfo";
 import GameGuess from "./GameGuess";
 import { getGameById } from "../api/GameApi";
-import { useParams, Redirect } from "react-router-dom";
+import { useParams, Redirect, useHistory } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useHistory } from "react-router-dom";
 import { useCurrentUser } from "../api/UserApi";
 import { createStatForGame } from "../api/StatisticApi";
 import { useStateIfMounted } from "use-state-if-mounted";
+import { useRanking } from "../api/RankingApi";
+import { mutateRanking } from "../rankings/ranking-mutator";
 
 const GamePlayPage = () => {
+  
   const { gameId } = useParams();
   const [gameData, setGameData] = useStateIfMounted({});
   const history = useHistory();
   const { data: currentUser } = useCurrentUser();
-  console.log(currentUser);
   const isGamerRegistered = currentUser?.id;
-  console.log("Rendering GamePlay page...");
+  const showTop10EverList = true;
+  const { data: playersList, mutate } = useRanking(showTop10EverList);
+
   useEffect(() => {
     getGameById(gameId)
       .then((data) => {
@@ -31,16 +34,19 @@ const GamePlayPage = () => {
   const isGameFinished =
     gameData.lettersToGuessLeft === 0 || gameData.triesLeft === 0;
 
-  const sendStat = async () => {
-    console.log("cuurent user on finish : " + currentUser.username);
-    await createStatForGame({
-      gamerName: currentUser.username,
+  if (isGameFinished && isGamerRegistered) {
+    const playerName = currentUser.username;
+    createStatForGame({
+      gamerName: playerName,
       gameId: gameId,
     });
-  };
-
-  if (isGameFinished && isGamerRegistered) {
-    sendStat();
+    mutate(
+      mutateRanking({
+        playersList: playersList,
+        username: playerName,
+        lettersToGuessLeft: gameData.lettersToGuessLeft,
+      })
+    );
     return <Redirect to={{ pathname: "/" }} />;
   }
 

@@ -2,12 +2,14 @@ package com.proxiad.hangmangame.api;
 
 import java.util.Optional;
 import javax.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.proxiad.hangmangame.api.user.UserInfo;
 import com.proxiad.hangmangame.api.user.UserInfoAssembler;
@@ -26,10 +28,9 @@ public class UserApi {
   private final UserInfoAssembler userInfoAssembler;
 
   @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
   public void registerUser(@Valid @RequestBody UserRegisterRequest newUser) {
     userService.save(newUser);
-    // Log user in system
-    HangmanSecurityHelper.loginUser(newUser.getUsername(), newUser.getPassword());
   }
 
   @GetMapping("/current")

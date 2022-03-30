@@ -4,7 +4,6 @@ import GamePlayPage from "./app/games/GamePlayPage";
 import GameStartPage from "./app/games/GameStartPage";
 import RegisterForm from "./app/RegisterForm";
 import SignUpForm from "./app/SignUpForm";
-import StatisticFrom from "./app/stats/StatisticForm";
 function App() {
   return (
     <div className="App">
@@ -12,7 +11,6 @@ function App() {
         <Switch>
           <Route exact path="/" component={GameStartPage} />
           <Route path="/games/:gameId" component={GamePlayPage} />
-          <Route path="/stats" component={StatisticFrom} />
           <Route path="/register" component={RegisterForm} />
           <Route path="/signup" component={SignUpForm} />
           <Route path="*" component={GameStartPage} />

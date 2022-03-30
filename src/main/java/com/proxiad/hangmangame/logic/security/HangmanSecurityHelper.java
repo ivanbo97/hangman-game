@@ -20,15 +20,16 @@ public final class HangmanSecurityHelper {
   }
 
   public static String fetchPrinciple() {
+
     return HangmanSecurityHelper.isAuthenticated()
         ? SecurityUtils.getSubject().getPrincipal().toString()
         : "no-principal";
   }
 
   public static void loginUser(String username, String password) {
+
     UsernamePasswordToken token = new UsernamePasswordToken(username, password);
     Subject currentUser = SecurityUtils.getSubject();
     currentUser.login(token);
-    // token.setRememberMe(true);
   }
 }
