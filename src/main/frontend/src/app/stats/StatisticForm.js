@@ -19,7 +19,7 @@ const StatisticFrom = ({ location }) => {
   const history = useHistory();
   const sortDescByWins = (p1, p2) => p2.totalWins - p1.totalWins;
 
-  if (typeof gameData === "undefined") {
+  if (!gameData) {
     return <Link to="/">There is no game data. Return to main page</Link>;
   }
 

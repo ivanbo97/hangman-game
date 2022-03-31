@@ -1,6 +1,7 @@
 package com.proxiad.hangmangame.logic.statistic;
 
 import java.util.Optional;
+import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.model.statistic.GameStatistic;
@@ -8,6 +9,7 @@ import com.proxiad.hangmangame.model.statistic.GameStatisticRepository;
 import lombok.AllArgsConstructor;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class GameStatisticServiceImpl implements GameStatisticService {
 

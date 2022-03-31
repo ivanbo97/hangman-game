@@ -17,3 +17,5 @@ Every new topic of the learning path can be found on separate branch of this rep
 * **Web Services - SOAP (xml, wsdl files, messages, JAX-WS), REST (json, PayPal standards, TolerantReader pattern, HATEOAS, OpenAPI), List of tools used : ApacheCXF, Jackson, Swagger-UI, WebClient(for testing), RestAssured(for testing) -> web-services branch**
 
 * **JavaScript, ReactJS, react hooks (useEffect,useState, custom), create-react-app, SWR, react-bootstrap,react-router, react-intl-18n-> reactjs-intro branch**
+
+* **Apache Shiro Security-> security-intro branch**

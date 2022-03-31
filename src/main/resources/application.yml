@@ -1,4 +1,4 @@
----
+
 spring:
   datasource:
     username: ivanb
@@ -12,4 +12,5 @@ spring:
       suffix: .jsp
 cxf:
   path: /soap-services 
-...
+shiro:
+  loginUrl: /signup

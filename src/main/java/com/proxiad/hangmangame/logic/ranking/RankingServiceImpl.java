@@ -1,7 +1,7 @@
 package com.proxiad.hangmangame.logic.ranking;
 
 import org.springframework.stereotype.Service;
-import com.proxiad.hangmangame.logic.game.GameSessionServiceImpl;
+
 import com.proxiad.hangmangame.logic.game.InvalidGameSessionException;
 import com.proxiad.hangmangame.model.game.GameSession;
 import com.proxiad.hangmangame.model.game.GameSessionDao;
@@ -25,6 +25,7 @@ import static com.proxiad.hangmangame.model.statistic.GameStatisticSpecification
 import static com.proxiad.hangmangame.web.ControllerConstants.INVALID_GAME_MSG;
 
 @Service
+@Transactional
 @AllArgsConstructor
 @Slf4j
 public class RankingServiceImpl implements RankingService {
@@ -35,7 +36,6 @@ public class RankingServiceImpl implements RankingService {
 
   private final RankingRepository rankingRepository;
 
-  @Transactional
   @Override
   public void createRankingForPlayer(String gameId, String playerName)
       throws InvalidGameSessionException {

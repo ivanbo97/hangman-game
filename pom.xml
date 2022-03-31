@@ -30,6 +30,7 @@
 		<modelmapper.version>2.4.5</modelmapper.version>
 		<frontend-plugin.version>1.12.1</frontend-plugin.version>
 		<node.version>v16.14.1</node.version>
+		<shiro.boot.version>1.9.0</shiro.boot.version>
 	</properties>
 
 	<dependencies>
@@ -145,6 +146,12 @@
 			<artifactId>cxf-spring-boot-starter-jaxws</artifactId>
 			<version>${apachecxf.version}</version>
 		</dependency>
+		<!-- Apache Shiro -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring-boot-starter</artifactId>
+			<version>${shiro.boot.version}</version>
+		</dependency>
 		<!-- OpenAPI -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -232,7 +239,7 @@
 						<goals>
 							<goal>wsimport</goal>
 						</goals>
-						  <phase>generate-test-sources</phase>
+						<phase>generate-test-sources</phase>
 					</execution>
 				</executions>
 				<configuration>
