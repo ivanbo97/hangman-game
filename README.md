@@ -25,7 +25,7 @@ Every new topic of the learning path can be found on separate branch of this rep
 * Requirements: Java 14, Maven, Docker 
 
 1. Run mvn install
-2. Pull the docker image: git pull ivanbo97/hangman-game:latest
-3. In the root folder of the project (where docker-compose.yml is located) run: docker compose up
+2. Pull the docker image: **docker pull ivanbo97/hangman-game:latest
+3. In the root folder of the project (where docker-compose.yml is located) run: **docker compose up
 4. Now you should have locally running two services: MySQL and Hangman game. You can acess the app on localhost:8080 and there you go :)
 
