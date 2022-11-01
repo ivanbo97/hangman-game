@@ -22,7 +22,7 @@ Every new topic of the learning path can be found on separate branch of this rep
 
 ## Getting started
 
-* Requirements: **Java 14, Maven, Docker
+* Requirements: **Java 14, Maven, Docker**
 
 1. Run mvn install
 2. Pull the docker image: **docker pull ivanbo97/hangman-game:latest**
