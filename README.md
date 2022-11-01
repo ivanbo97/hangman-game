@@ -21,4 +21,5 @@ Every new topic of the learning path can be found on separate branch of this rep
 * **Apache Shiro Security-> security-intro branch**
 
 ## Getting started
+
 * **Java 14 is required
