@@ -22,4 +22,4 @@ Every new topic of the learning path can be found on separate branch of this rep
 
 ## Getting started
 
-* **Java 14 is required
+* Requirements: Java 14, Maven, Docker 
