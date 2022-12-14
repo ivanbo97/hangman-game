@@ -2,7 +2,7 @@ version: "3"
 services:
   hangman-game-app:
     container_name: hangman-game-app
-    image: hangman-game:latest
+    image: ivanbo97/hangman-game:latest
     restart: always
     build: .
     ports:
