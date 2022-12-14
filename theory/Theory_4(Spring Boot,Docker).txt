@@ -1,0 +1,464 @@
+	========================================================================================================================================================================================================================
+ 											Spring BOOT
+        ========================================================================================================================================================================================================================
+1. Spring Boot
+
+   Основната идея на създаването на този е проект е програмистите по-бързо да преминават към имплементациятаа на бизнес логиката, като детайлите по конфигурацията
+   на проекта се поема от самия Spring Boot.
+
+   Spring Boot е разработен така че да проверява какви дипендънсита има на classpath-a и спрямо тях да прилага необходимите конфигурации. Например ако прихване, че има 
+   добавен spring mvc jar към classpath-a това ще накара спринг да създаде DispatcherServlet и  да го конфигурира със съответния application context. Също спринг буут
+   знае и че едно mvc приложение има нужда от сървлет контейнер, така че ще конфигурира и Tomcat.
+
+   Така голяма част от конфигурирането на едно приложение се свежда до добавяне на необходимите дипендънсита в pom файла.
+
+   Ключовото при Spring Boot е, че вгражда Tomcat в самия jar и не прави war файл. Така едно Spring Boot приложение може да бъде стартирано като обикновено java приложение с
+   командата java jar [project-name].
+
+   Идеята за вграждането на томкат идва от cloud революцията. Самостоятелното инсталиране на томкат е "тегаво" и "чупи" идеята за скейлване (pay-as-you-go концепцията). Амазон всъщност
+   започват да предлагат услуга за заплащaне според натовареността. Когато имаме повече натоварване вдигаме повече инстанции на томкат и деплойваме там приложението, но това става много
+   по-бавно от това в един jar да имаме вграден и конфигуриран tomcat.
+
+   Когато някоя от конфигурациите по подразбиране на Spring Boot не са приложими в наше конкретно приложение, ние можем да ги донастройм в application.properties / application.yaml.
+   Например можем да зададем префикс и суфикс на ViewResolver-a : 
+       spring.mvc.view.prefix=/WEB-INF/jsp/
+       spring.mvc.view.suffix=.jsp
+
+
+  1.1 Naming conventions and code placement
+
+      Класът, който е анторант с @SpringBootApplication (и в него е main метода) обикновено е прието да бъде на едно ниво със всички останли root пакети на приложението(logic,model,web). Това е така, защото тази антоация
+      наследява анотацията @ComponentScan, която както знаем указва на Spring да сканира текущия package и всички негови наследници за потенциални бийнове.
+
+
+  1.2 Auto-configuration
+
+      Под конфиграция се има предвид сглобяване на всички необходими за приложението бийнове. Spring Boot прави това базирайки се на съдържанието на classpath-a (тоест на jar дипендънситата). Например, ако види че имаме 
+      h2 дипендънси, то ще създаде H2 in-memory база данни като вземе под внимание нашите entity класове.
+
+      Разбира се автоматична конфигурация, която предлага Spring Boot не е толкова инвазивна и можем да настройваме използваните бийнове посредством application.properties/yaml файл. Също така можем изрично да указваме 
+      кои автоматично създавани класове да бъдат игнорирани : @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class }).
+
+      Ограничения от гледна точка на jsp технологията : ! Когато изпозлваме jetty или tomcat, jsp технологията работи със спринг боот, но трябва да сме пакетирали проекта като war, за да може да го стартираме с командата
+      java -jar [app-name.war] и да работи jsp.
+
+  
+  1.3 Embedded Servlet Container Support
+
+      Вграденият сървлет контейнер поддържа класове характерни за Servlet API : Servlet, Filter,  Listener-и. 
+
+      Вграденият контейнер не зачита наличието на класове импплементиращи : javax.servlet.ServletContainerInitialize.ServletContainerIntializer или org.springframework.web..WebApplicationInitializer. Това е преднамерено направено
+      от архитектите на Spring Boot, за да намали риска от нарушаването на работата на Spring Boot приложенията поради намеса на библиотеки създавани от трети старни.
+
+      Все пак, ако ни се налага да инициализираме сървлетния контекст на едно Spring Boot приложение може да регистрираме бийн, който имплементира интерфейса org.springframework.boot.web.servlet.ServletContextInitializer .
+      По този начин имаме достъп до ServletContext обекта.
+
+      Under the hood, Spring Boot uses a different type of ApplicationContext for embedded servlet container support. The ServletWebServerApplicationContext is a special type of WebApplicationContext that bootstraps itself by
+      searching for a single ServletWebServerFactory bean. Usually a TomcatServletWebServerFactory, JettyServletWebServerFactory, or UndertowServletWebServerFactory has been auto-configured.
+    
+      Използвайти application.properties/yaml можем да конфигурираме допълнително вградения сървър (порт, адрес и много други специфични за конкретната имплементация на сървлет контейнера, която изпилзваме : tomcat, undertow..)
+
+
+   1.4 Spring Boot and Spring MVC
+
+       Spring Boot предлага автоматична конфигурация на Spring MVC, която работи добре за повечето приложения. Ако искаме да правим някаква по специфична настройка на някой от MVC бийновете (ViewResolver, MessageHandler) можем да
+       използваме както application.properties/yaml, така и да създадем клас, който да импплементира интерфейса WebMvcConfigurer и да бъде анотиран с @Configuration, като този клас ще връща съответните mvc бийнове.
+
+       Aко искаме да поемем напълно конфигурацията на Spring MVC в наши ръце, може да използваме клас анотиран с @EnableWebMvc + @Configuration.
+
+       Ако искаме да добавяме наши HttpMessageConvertor-и може да връщаме HttpMessageConverters бийн, в който сме добавили нашите обекти.
+
+       Ако използваме Jackson за де/сереализиране на обекти в JSON можем да предоставим наша имплементация на JsonSerializer
+
+      1.4.1 Static Content (html,js,css,jsp..)
+
+        По подразбиране Spring Boot търси такова съдържание в директориите: /static, /public, /resources, /META-INF/resources , които трябва да се разположени в classpath-a. Тази конфигурация по подразбиране може да бъде 
+        пренаписана чрез добвянето на spring.web.resources.static-locations = ... в application.properties/yaml.
+
+
+      !!!Do not use the src/main/webapp directory if your application is packaged as a jar. Although this directory is a common standard, it works only with war packaging, and it is silently ignored by most
+      build tools if you generate a jar.
+
+      1.4.2 Welcome Page
+
+         Spring Boot поддържа както статични, така и template(thymeleaf например) index страници. Първо търси за index.html в посочените по-горе папки. Ако index.html не е намрен, се търси index template.
+
+      1.4.3 Path Matching and Content Negotiation (https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#web.servlet.spring-mvc.content-negotiation)
+
+          При Spring Boot suffix pattern е декативиран, което значи, че заявка във вид "GET /projects/spring-boot.json" няма да бъде пренесочена към контролер анотиран с @GetMapping("/projects/spring-boot").
+         Това е било възможно в миналото, когато е било често срещано клиентите да не изпращат "Accept" хедър. 
+         Сега все още има възмоцност заявка без "Accept" хедър да бъде обслужена, но трябва във параметър с име "format" на заявката да се посочи типа. Така например заявка във вид "GET /projects/spring-boot?format=json"
+         ще бъде успешно пренасочена към хендлър метод на контролер анотиран с @GetMapping("/projects/spring-boot"). Обаче трябва да бъде добавена следната настройка в application.properties :
+         spring.mvc.contentnegotiation.favor-parameter=true
+  
+         Ако искаме да сменим името на параметъра "format", това може да стане чрез : 
+          spring.mvc.contentnegotiation.favor-parameter=true
+          spring.mvc.contentnegotiation.parameter-name=myparam
+
+
+       1.4.4 Error handling
+  
+          По подразбиране Spring Boot предлага мапинг за /error, който използва глобална стараница за грешки, която е регистрирана в сървлетния контейнер. Ако клиентът е уеб бразуър връща добре познатата whitelabel страница, ако 
+         клиентът е "машина" връща JSON.
+
+          Ако искаме напълно да заменим default error handling трябва да имплементираме ErrorController.
+          Tip : The BasicErrorController can be used as a base class for a custom ErrorController. This is particularly useful if you want to add a handler for a new content type (the default is to handle text/html specifically
+          and provide a fallback for everything else). To do so, extend BasicErrorController, add a public method with a @RequestMapping that has a produces attribute, and create a bean of your new type.
+
+          Може също така да се дефинира клас с анотация @ControllerAdvice.
+
+          Може да се добавят custom error старници в зависимост от съответната HTTP грешка (https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#web.servlet.spring-mvc.error-handling.error-pages)
+
+        1.4.5 CORS support
+
+            Още в Spring MVC може да се анотира контролер или хендлър на контролер с @CrossOrigin. Чрез подаването на параметри на тази анотация се настройва и конкретната политика за CORS. При Spring Boot конфигурирането на 
+           CORS не се променя в сравнение с това, което е при Spring MVC
+
+    
+
+      1.5 Externalized Configuration (https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.external-config)
+
+          Тук ще говорим за конфигурирането на бийновете, които принадлежат към нашето приложение (но и не само), т.е за задаването на стойности на техните полета. Spring Boot позволява да зареждаме конфигурация за бийновете
+         от външен източник. Това всъщност ни улеснява да работим с еднакво изглеждащ сорс код на приложението независимо в каква среда се намираме (dev,prod...). Ако се намираме в dev среда ще заредим съответно дев конфигурацията.
+         Под конфигурация можем да дадем като пример connection string-a към БД, който може да бъде различен на различните следи.
+
+          Spring Boot приема различни механизми за конфигурация, но има стриктен ред на прилагане на конфигурационните източници, който се спазва и трябва да бъде взет под внимание, когато целим overriding на някой механизъм. 
+        По-долу е даден редът, по който се вземат конфигурациите (като тези с по-ниските номера пренаписват тези с по-големите) :
+    
+              1. Default properties (specified by setting SpringApplication.setDefaultProperties).
+
+              2. @PropertySource annotations on your @Configuration classes. Please note that such property sources are not added to the Environment until the application context is being refreshed.
+                 This is too late to configure certain properties such as logging.* and spring.main.* which are read before refresh begins.
+
+              3. Config data (such as application.properties files, yaml..).
+
+              4. A RandomValuePropertySource that has properties only in random.*.
+
+              5. OS environment variables.
+ 
+              6. Java System properties (System.getProperties()).
+
+              7. JNDI attributes from java:comp/env.
+
+              8. ServletContext init parameters.     
+
+              9. ServletConfig init parameters.
+
+              10. Properties from SPRING_APPLICATION_JSON (inline JSON embedded in an environment variable or system property).
+
+              11. Command line arguments.
+
+              12. properties attribute on your tests. Available on @SpringBootTest and the test annotations for testing a particular slice of your application.
+
+              13. @TestPropertySource annotations on your tests.
+
+              14. Devtools global settings properties in the $HOME/.config/spring-boot directory when devtools is active.    
+
+
+              !!! Note : It is recommended to stick with one format for your entire application. If you have configuration files with both .properties and .yml format in the same location, .properties takes precedence.
+
+              !!! Tip : The env and configprops endpoints can be useful in determining why a property has a particular value. You can use these two endpoints to diagnose unexpected property values.
+                        See Spring Boot Actuator for details.
+
+ 
+                 1.5.1 Command line properties : By default, SpringApplication converts any command line option arguments (that is, arguments starting with --, such as --server.port=9000) to a property
+                                                 and adds them to the Spring Environment.If you do not want command line properties to be added to the Environment, you can disable them by using
+                                                 SpringApplication.setAddCommandLineProperties(false).
+
+                 1.5.2 External application properties (application.properties, yml файлове) (https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.external-config) : 
+ 
+                      ->  Ако не харесваш дeфоутното "application" преди .properties/yaml, може да се овърайдне със настройката : java -jar myproject.jar --spring.config.name=myprojectprops
+
+                      ->  Mоже и изрично да се даде локацията на properties файла : java -jar myproject.jar --spring.config.location=\
+                                                                                 optional:classpath:/default.properties,\
+                                                                                 optional:classpath:/override.properties
+
+                      ->  Може да се създават няколко application.properties в зависимост от средата : application-dev.properties, application-prod.properties и да се стартира по следния начин
+                                       java -Dspring.profiles.active=dev -jar myApp.jar	
+
+                      ->  В един property файл могат да се добавя други property файлове като новите ще овърайднат дублиращите се настройки на по-старите:
+
+                                             spring.application.name=myapp
+                                             сspring.config.import=optional:file:./dev.properties
+
+                      -> The values in application.properties and application.yml are filtered through the existing Environment when they are used, so you can refer back to previously defined values (for example, from System properties).
+                         The standard ${name} property-placeholder syntax can be used anywhere within a value. For example, the following file will set app.description to “MyApp is a Spring Boot application”:
+
+                           app.name=MyApp
+                           app.description=${app.name} is a Spring Boot application
+
+
+                       -> Working with Multi-Document Files  : Spring Boot позволява разделянето на един физически файл на няколко логически документа. При yaml се използват "---" за разделяне на логическирте документи. За
+                                                               application.properties това е #---
+
+                       -> Activation Profiles : Можем да посочваме, че дадено множество от свойства е активно само при определен профил и среда. For example, the following specifies that the second logical document is only active when 
+                                                running on Kubernetes, and only when either the “prod” or “staging” profiles are active:
+                                                myprop=always-set
+						#---
+						spring.config.activate.on-cloud-platform=kubernetes
+						spring.config.activate.on-profile=prod | staging
+						myotherprop=sometimes-set
+
+
+                         -> Working with YAML (Yet Another Markup Language): Представлява superset на JSON и основното при него е йерархичната структура. Един yml файл автоматично се преобразува от Spring в application.properties
+                                                                             чрез SnakeYAML, който е част от spring-boot-starter.
+
+                         -> Java Bean Property Binding : Можем да насторим един цял бийн чрез анотацията @ConfigurationProperties (https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.external-config.typesafe-configuration-properties.java-bean-binding)
+                                                        
+               					         Може да се използва и анотация @ConstructorBidning + @ConfigurationProperties (https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.external-config.typesafe-configuration-properties.constructor-binding)
+
+							Полетата bind-нати с @ConfigurationProperties могат да бъдат валидирани с JSR-303 анотации
+
+               1.6 Properties and Configuration
+
+                   При Spring Boot имаме въможност да четем maven конфигурацията (от pom файла), да взимаме определени стойности и да ги изпозлваме в application.properties/yml. Пример за съдъражание на application.properties :
+                           
+                    app.encoding=@project.build.sourceEncoding@ 
+		    app.java.version=@java.version@  
+               
+                    Между @...@ слагаме името на елемента от pom файла.   
+
+	
+
+           ===========================================================================================================================================================================================================
+									                                           Docker Basics
+           ===========================================================================================================================================================================================================
+
+
+   1. Docker arhitecture
+
+      The architecture of Docker uses a client-server model and consists of the Docker’s Client, Docker Host, Network and Storage components, and the Docker Registry/Hub. 
+
+      A) Docker Client : Това е docker.exe. Посредством docker командата ние фактически управляваме Docker client и го караме да изпраща заявки към docker deamon (който се явява сървъра - dockerd.exe).
+                         Сървърът и клиента може да се намират на една и съща машина, но това не е задължително. Може да свързваме докер клиент към отдалечен демон (сървър) през REST API.
+
+      B) Docker Host : Предоставя пълната среда нужна за изпълнение на едно приложение. Състои се от docker deamon (dockerd.exe), Images, Containers, Networks and Storage.
+                       Docker Deamon (dockerd.exe - сървъра в docker архитектурата) е отговорен за всякакви операции свързани с контейнерите. Той получава команди от docker.exe (клиента) или от
+                       отдалечен клиент.
+
+   
+      C) Network : Тук говорим за механизъм, чрез който контейнерите комуникират с "външния свят" посредством хост машината, където се изпълнява docker deamon (сървърът).
+
+   
+      D) Storage : По подразбиране всички файлове съзадавани в контейнера се съхраняват в writeable слоя на самия контейнер. Това означа, че данните не се запазват когато контейнерът бъде спрян и е трудно 
+                   тези данни да се вземат от друг процес.
+                   Writeable слоя на контейнера е тясно обвързан с хост машината, на която се изпълнява контейнера.
+                   Писането в writeable слоя изисква storage driver, който да управлява файловата система
+                   
+
+   1. Какво е Docker ?
+
+      -> Това е инструмент, чрез който може да изпълняваме приложения в изолирана среда.
+
+      -> Подобно на виртуалните машини, но разлика е, че стартира много бързо и не изисква толкова рам и cpu.
+
+      -> Ако приложение, което съм създал работи в докер интеграция на моята машина, това означава, че ще работи на всяка една друга машина в докер среда.
+   
+      -> Стандарт за software deployment.
+
+  
+   2. Контейнери vs Виртуални машини
+
+      Докер Контейнерът е абстракция на приложно ниво, която капсулира нашето приложение и неговите дипендънсита. Множество контейнери мога да се изпълняват
+      върху една и съща машина и да споделят ядрото на ОС помежду си. Всеки контейнер се изпълнява като изоплиран процес в user space. Контейнерът не изисква 
+      напълно функционираща ОС.
+
+      В концепцията за вирутални машини е заложена идеята за изпълняване на множество ОС върху един и същи хардуер с помощта на Hypervisor. Всяка една виртуална
+      машина си мисли, че е "единственият господар" на наличния хардуер и не е наясно за съществуването на другите виртуални машини използващи същия хардуер.
+      Всяка една виртуална машина притежава напълно функционираща ОС (всички библиотеки и байнърита), което изисква десетки GB-ти. Виртуалните машини буутват бавно.
+
+      Container is a group of processes with some cool kernel features sprinkled on top that allow the processes to pretend that they’re running on their own separate machine.
+      While the host machine knows that the container is actually a process, the container thinks that it is a separate machine. 
+
+      A container is realy just a native host process beeing isolated and restricited.
+      A container is a set of isolated processes. This isolation is ensured by the operating system kernel. 
+ 
+      The OS of the container is in the form of an image. This is not the full operating system as on the host, and the difference is that the image is just the file system and binaries for the OS while the full OS
+      includes the file system, binaries, and the kernel. 
+  
+      The cool part is if there are two containers with the image layers a, b, c and a, b, d, then you only need to store only one copy of each image layer a, b, c, d both locally and in the repository. Thus two containers
+      can share a and b images and there is not duplication. This is Docker’s union file system.  
+
+   3. Предимствата на Docker контейнерите
+
+      -> Контейнерът с приложението се вдига за секунди.
+      -> Не изисква напълно функционираща операционна система.
+      -> Ако контейнерът работи, както трябва на моята машина, значи ще работи по същия начин на всяка друга машина, която изпозлва докер.
+
+
+   4. Docker Image 
+
+     -> Представлява шаблон за настройка на средата, която нашето приложение ще използва - БД, web app
+
+     -> Също така това е и версия (snapshot)
+
+     -> Това е описнаие на всички компонененти, от които има нужда нашето приложение, за да се изпълнява коректно.
+
+  
+   5. Docker Container
+
+     -> Представлява изплъняваща се инстанция на даден docker image
+
+  
+   6. Docker Hub : регистър за сваляне на docker images.
+
+      Командата за сваляне на image : docker pull [image-name]
+                                     Пример: docker pull ngnix
+
+
+    7. Running a container
+
+        docker run container-name:tag-name (docker run nginx:latest)
+ 
+	docker run -d nginx:latest (контейнерът се изпълнява в dettached mode, т.е текущият терминал не "зависва")
+
+
+    8. Exposing container port
+
+       docker run -p <hostPort>:<containerPort> imageName:tagName
+
+       Пример:  docker run -d -p 8080:80 nginx:latest
+
+       Можем да свързваме един контейнер порт с множество хост портове : docker run -d -p 8080:80 -p 8081:80 nginx:latest
+
+    9. Managing Containers
+
+        1) Можем да стартираме и сприаме контейнерите по тяхното id или име.
+       
+            docker ps [показва всички контейнери, които се изпълняват]
+
+               -> docker stop 8e7878bbe0f4
+
+               -> docker stop friendly_bose
+
+         2) Можем да показваме всички контейнери независимо дали в момента се изпълняват или не
+
+                    docker ps -a
+
+         3) Можем да изтриваме контейнери
+
+              docker rm [container-id]
+
+              Изтирване на контейнери с един ред: docker rm ${docker ps -aq}
+
+         
+	 4) docker start vs docker run
+
+            * docker run [image-id] : Използва се създавне на нов контейнер от даден имидж и стартиране.
+
+                      run = create + start
+
+            * docker start [container-id] : Използва се за стартиране на контейнер, който преди това се е изпълнявал, а сега е спрян
+
+
+         5) Можем да рестартираме контейнер
+
+                docker restart [image-id]
+
+   
+    10. Dockerfile
+
+        Този файл ни позволява да създаваме наши images и съдържа стъпки как тези images да бъдат създавани.
+
+        Пример за съдържание на Docker file:
+    
+        FROM nginx:latest
+        ADD . /usr/share/nginx/html
+
+        Тук указваме, че наследваме image-a на nginx и добавяме всички файлове на текущата директория в следната директория на image-a.
+
+        За да създадем image от Dockerfile-a използваме командата : docker build --tag [image-name:image-tag]
+
+
+    11. Docker file and Docker Layers
+
+        Когато билдваме един докер имидж, това което се случва е билдване на абсолютно цялата среда необходима за изпълнението на нашето приложение: започва се 
+        с билдване на ядро на ОС, след това инсталиране на всички необходими помощни библиотеки. В зависимост от броя на библиотеките и организацията на Dockerfile,
+        билд процесът може да отнеме доста време.
+          Всеки път, когато правим промяна по сорс кода на нашето приложение се налага да билднем нова версия на имиджа, която може да бъде използвана за деплоймент.
+        Въпреки, че се прави промяна само на сорс кода принадлежащ на самото приложение, целият имидж трябва да се билдва наново от началото : ядрото на ОС и всички 
+        библиотеки. Тове не е особено ефективно, затова Docker въвежда идеята за кеширане на слоевете.
+   
+        Нека първо разгледаме един пример за Dockerfile:
+
+	FROM node:12.13.1-buster-slim AS dev
+	WORKDIR /home/app
+	COPY ./package.json ./package-lock.json* ./
+	RUN npm install
+	COPY public /home/app/public
+	COPY src /home/app/src
+	CMD ["npm", "start"]
+
+        Всеки един ред от Dockerfile представлява команда, която създава нов слой на docker image-a. Информацията за всеки слой се запазва във файловата система на хоста и може да служи като кеш.
+        Следователно, ако нищо не се е променило на даден слой спрямо предишния билд на имиджа, то ние можем да преизползваме информацията от предишния билд за дадения слой.
+        Ако обаче се установи, че има промяна и кешът не може да бъде използван, се налага да се билдне както съответният слой, така и всички останали, които следват след него.
+
+        !!! Затова е много важно, когато създаваме Dockerfile, внимателно да планираме подредбата на командите, за да може да се възползваме от кеширането и съответно да намаляваме времето
+            за билд на нов имидж.
+
+
+    11. Docker and Spring Boot Apps
+
+        The other issue is that putting your application’s code and all its dependencies in one layer in the Docker image is sub-optimal. Since you probably recompile your code more often than you upgrade the version of
+        Spring Boot you use, it’s often better to separate things a bit more. 
+        If you put jar files in the layer before your application classes, Docker often only needs to change the very bottom layer and can pick others up from its cache.
+
+        За да създават по-оптимизарани докер имиджи, т.е такива които се билдват за кратко време, от Spring Boot въвеждат layer.idx файл. В него има списък със логически слоеве, на които може да бъде разделено приложението.
+        Подредбата на тези слоеве съотвества на това как ще бъдат добавяни към Docker имиджа. 
+        Добавянето на layer.idx файла и неговото дефоутно съдържание се поема от maven плъгина : spring-boot-maven-plugin.
+       
+        Съдържанието на layer.idx е следното: 
+        
+        dependencies 
+	spring-boot-loader
+	snapshot-dependencies
+        application
+
+	Идеята e архивът на цялото ни приложение (jar/war), който е fat, да бъде разбит на словете посочени в layer.idx файла. Това може да стане с командата:
+        java -Djarmode=layertools -jar application.war extract
+
+        Имайки вече слоеста структура с файловете,разпределни по отделни директории, можем да правим поетапно добавяне на всеки от словете от хост файловата система към имиджа :
+
+        COPY --from=builder application/dependencies/ ./
+    	COPY --from=builder application/spring-boot-loader ./
+	COPY --from=builder application/snapshot-dependencies/ ./
+	COPY --from=builder application/application/ ./
+
+        Така всяка една COPY команда създава нов слой и го кешира. По този начин, ако правим промени по сорс кода на приложението и билдваме наново имиджа то ще използваме кеш съдържанието на всички 
+        слоеве, с изключение на последния (COPY --from=builder application/application/ ./). Там ще се наложи да направим само едно копиране на сорс кода на приложението.
+
+	
+
+     12. Linux Alpine
+
+       Когато сваляме някакъв image е добре да използваме таг, който съдържа в себе си ключовата дума alpine. Това означава, че имиджът използва "олекотена" дистрибуция на линукс, която е значително по-малка по размер.
+
+   
+        docker build --tag hangman-game:latest .
+
+        docker exec -it website bash
+
+
+     13. Versioning of containers
+
+      Можем да използваме тагове за поддържане на различни версии на нашето приложение. Ако например latest билда на нашия имидж е добавил някакъв бъг ние без проблем можем да се върнем към предишната версия на имиджа, ако
+      преди това тя е била обозначена с някакъв таг.
+
+      Затова преди да правим билд на имидж е добре да направим нов таг, чрез който ще съхраним текущата весия. Например :
+   
+      docker tag website:latest website:v1   // По този начин казваме вземи имиджа в текщия му вариант и го тагни с v1
+
+      След това можем да направим билд на новата версия на имиджа : docker build -t website:latest .
+
+      Ако обаче след стартиране на контейнера установим, че новият билд е вкарал някакъв бъг, без проблем можем да се върнем към старата версия на имиджа и да стартираме контейнер от нея : 
+      docker run --name website -d -p8080:80 website:v1 
+   
+        docker build --tag hangman-game:latest .
+
+        docker exec -it website bash
+
+      
+        
+
+       
+

@@ -1,0 +1,532 @@
+1.Maven
+
+* Philopsophy of Maven ? 
+
+Maven is generally considered by many to be a build tool. It also come as a standart pattern for organzing your project strucutre.
+On a very high level all projects need to be built, tested, packaged, documented and deployed. Of course there is infinite variation in each of the above mentioned steps,
+but this variation still occurs within the confines of a well defined path and it is this path that Maven attempts to present to everyone in a clear way.
+
+Maven is a Java tool, so you must have Java installed in order to proceed.
+
+Maven is used for building, documemting and managing a project.
+
+What do we mean by build tool ?
+
+ It encompasses following processes : 
+->Generating source code, 
+->Generating documentation for source code, 
+->Compiling source code, 
+->Packaging of the compiled source code into JARs, Installing the packafged code in local repo, server or central repo
+
+   *** What is a POM (Project Object Model) file ? ***
+
+Is is an XML file that contains info about the project and the configuration details used by Maven to build the project. It includes the goals and plugins used by maven in
+a project. Maven looks for the POM in the current directory by executing a task or a goal. It reads the POM, gets the needed configuration info and then runs the goal.  
+
+   *** Super POM : The Super POM is Maven's default POM. All POMs extend the Super POM unless explicitly set, meaning the configuration specified in the Super POM is inherited by the POMs you created for your projects.
+		   The role of a POM file is to describe the project, manage dependencies, and declare configuration details that help Maven to build the project.
+
+   
+   *** Project Inheritance : Един пом файл може да наследява конфигурацията от друг пом файл като го добави в <parent> секция. Елементите, които се сливат между parent и child помовете са следните: 
+                             -> dependencies
+                             -> developers and contributors
+                             -> plugin lists (including reports)
+                             -> plugin executions with matching ids
+                             -> plugin configuration
+                             -> resources
+
+   *** Project Aggregation : Разликата с наследяването е, че още в parent пома се обявяват модулите, които са наследници на този пом. Това става в секция <modules>..</modules>.
+			     Всяка една maven команда обработваща parent пом-а ще бъде автоматично изпълнена и за всички обявени модули
+
+   *** What problems does Maven solve ? ***
+
+-> Помага за конфликтите съврзани с различните версии на различните проекти, които използваме
+-> Вместо да сърфираме през различни сайтове и да сваляме jars, ние имаме mvnrepository.com
+-> Помага със създването на правилна структура на файловете в зависимост от проекта.
+
+   *** Maven Build Lifecycle ***
+
+    Представлява процеса на билдване и разпространяване на даден артефакт (проект). Има три вградени жизнени цикъла в мейвън : default, clean и site. Default цикълът
+    отговаря за deployment, a site е за автоматично генериране на уеб сайт на проекта. Един билд жизнен цикъл е дефиниран от списък с build фази (phases).
+    Например default цикълът е изграден от следните фази : 
+
+    -> validate : валидира,че проектът е коректен и цялата необходима информация е налице
+    
+    -> compile  : компилира сорс кода на проекта
+
+    -> test : тества компилирания сорс код чрез използването на подходящ framework. Тези тестове не трябва да изискват кодът да бъде пакетиран или deploy-нат
+
+    -> package : взема компилирания сорс код и го пактеира във формат подходящ за разпространение, например JAR,WAR..
+
+    -> verify : изпълнява проврки на резултатите от интеграционни тестове, за да посигури, че критериите за качество са спазени
+
+    -> install : инсталира package в локалното maven repo, за да може да се използва като дипендънси от други проекти
+   
+    -> deploy : на тази фаза вече сме приключили с build-ването в локалната среда и може да копира финалния вариант на пакета в remote repo, откъдето да
+                могат да го свалят други разработчици и да го използват в други проекти
+		
+
+    При изпълнението на default lifecycle фазите се изпълняват в посочения по-горе ред. Ако например решим да изпълним фазата package чрез командата mvn package.
+    То ще се изпълнят както следва : validate -> compile -> test -> package
+
+
+    *** Maven Goals ***
+      
+      Към всяка от споменатите по-горе билд фази може да бъде добавяна специфична задача, която допринася за билдването и управлението на проекта - тези задачи се 
+      наричат goals. Не всеки goal е задължително да бъде част от билд фаза, той може да се изпълнява и самостоятелно чрез директно извикване. 
+      Ако дадена фаза няма нито един goal прикрепен за нея, то тази фаза няма да бъде изпълнена.
+
+    
+    *** По какъв начин можем да задаваме конкретни goals на отделните фази ?
+
+         -> Чрез задаване на <packaging>[jar/war/ear/pom]</packaging>. Ако packaging не е зададен, по подразбиране ще се вземе jar. Със задавнето на този packaging елемент
+            "от въздуха" получаваме головете за съответните фази. Линк с головете за конкретни packaging типове : https://maven.apache.org/ref/3.8.4/maven-core/default-bindings.html
+
+         -> Конфигуриране на плъгините в самия pom файл. Плъгините предствляват артефакти, които предоставят имплементацията на головете в Maven. Един плъгин може да 
+            съдържа имплементацията на няколко гола, като всеки гол е определна способсност на плъгина.
+            Плъгининте могат да съдържат информация за това към коя фаза от даден жизнен цикъл да прикрепят дадения гол.
+            
+	   
+           Нека разгледаме пример за добавяне на плъгин : 
+
+<build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-myquery-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>execution1</id>
+            <phase>test</phase>
+            <configuration>
+              <url>http://www.foo.com/query</url>
+              <timeout>10</timeout>
+            </configuration>
+            <goals>
+              <goal>query</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>execution2</id>
+            <configuration>
+              <url>http://www.bar.com/query</url>
+              <timeout>15</timeout>
+            </configuration>
+            <goals>
+              <goal>query</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+Тук виждаме добавяне на плъгин maven-myquery-plugin. Голът query на този plugin ще се изплълни два пъти (имаме два execution елемента с ид-та execution1  и execution2), като всяко едно изпълнение ще има своите
+параметри зададени в <confuguration> елемента. Имената им (<url>, <timeout>) съответстват на имената на член променливите в класа (MOJO) имплементиращ съответния гол. Първият execution с ид execution1 ще се изпълни във фаза test
+на съответния билд жизнен цикъл. Втория обче няма зададен параметър за фаза. Тогава как да се определи за коя фаза е предназначен ? Головете може да имат зададена фаза по подразбиране в самия Java код на плъгина (с анотация @phase например)
+и тогава execution2 ще се изпълни в тази дефоутна фаза. Но ако такава не е задедна в джава кода, съответния execution няма да бъде изпълнен в билд жизнения цикъл.
+Важно!!! : Ако в джава кода имаме зададена фаза по подразбиране, за която да се прикрепи гола, но в конfигурацията на проекта (pom) зададем <execution>...<phase>..</phase>..</execution>, то дефоутната ще бъде
+пренаписана от тази във <phase>.
+
+
+  *** Maven Plugin Configuration  : <pluginManagement> vs <plugins> : <pluginManagement> секцията обикновено се използва в parent pom-a 
+            
+
+1.1 Какво е Maven Dependency ? 
+
+    Това представлява друг архив (JAR,ZIP...), който е небоходим на нашия проект, за да се компилира, билдне, test i run-e. Когато ръннем maven build или изпълним даден 
+    maven goal, тези dependency-ита се откриват в локал репо, ако не са там се търсят в централното репо на мейвън и се свалят в локалното. Дипендънситата се обявяват в 
+    pom.xml, в тага <dependencies><dependency>...</dependency>.....</dependencies>
+
+1.2 Transitive Dependency
+  
+    Ситауции, в които нашият проект зависи от проект Б, a проект Б от своя страна зависи от проект Ц. Следоватаело нашият проект зависи както от Б, така и от Ц. Няма ограничение в 
+    навлизането в дълбочина на зависимостите. Проблем се появява само когато имаме циклична зависимост. Пример по долу :
+     
+    А -> Б -> Ц -> Д(в. 2.0)
+    А -> Е -> Д(в. 1.0)
+   
+    При билдването на проекта възниква казус. Коя версия на Д да се използва ? Мейвън тук прилага "nearest definition" правилото, т.е версията, която е най-близка до нашия
+    проект в дървото на зависимостие. В горния пример това е Д(в. 1.0) (пътят до него е по-къс).
+
+    !!!Важно : Ако две дипендънсита са на една и съща дълбочина в дървото, ще бъде взето това, което първро присъства в декларацията.
+
+    !!!Ако искаме обаче да използваме задължително версия 2.0, тогава още на нивото на нашия проект може да добавим зависимост към Д(в. 2.0). И дървото на зависимостите би
+    изглеждало по следния начин:
+
+    А -> Б -> Ц -> Д(в. 2.0)
+    А -> Е -> Д(в. 1.0)
+    А -> Д(в. 2.0)
+
+1.3 Dependency Management
+
+    Това позволява на авторите на проекта директно да укажат вверсиите на артефактите, които да бъдат използвани в случай на транзитивни зависимости или в ситуации, в които
+    не е зададена версия. Тоест в горния пример А не зависи пряко от Д, но въпреки това може да укаже коя версия на Д да използват дипендънситата.
+
+    От документацията : 
+
+    Although transitive dependencies can implicitly include desired dependencies, it is a good practice to explicitly specify the dependencies your source code uses directly.
+    This best practice proves its value especially when the dependencies of your project change their dependencies.
+    
+    For example, assume that your project A specifies a dependency on another project B, and project B specifies a dependency on project C. If you are directly using components
+    in project C, and you don't specify project C in your project A, it may cause build failure when project B suddenly updates/removes its dependency on project C.
+
+    1.3.1 <dependencyManagemenet> vs <depedencies> tag що се отнася до parent pom
+
+          В parent pom-a (този с <packaging>pom</packaging>)  обикновено се използва <dependencyManagemenet> секция.
+
+          Артефактите посочени в <dependency> секцията ще бъдат ВИНАГИ по подразбиране включени като дипендънсита в налседяващите pom файлове.
+
+          Артефактите посочени в <dependencyManagement> секцията ще бъдат включени в наследяващите pom файлове само и единствено, ако са включени
+          в <dependency> секцията на самия наследяващ pom. По този начин може да се специфицира версия и евентуално scope на самото дипендънси в <dependencyManagemenet>
+          на parent pom-a и след това в <dependency> секцията на child pom-a само да се включи group id и artifact id, без да се налага да се посочва версия / обхват, защото
+          тя ще бъде наследявана от това, което е посочено в <dependencyManagement> на parent pom-a. (Подобен меахинизъм използваме, когато добавяме spring-boot-starter-parent като
+          <parent> в нашия проект. Именно в него са описани конкретните версии на отделните dependenci-та, а ние трябва да добавяме само groupId и artifactId).
+
+
+1.4 Dependency scope
+
+    Maven dependency scope attribute is used to specify the visibility of a dependency, relative to the different lifecycle phases (build, test, runtime etc).
+
+    Използва се за лимитиране на транзитивността на депендънсито и за определяне кога то да бъде добавено към classpath. 
+    Съществуват 6 обхвата (scope) : 
+  
+    1) compile : Това е обхватът по подразбиране, ако не сме посочили такъв. Compile зависимостите са налични във всички classpaths* на проекта. Нещо поече, тези дипенденсита
+                 се разпространяват към проектите, които зависят от текущия.
+                
+                 *classpaths  : множествено число, защото имаме различни фази на билдване, които съответно имат и различни classpaths
+
+    2) provided : Подобно на compile, но индикра, че очкваме JDK или контейнер да предостави дипендънсито at runtime. Например, когато билдваме уеб приложение за JEE, ще
+                  трябва дипендънситата за Servlet API да бъдат provided, защото уеб контейнерът (Tomcat) ще предостави тези класове. Дипендънси с този scope се добавя към
+                  classpath при компилация и тестване, не и към runtime classpath-a. Дипендънсито не е транзитивно.
+
+    3) runtime  : Този обхват индикира, че дипендънсито не се изисква при компилация, но е при изпълнение. Мейвън включва дипендънситата с този обхват в classpatho-вете за
+                  runtime и test, но не и при compile.
+
+    4) test     : Този обхват индикира, че дипендънсито не се изисква при нормалното използване на приложението и трябва да е налично само за компилирането и изпълнението
+                  на тестовете. Този обхват не е транзитивен.
+
+    5) system   : Обхватът е подобен на provided, само че тук явно трябва да се даде пътят до jar-a, който отговаря на дипендънсито.
+   
+    6) import   :  This scope is only supported on a dependency of type pom in the <dependencyManagement> section!!! It indicates the dependency is to be replaced with
+                   the effective list of dependencies in the specified POM's <dependencyManagement> section. Since they are replaced, dependencies with a scope of import
+                   do not actually participate in limiting the transitivity of a dependency.
+
+
+1.5.1  Plugin configuration : frontend-maven-plugin – make Maven build to run NPM build
+
+     Back-end програмистите могат да билдват проекти, които включват фронт енд код, без дори да имат познания как става това точно и да трябва да инсталират npm на своята машина.
+     Билдването на бекенд код и фронт енд код остава максимално разделено, единствено конфигурацията на самия плъгин в пома е свързващото звено.
+     Самият плъгин работи като инсталира локално за проекта Node и NPM и след това изпълнява npm install.
+     
+     Коментари по конфигурацията на самия плъгин:
+    
+     -> Най-новата версията на плъгина да се види от гитхъб и да се зададе в пом-а.
+
+     -> В глобален <configuration> елемент може да се зададе работната директория в елемента <workingDirectory>. Под работна директория се разбира локацията на package.json (ключов
+        файл за един Node проект, там са описани дипендънситата) и други конфигурационни файлове за фонтенда (Gruntfile.js, gulpfile.js ...).!!!Ако не се зададе изрично стойност на
+        <workingDirectory> то по подразбиране се взема базовата директория на проекта (там където е пома).
+
+      -> В глобален <configuration> елемент може да се зададе инсталационната директория в елемента <installDirectory>. Под инсталационна директория се разбира локацията където 
+         се свалят и инсталират node и npm. Ако не се зададе коя обаче е дефоутната ???? 
+
+      -> За да задействаме свалянето и инсталцията на node и npn трябва да посочи небходимата имнформация в <еxeutions><execution>...</execution></executions>
+         Под необходима информация имаме предвид голът, който трябва да се изпълни и опционално фазата към която ще бъде прикрепен (дефоутната е generate-resources, което обикновено
+         ни върши работа). Също така е много важно да добавим конфигурационна информ. за най-новите версии на ноде и нпм, които трябва да се свалят. По-долу е даден пример за конфигура-
+         ция на плъгина : 
+
+build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
+        <version>@project.version@</version>
+
+        <executions>
+
+          <execution>
+            <id>	de and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
+              <nodeVersion>v8.11.1</nodeVersion>
+              <npmVersion>5.6.0</npmVersion>
+            </configuration>
+          </execution>
+         .......
+.....
+
+             
+    -> След като е изпълнен гола за сваляне на npm и node може би ще е добре да изпълним командата npm install. Тя отговаря за свалянето на всички дипендънсита обявени в package.json
+       като ги запазва в папка node_modules, която се намира в базовата директория (там където е помът). Изпълнението става като добавим нов <execution> елемент, който да изпълни 
+       голът npm предоставян от плъгина. По подразбиране аргументът на този гол е install така че няма нужда и от добавяне на <configuration> елемент. Ако искаме друга команда трябва
+       вече да се добави в <configuratuoin><arguments>......</arguments></configuratuoin>.   Пример от документацията : 
+
+ <execution>
+    <id>npm install</id>
+    <goals>
+        <goal>npm</goal>
+    </goals>
+
+    <!-- optional: default phase is "generate-resources" -->
+    <phase>generate-resources</phase>
+
+    <configuration>
+        <!-- optional: The default argument is actually
+        "install", so unless you need to run some other npm command,
+        you can remove this whole <configuration> section.
+        -->
+        <arguments>install</arguments>
+    </configuration>
+</execution>
+
+
+ 1.5.2 Plugin configuration :   jaxws-maven-plugin – code generation from WSDL
+
+       *JAX-WS(Java API for XML Web Services) : Това представлява спецификация за имплементиране на уеб услуги в Java. Тя описва как съдържанието на WSDL да се преобразува в Java класове, консуматори на услугата, и как това
+       преборазуване може да стане посредством анотации. Инструментът wsimport е част от имплементацията на тази спецификация и е част от JDK до версия 8.
+
+        Има два основни подхода  за създаване на уеб услуга: 
+
+             ->top-down (contract-first): първо се създава WSDL, който описва уеб услугата и след това той се използва за генераиране на съответен Java калс
+
+             ->bottom-up : Първо се създават класове и после се генерира WSDL файла. Този подход се счита за по-лесен. Промяна на Java кода води до промяна и на WSDL.
+
+        Има разлика, когато добавяме плъгина при JDK 8  и JDK 11. Разликата идва оттам, че при JDK 8 има вграден wsimport, а при JDK 11 е премахнат. Затова при версия 11 трябва
+        да се добавят дипендънситата : jakarta.xml.ws-api, jaxws-rt и jaxws-ri. 
+
+        Самият плъгин може да бъде конфигураран с информация за това откъде да се свали WSDL файла, в коя директория да бъдат генрераини java класовете, към кой пакет ще принадлежат и др.
+        Примерна конфигурация на плъгина е дадена по-долу:
+
+
+
+<build>
+    <plugins>        
+        <plugin>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-maven-plugin</artifactId>
+            <version>2.3.2</version>
+            <configuration>
+                <wsdlUrls>
+                    <wsdlUrl>http://localhost:8888/ws/country?wsdl</wsdlUrl>
+                </wsdlUrls>
+                <keep>true</keep>
+                <packageName>com.baeldung.soap.ws.client.generated</packageName>
+                <sourceDestDir>src/main/java</sourceDestDir>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+
+===========================================================================================================================================================================
+
+2.1 Kакво е servlet ? 
+   
+   Добър източник на Servlet и JSP базово инфо : https://www.oracle.com/technical-resources/articles/javase/servlets-jsp.html
+   Всъщност това са Java класове, които са предназначени за обслужване на изпратени към сървъра HTTP заявки. Те се изпълняват в servlet container (например Tomcat), който
+   всъщност отговаря за парсването на HTTP заявките, които идват като поток от символи и се обръщат в съответните servlet класове. По този начин не ни се налага да пишем
+   имплементация на ниско ниво на самата комуникация по мрежата.
+
+   From stackoverflow () : 
+A servlet at its very core is a java class; which can handle HTTP requests. Typically the internal nitty-gritty of reading a HTTP request and response over the wire is taken
+care of by the containers like Tomcat. This is done so that as a server side developer you can focus on what to do with the HTTP request and responses and not bother about
+dealing with code that deals with networking etc. The container will take care of things like wrapping the whole thing in a HTTP response object and send it over to
+the client (say a browser).
+
+Now the next logical question to ask is who decides what is a container supposed to do? And the answer is:
+In Java world at least It is guided (note I did not use the word controlled) by specifications. For example Servlet specifications (See resource 2) dictates what a
+ servlet must be able to do. So if you can write an implementation for the specification, congratulations you just created a container (Technically containers like Tomcat
+ also implement other specifications and do tricky stuff like custom class loaders etc but you get the idea).
+
+Assuming you have a container, your servlets are now java classes whose lifecycle will be maintained by the container but their reaction to incoming HTTP requests
+will be decided by you. You do that by writing what-you-want-to-do in the pre-defined methods like init(), doGet(), doPost() etc. Look at Resource 3.
+
+
+2.1.1 Filter - Представлява механизъм, чрез който може да се прочита и обработва информацията съдържаща се в една завка/отговор преди самата заявка/отговор да достигне до сървлета/клиента.
+               Филтрите могат да се използват за различни задачи : автентикация на потребител, логване на инфо, компресия на данни и много други. Интерфейси, които са части от Filter API са
+               Filter, FilterChain, и FilterConfig. 
+               
+	       Всеки филтър се конфигурира за какъв url/сървлет ще се активира. Това може да става през web.xml или през анотацията @WebFilter("/*"). Филтрите също могат да имат инициализиращи параметри,
+               които да са дадени в web.xml и след това да могат да се достъппват в init(FilterConfig filterConfig) през filterConfig
+               Фактически, за да напишем филтър трябва да имплементираме Filter интерфейса, като самата логика на филтър се слага в метода doFilter(ServletRequest req, ServletResponse res, FilterChain chain).
+               Можем да имаме логика, при която в зависимост от съдържанието на заявката да преценим дали изобщо трябва тя до стига до сървлета. Ако при определна ситуация не трябва да достига, то в имплементацията
+               на doFilter(...) просто не извикваме следващия филтър от веригата и връщаме някаква грешка. Ако всичко е ок може да извикаме следващи филтър във веригата: chain.doFilter(req,res);
+
+2.1.2 Listeners - Използват се за следене и реагиране на събитя възникващи в контейнера, като например създаване на сесия, поставяне на атрибут в сесия, създаване/унищожаване на сървлетен контекст.
+                  Често се налага да имплементираме интерфейса ServletContextListener, което ни позволява да изпълняваме определени действия повреме на инциализацията на самия сървлетен контекст или
+                  неговото унищожаване. Тези действия могат да бъдат свързани с добавянето на определен атрибут към сървлетния контекст, който после ще може да бъде използван от всички сървлети.
+
+
+2.1.3 Scope(context) Objects - Уеб компонените споделят информация помежду си посредством обекти, които се поддържат като атрибути принадлежащи на 4 обхвата (скоупа). Имаме достъп до тези атрибутни обекти чрез
+                               извикването на методите getAttribute, setAttribute през класа представляващ съответния скоуп (обхват). Сървлетите имат общо 3ри обхвата:
+
+                                -> Request scope(ServletRequest) - атрибутите, които се съхраняват тук имат време на живот в рамките на един request-response цикъл. Вскички сървлети участващи в обслужването
+                                                                   на конкретната заявка имат достъп до атрибутите запазени в този обхват. Както знаем от един сървлет можем да пренасочим изпълнението към
+                                                                   друг като просто подадем req и resp обектите. След като заяваката бъде изпълнена (изпълни се doGet метода на последния сървлет, ServletRequest обектът
+                                                                   се унищожава)
+
+                                -> Session scope (HttpSession) - Попринцип HTTP е stateless, т.е всяка заявка е самостоятелна и не разчита на информация от предишната заявка. Това обаче до някаква степен се предолява
+                                                                 чрез поддържането на бисквитки. Когато даден клиент изпрати за първи път своята заявка, сървърът генерира специално ид, с което ще може да познае клиента
+                                                                 при последващи завки. Това ид се съхранява в мястото за бисквитки в клиентския браузур с ключ JSESSIONID или в самия URL, ако бисквитките са забранени.
+                                                                 Така сървърт вече има механизъм да разпознава всеки клиенти. От страна на сървъра се създава HttpSession обект, в който може да се съхраняват атрибути за
+                                                                 всяка отделна сесия. Този обект може да се вземе през ServletRequest обекта. Времето на живот на HttpSession обекта зависи от задеден timeout по подразбиране.
+                                                                 С достъпването на методи принадлежащи на сървлета всеки път брояча за живот на сесия се нулира. Ако броячът достигне стойността за таймоут сесията се унищожава.
+
+                                -> Application scope (ServletContext) - Обект, който се създава от сървлет контейнера и данните съхранявани в него са достъпвани от всички сървлети(jsp,tags). Имаме само един ServletContext обект
+                                                                        за приложението и неговото време на живот съвпада с това на приложението.
+                                                                 
+
+ 2.2 Annotations vs web.xml : Имаме право на избор дали да конфигураме филтрите, лисънърите и сървлетите в xml файл или да го правим със съоветните анотации (@WebListener, @WebServlet, @WebFilter).
+                              Що се отнася до init-parm, които се задават за съответния уеб компонент в web.xml, те могат да бъдат зададени чрез лисънър в самия servlet context.
+
+ 2.3 WAR (Web Archive) file structure : WAR файлът представялва един архив, със сдържание годно за изпълнение от сървлет контейнера. WAR има следната стандартна структура : 
+                                        
+                                        -> Папка META-INF : Файловете в тази папка са предначначени за Java Platform, като те обикновено са конфигурационни (като например MANIFEST.MF)
+
+                                        -> Папка resources : Съдържа обикновено ресурси, които ще бъдат необходими at runtime (css фалове/изображения/..)
+я
+                                        -> Папка WEB-INF : Съдържанието на тази папка не достъпно публично.
+
+                                                  -> web.xml : Съдържа информация конфигурираща самия сървлет контайнер. Нарича се още deployment descriptor. Тук може да се зададат мапингите на сървлетите, параметри за конфигурация на сървлетите
+                                                               двойка ексепшън и сървлет, които облсужва ексепшъна и много други.
+
+                                                  -> Папка lib : Съдържа вскички JAR файлове, които се използват от нашето приложение (става въпрос за дипендънситата, но не само) 
+          
+                                                  -> Папка classes : Съдържа компилирания вариант на всички класове на нашето прложение (*.class файлове)
+ 
+                                                  -> Папка tags  : съдържа tag файловете
+
+2.4 Maven file structure for WAR packaging : Когато използваме Maven за генрирането на WAR файл, нашият проект трябва да се съобразява със стандартна структура :
+                                             -> src/main/java  : съдържа всички *.java файлове написани от нас в проекта
+                                             -> src/main/webapp/resources : съдържа всички ресурси нужни за една уеб среда (jsp,web.xml,tag,css)
+                                             ->src/main/webapp/WEB-INF/tags 
+				             ->src/main/webapp/WEB-INF/web.xml
+
+2.5.1 JSP (Java Server Page) - Технология, която позволява създаването на уеб съдържание, което има както статични, така и динамични компоненти. Самата технология дава налични всички динамични възможности на Java Servlet технологията.
+       
+    -> Каквко е JSP страница  : Това е текстов документ, който може да съдържа статични данни (HTML/XML/SVG елементи) и JSP елементи, които са динамично съдържание. Някои JSP елменти са дедени по-долу:
+                                  
+                                -> A page directive (<%@page ... %>) sets the content type returned by the page.
+                                -> Tag library directives (<%@taglib ... %>) import custom tag libraries.
+
+   -> A JSP page services requests as a servlet. Thus, the life cycle and many of the capabilities of JSP pages (in particular the dynamic aspects) are determined by Java Servlet technology.
+      When a request is mapped to a JSP page, the web container first checks whether the JSP page’s servlet is older than the JSP page. If the servlet is older, the web container translates the JSP page into a servlet class
+      and compiles the class.
+
+2.5.2 Tag libs  : Tag lib е библиотека с дефинирани тагове (приличащи на тези при HTML / XML), но имащи специфично поведение. Директивата taglib декларира, че JSP страницата ще използва външна библиотека с тагове, посочва нейната локация
+                  и предоставя начини за адресиране на конкретен таг от библиотека (с префикс например). taglib директивата следва синтаксисът даден по-долу : 
+                  <%@ taglib uri = "uri" prefix = "prefixOfTag" > 
+                  
+                  Синтаксис за използването на тагове :  <prefix:tagname>
+
+                  Функционалността на таговете обикновено се разписва в специален Java клас, който имплементира някой от следните интерфейси : Tag, BodyTag, IterationTag, SimpleTag, които дефинират методи извиквани повреме на цикъла на живот
+                  на тага.
+   
+                  JSP таг библиотеките включват един или повече късътм JSP тагове и са описани в tag library descriptor file (tld). В този файл се съдържа информация за името на Tag handler класа, атрибутите и др. допълнителна информация.
+
+2.5.3 JSTL (JavaServer Pages Standard Tag Libraries) : Колекция от JSP тагове, които поддържат възможности за итерация върху колекция, внасяне на условна логика (if-ове), представяне на инфо от БД и др.
+                                                       Типове библиотеки в JSTL :
+                                                                                Core (c) : flow control, iteration, url managment, variables
+                                                                                XML (x) : parsing
+                                                                                SQL(sql) : for interaction with DB (query, update ...)
+                                                                                Formatting (fmt) : formatting text, date, time, numbers
+                                                                                Function (fn) : include functions for string manipulation
+
+
+      *EL (Expresssion Langugae) : Основната му роля е, че предоставя механизъм, чрез който презентационния слой (самата уеб странца) да комуникира с приложния слой (например да снема инфо от Java обекти).
+
+
+2.6 Tag Files (*.tag)
+
+Tag files allow us to create custom actions for script free JSP pages.
+
+Tag files promote separation of concerns by keeping the business logic apart from the presentation.
+
+In Tomcat tag files get translated into simple tag handlers that implement the javax.servlet.jsp.tagext.SimpleTag interface,
+so we get all the benefits of tag handlers without the extra deployment work.
+
+The <jsp:invoke> action must only be used in a tag file. It evaluates the named fragment, adding the output to the calling page’s output stream or
+capturing it in a variable.
+
+Tag File is an indirect method of content reuse, the way of encapsulating reusable content.
+A Tag File is a source file that contains a fragment of JSP code that is reusable as a custom tag.!!!
+
+=============================================================================================================================================================================================================================================
+
+HTTP Methods :           CRUD op
+             
+               -> POST   create
+               -> GET    read
+               -> PUT    Update/Replace
+               -> PATCH  Update/Modify
+               -> DELETE Delete
+
+
++---------+------+------------+
+| Method  | Safe | Idempotent |
++---------+------+------------+
+| CONNECT | no   | no         |
+| DELETE  | no   | yes        |
+| GET     | yes  | yes        |
+| HEAD    | yes  | yes        |
+| OPTIONS | yes  | yes        |
+| POST    | no   | no         |
+| PUT     | no   | yes        |
+| TRACE   | yes  | yes        |
++---------+------+------------+
+
+
+HTTP response codes :
+
+      -> 1xx informational response
+
+      -> 2xx success (200-OK,201-CREATED,202-Accepted...)
+
+      -> 3xx redirection
+
+      -> 4xx client errors (400-Bad Request, 401-Unauthorized,403-Forbidden,404-Not Found, 405-Method Not Allowed)
+
+      -> 5xx server errors (500-Internal Sever Error, 501-Not implemented)
+
+
+HTTP Request structure : [HTTP Method Name] [resource-url] [HTTP version]    (пример : GET https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages HTTP/1.1)
+                         [haeder-field-name]: [header-value]
+                         [haeder-field-name]: [header-value]
+                         ...................................
+                         [Request Body]
+
+HTTP headers (for requests)
+                          -> Content-Type  :  multipart/form-data; charset=utf-8    (Така даваме инфо за данните, които изпращаме какви са и какво е тяхното кодиране). HTTP 1.1 says that the default charset is ISO-8859-1.
+                                               
+                                              *multipart/form-data : индикира, че бодито ще бъде разделено на секции с различни типове данни (които можда да имат и различно кодиране). Разделенията (boundary) се задава със стринг.
+                                                                     
+                          -> Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+
+ 
+
+HTTP Caching : Идеята е когато искаме да достъпим един ресурс отново и отново през кратки интервали от време, да не се обръщаме всеки път към сървъра за ресурса, а всъщност самият браузър или прокси сървър да кешират ресурса и
+               да го получаваме от тях. Предимствата са, че се спестява трафик по мрежата и съответно времето за получаване на ресурса е по-кратко.
+               Има различни видове кешове : 
+                                           -> private (browser) cache : предназначен е за конкретния браузър и не се достъпват от други
+                                           -> shared proxy cache : Например самия ISP или нашата компания могат да има такъв кеш, който да се достъпва от повече от един клиент и да съдържа
+                                                                   копие на най-посещаваните страници, като по този начин клиентите ще получават данните от прокси кеша, а не от оригиналните сървъри
+
+               HTTP хедъри свързани с caching (могат да бъдат както в заявките, така и в отговорите) : 
+                                              -> Cache-Control: no-store (Указва,че не трябва да се запазва информация в кеша свърьзана със завката на клиента или отговора на сървъра) 
+                                              -> Cache-Control: no-cache (Указва, че кешът трябва първо да изпрати ресурса към сървъра и да провери дали има най-актуалната версия на ресура и чак тогава да върне отговор)
+                                              -> Cache-Control: private (Уакзва, че отговорът е предназначен за конкретен клиент и няма нужда да бъде кеширан е споделен кеш)
+                                              -> Cache-Control: public (Уакзва, че отговорът може да бъде кеширан от всякакъв вид кеш)
+                                              -> Cache-Control: max-age=31536000 (Този хедър обикновено се праща от сървара в неговия отговор по дадена заявка. Показва максималното време в секунди, за което ресурсът може да се 
+                                                                              счита за актуален)
+                                              -> Cache-Control: must-revalidate (Този хедър указва, че кешът трябва да верифицира дали ресурсът е остарял преди да го използва)
+                    
+
+
+ 
+- encoding, charset, http kodove
+- keshirane , cookies, heduri, content-type,control
+
+

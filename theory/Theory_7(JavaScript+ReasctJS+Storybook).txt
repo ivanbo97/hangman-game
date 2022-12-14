@@ -1,0 +1,982 @@
+                                           ================================================================================================================================
+                                                                                                      JavaScript and ReactJS
+                                           ================================================================================================================================
+
+
+
+1. JavaScript (main concepts)
+
+
+   1.1 let and const
+
+       -> let and const variables are block scope
+
+       -> let variables can be reassigned (update their value) but not redeclared in the same scope
+
+       -> const variables can not be updated and redeclared. When talking about constant object this does not mean that they are immutable. We still can change values of their properties. Constants in terms of JS object
+          means that we can not re-assign the variable to different object.
+
+   
+   1.2 Arrow functions 
+
+       An arrow function expression is a compact alternative to a traditional function expression, but is limited and can't be used in all situations.
+
+       Does not have its own bindings to this or super, and should not be used as methods.
+
+       The { braces } and ( parentheses ) and "return" are required in some cases.
+
+       For example, if you have multiple arguments or no arguments, you'll need to re-introduce parentheses around the arguments : (a, b) => a + b + 100;
+
+       Likewise, if the body requires additional lines of processing, you'll need to re-introduce braces PLUS the "return" (arrow functions do not magically guess what or when you want to "return") :
+
+         (a, b) => {
+            let chuck = 42;
+            return a + b + chuck;
+         }
+
+     
+        And finally, for named functions we treat arrow expressions like variables:
+
+           const bob = a => a + 100;
+
+
+    
+    1.3 Creating new objects
+
+         A) Using object literals : const obj = {
+                                          
+                                         property_1:   value_1,   // property value may be an identifier...
+                                         2:            value_2,   // or a number...
+                                         // ...,
+                                         'property n': value_n    // or a string
+                                     };
+
+              Where obj is the name of the new object, each property name before colons is an identifier (either a name, a number, or a string literal), and each value_i is an expression whose value is assigned to the property name.
+              The obj and assignment are optional; if you do not need to refer to this object elsewhere, you do not need to assign it to a variable. 
+
+
+          B) Using a constructor function
+
+               Define the object type by writing a constructor function. : 
+
+                                                                           function Car(make, model, year) {
+                                                                                       this.make = make;
+                                                                                       this.model = model;
+                                                                                       this.year = year;
+                                                                           }
+
+
+               Now you can create an object called myCar as follows:
+
+                             const myCar = new Car('Eagle', 'Talon TSi', 1993);
+
+
+
+            C) Using the Object.create method
+
+                This method can be very useful, because it allows you to choose the prototype object for the object you want to create, without having to define a constructor function.
+
+                            // Animal properties and method encapsulation
+                              const Animal = {
+                                   type: 'Invertebrates', // Default value of properties
+                                   displayType: function() {  // Method which will display type of Animal
+                                   console.log(this.type);
+                                   }
+                             };
+
+                              // Create new animal type called animal1
+                              const animal1 = Object.create(Animal);
+                              animal1.displayType(); // Output: Invertebrates
+
+                              // Create new animal type called fish
+                              const fish = Object.create(Animal);
+                              fish.type = 'Fishes';
+                              fish.displayType(); // Output: Fishes
+
+
+
+
+      1.4 Coercion
+
+          In JavaScript conversion between different two build-in types is called coercion. Coercion comes in two forms in JavaScript: explicit and implicit.
+
+                * explicit
+
+                        let a = "42";
+
+                        let b = Number(a);
+
+                * implicit
+
+                       let a = "42";
+                       let b = a*2;
+
+
+
+     1.5 Checking for equality in JavaScript
+
+         1) Strict comparison : Comparison is made without allowing coercion (the type of the variable is also checked)
+
+                        "4" === 4  -> evaluates to false
+
+         2) Abstract comparison : Allows implicit coercion
+
+                         "4" == 4 -> evaluates to true
+
+    
+
+     1.6 Class definitions
+
+         Classes are a template for creating objects. They encapsulate data with code to work on that data. Classes in JS are built on prototypes but also have some syntax and semantics that are not shared with ES5 class-like semantics.
+ 
+         Classes are in fact "special functions", and just as you can define function expressions and function declarations, the class syntax has two components: class expressions and class declarations.
+
+ 
+         A) Defining class with class declaration
+
+                               class Rectangle {
+                                 constructor(height, width) {
+                                    this.height = height;
+                                    this.width = width;
+                                 }
+                               }
+
+              
+                             Usage : const p = new Rectangle();
+
+
+
+        B) Defining class using class expressions
+
+           A class expression is another way to define a class. Class expressions can be named or unnamed. The name given to a named class expression is local to the class's body. However, it can be accessed via the name property.
+
+ 
+                                  // unnamed
+                                  let Rectangle = class {
+                                    constructor(height, width) {
+                                    this.height = height;
+                                    this.width = width;
+                                    }
+                                  };
+
+                                  console.log(Rectangle.name);
+                                  // output: "Rectangle"
+
+                                  // named
+                                  let Rectangle = class Rectangle2 {
+                                    constructor(height, width) {
+                                      this.height = height;
+                                      this.width = width;
+                                    }
+                                  };
+
+                                  console.log(Rectangle.name);
+                                  // output: "Rectangle2"
+
+
+                               Usage : const rect1 = new Rectangle(10,20);
+
+   
+      1.7 Rest/Spread operator for arrays and object
+
+
+          1) Rest operator : used when we want to destructure an array/ object
+
+
+               Example of array destructuring: 
+
+               const arr = [1, 2, 3, 4]
+               let [x, ...remaining] = arr;
+               console.info(x); // 1
+               console.info(remaining); // [2,3,4] 
+
+
+               Example of object destructuring : 
+            
+                 let { x, ...remaining } = { x: 1, a: 2, b: 3, c: 4 };
+                 console.info(x); // 1
+                 console.info(remaining); // {a: 2, b: 3, c: 4}
+
+               
+               Example of object destructuring in function methods (here we are also giving default values of c and y in case they do not exist as fields of the passed object):
+
+                  let sampleObject = { x: 1, y: 2 };
+
+                  const myFunc = ({x=3,y=4})=>{
+                      console.log(x);
+                      console.log(y);
+                  };
+
+                 myFunc(sampleObject); // logs 1 and 2
+           
+   
+         2) Spread : When initializing an array - the spread operator copies the elements of an existing array into the new array
+
+          ->  Example of array spreading : 
+  
+            const arr = [1,2,3,4]
+            let newArr = [...arr,5,6];
+            console.log(newArr); // [1,2,3,4,5,6]
+
+  
+          -> Example of overriding value of object property using spread operator:
+
+            let sampleObject = { x: 1, y: 2 };
+            let newObject = { ...sampleObject, x: 3 };
+            console.info(newObject); // {x: 3, y: 2}
+
+
+          -> Example of copying properties of exisiting js object into new object and adding more properties:
+
+             let sampleObject = { x: 'a', y: 'b' };
+             let newObject = { z: 'c', ...sampleObject, };
+             console.info(newObject); // {z: 'c', x: 'a', y: 'b'}
+
+
+         *** We should be careful with the default shallow copies that js will create for nested arrays or objects when using spread operator or some of the built-in array-copy functions. Take the following example : 
+
+             Here we have firstObj that contains nestedObj. Nested obj has array of integers. If we try to copy the contents of firstObj into new object (shallowCopy) something interesting happens. In copy object (shallowClone)
+             we have reference to the memory location of the array of firstObj. Thus changes in shallowClone.nestedObj.arr directly reflect firstObj.nestedObj.arr, because the array is at the same memory location.
+
+             let firstObj = { x: 1, nestedObj:{arr: [1,2,3,4]} };
+             let shallowClone = {...firstObj};
+             shallowClone.x = 7;
+             shallowClone.nestedObj.arr = [7,8,9,10];
+             console.info(firstObj.nestedObj.arr);  // will output [7,8,9,10] not [1,2,3,4] 
+
+
+
+       1.8 Array as API (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)
+
+           In JavaScript, arrays aren't primitives but are instead Array objects with the following core characteristics:
+
+                       -> JavaScript arrays are resizable and can contain a mix of different data types. (When those characteristics are undesirable, use typed arrays instead.)
+
+                       -> JavaScript arrays are not associative arrays and so, array elements cannot be accessed using strings as indexes, but must be accessed using integers as indexes.
+
+                       -> JavaScript arrays are zero-indexed: the first element of an array is at index 0, the second is at index 1, and so on — and the last element is at the value of the array's length property minus 1.
+
+                       -> JavaScript array-copy operations create shallow copies. (All standard built-in copy operations with any JavaScript objects create shallow copies, rather than deep copies).
+
+
+          
+           1.8.1 Create array (3 ways)
+  
+                 -> using literal notation : const fruits = ['Banana','Apple']
+
+                 -> using Array() constructor : const fruits = Array('Banana','Apple');
+
+                 -> from String to array : const fruits = 'Banana, Apple'.split(',');
+
+            
+           1.8.2 From array to string : const fruitsString = fruits.join(', ');
+
+       
+           1.8.3 Find index of array item : fruits.indexOf('Banana')
+
+           1.8.3 Check if array contains item : fruits.includes('Banana'); // true  or we can use fruits.indexOf('Banana') !== -1; // true
+
+           1.8.9 Append item to array : fruits.push('Orange');
+
+           1.8.10 Remove the last item of array : const removedItem = fruits.pop();
+
+           1.8.11 Remove multiple items for the end of array	
+
+                             const fruits = ['Apple', 'Banana', 'Strawberry', 'Mango', 'Cherry'];
+                             const start = -3;
+                             const removedItems = fruits.splice(start);    
+		             console.log(fruits); // ['Apple', 'Banana']
+                             console.log(removedItems); // // ["Strawberry", "Mango", "Cherry"]
+
+           1.8.12 Iterate over the items of array (for..of)
+
+                          for(const fruit of fruits){
+                             // use fruit
+                          }
+
+
+           1.8.13 Using forEach for performing action on each element of the array. forEach expects function reference with 3 parameters: item, idx and array reference
+
+           1.8.14 Merging two arrays : fruits.concat(moreFruits);
+
+           1.8.15 Useful functions for arrays : every, filter, flat, flatMap, forEach, map
+
+
+      1.9 Destructuring assignment (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+
+
+            A) Array destructuring
+
+                    * Basic variable declaration and assignment at the same time
+
+                                 const foo = ['one', 'two', 'three'];
+                                 const [red, yellow, green] = foo; // assignment and declaration
+
+
+                     * Assignment separate from declaration
+
+                       let a, b;
+                       [a, b] = foo;
+
+                     
+                     * We can define default if there are undefined values in the unpacking array
+
+                             const foo = ['one', 'two'];
+                             const [red, yellow, green='three'] = foo;
+
+                             green will be three since in foo there is no third element
+
+
+
+                     * Parsing an array returned from a function
+
+                       
+                             function f() {
+                                  return [1, 2, 3];
+                             }
+
+                             let [a, b] = f()
+
+
+                      * Ignoring values from an array
+
+                          let arr = [{a:1,b:2},{c:3,d:4},{e:5,f:6}];
+
+                          // Taking the second object from array
+                          const [,secondObj,] =  arr;
+
+
+                      * Assigning the rest of the array to a variable
+ 
+                        const [a, ...b] = [1, 2, 3];
+                        console.log(a); // 1
+                        console.log(b); // [2, 3]
+
+
+
+            B) Object destructuring : Almost the same as array destructirung but on the left side of the equals sign we should user curly braces ({})
+
+
+		    
+                             const user = {
+                                  id: 42,
+                                  isVerified: true
+                             };
+
+
+
+                     * Basic assignment
+
+                            const {id, isVerified} = user;
+
+
+                     * Using new varables names for storing destructured values
+
+                           const {id: identifier} = user; // Will take the value of id property from user object and store it in variable with name identifier
+
+
+                     * Giving default values if property of object is not present
+
+                              let {age=18} = user; // Since user object does not have age field, it will take the default value of 18.
+
+
+                     * Unpacking values from js objects and passing them as function paramerters
+
+                              function extractId({id}){
+                                 return id;
+                              }
+
+                              extractId(user); // User object will be passed but before function exection the value of id property will be retrieved and passed as argument.
+
+
+                     * Giving default values to functions if property is not present in object
+
+                              function extractAge({age = 18}){
+                                 return id;
+                              }
+
+                              !!! There is something specific here: If we want to call the function without supplying any argument (calling extractAge();), in function parameters we should write the 
+                                   following : function extractAge({age=18}={})
+
+
+
+                     * Computed object property names and destructuring : Computed property names, like on object literals, can be used with destructuring.
+                     
+				let key = 'z';
+                                let {[key]: foo} = {z: 'bar'};
+
+                                console.log(foo); // "bar"
+
+
+                      * Rest operator in object destructuring
+                          
+                                   let {a, b, ...rest} = {a: 10, b: 20, c: 30, d: 40}
+                                   a; // 10
+                                   b; // 20
+                                   rest; // { c: 30, d: 40 }
+                             
+                   
+                      * Spread operator for adding new fields to object or overriding existing values.
+                
+                         const firstObj = {a: 10, b: 20, c: 30, d: 40};
+                             const secondObj = {...firstObj,e:50};
+
+
+                      * Combing object and array destructuring at the same time
+
+                              const props = [
+                                 { id: 1, name: 'Fizz'},
+                                 { id: 2, name: 'Buzz'},
+                                 { id: 3, name: 'FizzBuzz'}
+                              ];
+
+                              // First destructirung array of objects for taking the third one and then from the third object getting the name property
+                              const [,,{name}]  = props
+  
+              
+ 
+           
+
+            1.10 JavaScript this keyword
+
+
+                 There are different meanings of 'this' keyword depending on the context it is used in :
+
+ 
+                     A) Global context (directly in js file, outside of any function) : Refers to the global object whether in strict mode or not. In web browsers the window object is always the global object
+
+                                                   console.log(this === window); // true
+
+
+                     B) Function context : Inside a function, the value of this depends on how the function is called. If inside the function body we do not declare strict mode and we haven't explicitly set the value of 'this' before
+                                           the function call, we should exepct the value of 'this' will default to global object (window).
+
+                                           If we define strict mode in function body but we haven't explicitly set 'this' (with call() or apply() ) we can expect the value of 'this' to be undefined.
+
+                     
+                     C) Class context : Within a class constructor, 'this' stores the reference of the current instance (like in Java).
+
+                     D) Derived class : Child classes do not have 'this' by default like base classes. Therefore we should call super() in the constructor of the child class in order to initialize its 'this'.
+
+                     E) Arrow functions : In arrow functions, this retains the value of the enclosing lexical context's this. In global code, it will be set to the global object
+
+                     F) As a DOM event handler : When a function is used as an event handler, its this is set to the element on which the listener is placed (some browsers do not follow this convention for listeners added dynamically
+                                                 with methods other than addEventListener())
+
+
+
+            1.11 Fetch API
+
+                 The Fetch API is a simple interface for fetching resources. Fetch makes it easier to make web requests and handle responses than with the older XMLHttpRequest, which often requires additional logic (for example,
+                 for handling redirects).
+
+                 The fetch() method takes the path to a resource as input. The method returns a promise that resolves to the Response object of that request.
+                 The Response object, in turn, does not directly contain the actual JSON response body but is instead a representation of the entire HTTP response. So, to extract the JSON body content from the Response object, we use the
+                 json() method, which returns a second promise that resolves with the result of parsing the response body text as JSON.
+
+ 
+                 The fetch() method can optionally accept a second parameter, an init object that allows you to control a number of different settings: http method, headers, body (for post requests), cors mode.
+
+                 Some of the core classes in Fetch API : 
+
+                 A) Request :  
+
+                 B) Response
+
+                 C) Headers
+
+                 E) Promise : 
+
+
+                 Data that is returned with the help of Fetch API can be acessed through async.. await style or fetch(..).then(response=>{...}). The important point in using async/await is that you have to call await keyword just inside
+                 an async function.
+
+
+           1.12 JS modules (import, export, default export)
+
+
+                JavaScript programs started off pretty small — most of its usage in the early days was to do isolated scripting tasks, providing a bit of interactivity to your web pages where needed,
+                so large scripts were generally not needed and all js code was basically situated in just one js file. However, with the advance of front-end technologies and application complexities having a single js file 
+                makes everything hard to follow. Therefore the idea of separating frontend functionalities in different js files seemed to solve the problems of readability and maintenance.
+                First this fetaure was provided by third-party software like Babel and Webpack but fortunately in recent years modern browsers started to support module functionality natively.
+
+
+               A) Exporting js module (js file) features
+
+                  The first thing you do to get access to module features is export them. This is done using the export statement.
+
+                  The easiest way to use it is to place it in front of any items (array, function, class, enum, var, let, const) you want exported out of the module. Example:
+
+                       export const name = 'square';
+
+            
+                  A more convenient way of exporting all the items you want to export is to use a single export statement at the end of your module file, followed by a comma-separated list of the features you want to export wrapped in
+                  curly braces. For example:
+
+                       export { name, draw, reportArea, reportPerimeter };
+
+
+
+               B) Importing already exported module features
+
+                  Once you've exported some features out of your module, you need to import them into your script to be able to use them. The simplest way to do this is as follows:
+
+                  import { name, draw, reportArea, reportPerimeter } from './modules/square.js';
+
+                  You use the import statement, followed by a comma-separated list of the features you want to import wrapped in curly braces, followed by the keyword from, followed by the path to the module file — a path relative to
+                  the site root.
+
+                  However, we've written the path a bit differently — we are using the dot (.) syntax to mean "the current location", followed by the path beyond that to the file we are trying to find. This is much better than writing
+                  out the entire relative path each time, as it is shorter, and it makes the URL portable — the example will still work if you move it to a different location in the site hierarchy.
+
+
+               D) Default exports
+
+                   The functionality we've exported so far has been comprised of named exports — each item (be it a function, const, etc.) has been referred to by its name upon export, and that same name has been used to refer to it on
+                   import as well.
+                   There is also a type of export called the default export — this is designed to make it easy to have a default function provided by a module. We export something with default keyword, in the module we import it
+                   we can use different name. Example:
+       
+                                              export default arr = [1,2,3,4,5];
+                                              ......................................
+                                               import providedArray from "./array.js";
+
+
+                 !!! When we import default exported items, we should ommit {} in import statement.
+                 !!! When we import exported items that are not exported by default, we should use {} and use the exact exported name (they are called named imports)
+
+ 
+                E) Renaming imports and exports
+
+                   We can reaname components while exporting or importing. Example : 
+
+
+                   import {arr as myArray} from "./array.js"
+      
+                   или пък
+
+                   export myArr = [1,2,3,4] as exportedArray;
+
+
+                F) Creating a module object
+
+                   It is about grabbing all the exported features of a js file and making them available through module object. Example:
+
+                   import * as Module from './modules/module.js';
+
+                   This grabs all the exports available inside module.js, and makes them available as members of an object Module, effectively giving it its own namespace.
+                   Then we can access the exported module functionality as follows:
+
+                   Module.function1();
+                   Module.function2();
+
+
+                G) Dynamic module loading
+
+
+
+2. NPM (Node Package Manager) 
+ 
+   This is the default packaging tool for JavaScript projects. It consists of command line client and an online database (npm registry) of public and paid-private packages which you can use in your project. It is like Maven but
+   does not include packaging (making final code archive for prod or dev) and execution of plugins.
+
+   An important file for npm is package.json. It consists of metadata about the application (name,version,description..) and all the third party dependencies that the current app uses (like pom file in maven).
+   Having dependencies in your project's package.json allows the project to install the versions of the modules it depends on. By running an install command [npm install].
+   In package.json we can separate the dependencies based on when they are used : during development (devDependencies) and in production.
+   In package.json we can specify scripts that can be ran through: npm run <script_name>
+
+
+  A) Npm essential commands
+
+
+         -> npm install : This command is used for downloading all dependencies specified in package.json and saving them in default folder node_modules in the main project folder.
+           
+            -> npm install <module_name> 
+   
+         -> npm install <module_name> --save : This flag will add the module as a dependency of your project to the project's package.json as an entry in dependencies object.
+
+            -> npm install <module_name> --save-dev : Saves the dependencies in devDependencies object in package.json
+
+
+
+  * Peer Dependencies (https://nodejs.org/es/blog/npm/peer-dependencies/) Nikolay says they are like optional dependencies in maven
+
+
+  * Uglify plugin - minimalistic variant of code for smaller bundle size
+
+3. Webpack (src: https://www.sitepoint.com/webpack-beginner-guide/)
+
+   As we mentioned above npm it is like maven but does not support packaging and plugins. Here comes the role of Webpack. Webpack is a static module bundler. It treats all files and assets as modules.
+   Under the hood, it relies on a dependency graph. A dependency graph describes how modules relate to each other using the references (require and import statements) between files. In this way, webpack statically traverses all modules
+   to build the graph, and uses it to generate a single bundle (or several bundles) — a JavaScript file containing the code from all modules combined in the correct order. 
+   “Statically” means that, when webpack builds its dependency graph, it doesn’t execute the source code but stitches modules and their dependencies together into a bundle.
+
+   Webpack has some main concepts which we need to understand clearly before digging in its practical implementation. Let’s examine them one by one:
+
+        -> Entry: the entry point is the module that webpack uses to start building its internal dependency graph. By default, the entry property is set to ./src/index.js, but we can specify a different module (or even multiple modules)
+                  in the webpack configuration file.
+
+
+        -> Output : the output property instructs webpack where to emit the bundle(s) and what name to use for the file(s). The default value for this property is ./dist/main.js for the main bundle and ./dist for other generated files — 
+                    such as images, for example. Of course, we can specify different values in the configuration depending on our needs.
+
+
+        -> Loaders : by default, webpack only understands JavaScript and JSON files. To process other types of files and convert them into valid modules, webpack uses loaders. Loaders transform the source code of non-JavaScript modules,
+                     allowing us to preprocess those files before they’re added to the dependency graph. For example, a loader can transform files from a CoffeeScript language to JavaScript or inline images to data URLs. With loaders we
+                     can even import CSS files directly from our JavaScript modules.
+
+        -> Plugins : plugins are used for any other task that loaders can’t do. They provide us with a wide range of solutions about asset management, bundle minimization and optimization, and so on.
+
+        -> Mode : typically, when we develop our application we work with two types of source code — one for the development build and one for the production build. Webpack allows us to set which one we want to be produced by changing
+                  the mode parameter to development, production or none. This allows webpack to use built-in optimizations corresponding to each environment. The default value is production. The none mode means that no default
+                  optimization options will be used.
+
+
+   How does Webpack works (let's put it simply) : Even a simple project contains HTML, CSS and JavaScript files. Also, it can contain assets such as fonts, images, and so on. So, a typical webpack workflow would include setting up
+                                                  an index.html file with the appropriate CSS and JS links, and the necessary assets. Also, if you have many CSS and JS modules which depend on each other, they need to be optimized and
+                                                  properly combined in one unit ready for production.
+
+                                                  To do all this, webpack relies on configuration. Starting from version 4 and above, webpack provides reasonable defaults out of the box, so creating a configuration file is not required.
+						  However, for any non-trivial project you’ll need to provide a special [webpack.config.js] file, which describes how the files and assets should be transformed and what kind of output should
+                                                  be generated. This file can quickly become monolithic, which makes it hard to understand how webpack does its job unless you know the main concepts behind its working.
+
+                                                  Based on the provided configuration, webpack starts from the entry points and resolves each module it encounters while constructing the dependency graph. If a module contains dependencies
+                                                  , the process is performed recursively against each dependency until the traversal has completed. Then webpack bundles all the project’s modules into a small number of bundles — usually,
+                                                  just one — to be loaded by the browser.
+
+
+4. ReactJS
+
+React components describe your UI at any point in time, just like server-rendered app.
+
+You can't just throw out the DOM and rebuild it on each update. It is too slow and you'll lose form state and scroll position.
+On every set state react builds new virtual DOM tree and diff it with the old one
+
+
+Ако искаш да смениш какво се вижда на екрана не пипаш самия екран, пипаш стейта(ъпдейтваш стейта) и React js се грижи да синхорнизира екрана със стейта.
+Когато променям даден елемент аз не пипам DOM-а директно, аз пипам пропъртитата, които се подават на компонента
+Изпозлва се не mvc pattern, а flux pattern (https://medium.com/weekly-webtips/flux-pattern-architecture-in-react-35d0b55313f6)
+Страницата само по себе си е react компонент съставен от други компоненти.
+
+Elements vs Components : Unlike browser DOM elements, React elements are plain objects, and are cheap to create. React DOM takes care of updating the DOM to match the React elements.
+                         One might confuse elements with a more widely known concept of “components”. Elements are what components are “made of”.
+                         React elements are immutable. Once you create an element, you can’t change its children or attributes.
+
+
+
+4.1 Function and class components (src: https://reactjs.org/docs/components-and-props.html)
+
+    Components let you split the UI into independent, reusable pieces, and think about each piece in isolation.
+    Conceptually, components are like JavaScript functions. They accept arbitrary inputs (called “props”) and return React elements describing what should appear on the screen.
+
+    The simplest way to define a component is to write a JavaScript function:
+ 
+          function Welcome(props) {
+            return <h1>Hello, {props.name}</h1>;
+          }
+                   
+     This function is a valid React component because it accepts a single “props” (which stands for properties) object argument with data and returns a React element. We call such components “function components” because they are
+     literally JavaScript functions.
+
+    
+     You can also use an ES6 class to define a component:
+
+
+         class Welcome extends React.Component {
+              render() {
+                 return <h1>Hello, {this.props.name}</h1>;
+              }
+         }
+
+      The above two components are equivalent from React’s point of view.
+
+
+  4.1.1 Components and props
+
+        Let's take an example to explain how the rendering happens
+
+        function Welcome(props) {
+             return <h1>Hello, {props.name}</h1>;
+        }
+
+        const element = <Welcome name="Sara" />;
+
+        ReactDOM.render(
+         element,
+         document.getElementById('root')
+        );
+
+        1. We call ReactDOM.render() with the <Welcome name="Sara" /> element.
+        2. React calls the Welcome component with {name: 'Sara'} as the props
+        3. Our Welcome component returns a <h1>Hello, Sara</h1> element as the result.
+        4. React DOM efficiently updates the DOM to match <h1>Hello, Sara</h1>.
+
+
+        !!! Component props are read-only and a component should not reassign values to its props directly. Of course, application UIs are dynamic and change over time. So how do we update this props ? Here comes the concept of
+            state in React. State allows React components to change their output over time in response to user actions, network responses, and anything else, without violating this rule.
+
+
+       4.1.2 Important info about React re-rendering (src:https://felixgerschau.com/react-rerender-components/#rendering-in-react): 
+
+             To sum up, it is really important to structure your component hierarchy well. If your application is poorly structured, you might be running a lot more JavaScript than you expected because updating the parent node implies
+             running the render function of all children components.
+
+
+  4.1.2 State and lifecycle of components
+
+        !!!State is similar to props, but it is private and fully controlled by the concrete component. State is maintained internally by React. Every component has its own state.
+
+        There is a slight difference in how class components and functional components handle their state changes:
+
+                 -> In class components we can store component's state in [this.state] property. We can assign the value of the state only in constructor of the class. When we want ot change that state we should call this.setState(..)
+                    providing the new state of the component. In cases our new state depends on the previous one we should consider passing function as parameter to setState(..) (example https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous)
+
+                                           Somethig worth mentioning is the case when we assign to [this.state] an object which has for example two properties. If we update only one of the property, we won't lose the current data
+                                           of the other. Example: 
+
+                                       constructor(props) {
+                                           super(props);
+                                           this.state = {
+                                               posts: [],
+                                               comments: []
+                                           };
+                                        }
+
+                  -> In functional react components, component state is maintained with something called react hooks
+
+
+   4.1.3 Handling events (https://reactjs.org/docs/handling-events.html)
+
+         By events we mean user interactions with the dom elements. Handling events with React elements is very similar to handling events on DOM elements. There are some syntax differences:
+
+           -> React events are named using camelCase, rather than lowercase (onClick, onSubmit)
+           -> With JSX you pass a function as the event handler, rather than a string.
+
+         For example: 
+
+         <button onClick={activateLasers}>
+            Activate Lasers
+          </button>
+
+         Another difference is that you cannot return false to prevent default behavior in React. You must call preventDefault explicitly. 
+
+
+        
+  4.1.4 Conditional rendering 
+
+        Using ternary operators and the short-circuit evaluation mechanism of jsavascript to dispaly components conditionally, without using if..else (detailed info in React_Course.txt file)
+
+
+  4.1.5 Props propagation and functions as props (src : https://www.robinwieruch.de/react-pass-props-to-component/)
+
+        Props are used to pass data from component to component. Thus to every component you can pass different data which is a way more dynamic than storing statically data in each component.
+	You can pass data in React by defining custom HTML attributes to which you assign your data with JSX syntax. So don't forget the curly braces.
+        There is no way in React to set props (even though it was possible in the past). After all, props are only used to pass data from one component to another React component , but only from parent to child components down
+        the component tree.
+        Passing only props from component to component doesn't make the component interactive, because nothing is there to change the props. Props are read-only. That's the time when React State comes into play.
+        Every time the props or state change, the rendering mechanism of the affected component is triggered. That's how the whole component tree becomes interactive.
+
+        !!! There is no way of passing props from child to parent components but you can always pass functions from parent to child components, whereas the child components make use of these functions and the functions may change
+            the state in a parent component above. 
+
+
+        !!! Regardless of passing props or state to a component, the component just receives the data as props. It doesn't differentiate between props or state. Everything incoming is props, everything managed by the component itself
+            is state.
+
+     ->   Strategy for passing all object props to a child component is the JavaScript spread operator. JavaScript's spread operator in React is a useful powerful feature and it is used for destructuring object data. Example: 
+
+
+                       We are having the following js object and we are trying to pass it to react component as prop : const greeting {
+                                                                                                                          subject: "React",
+                                                                                                                          description: "Hello"
+                                                                                                                       }
+
+
+                       Here we are destructirung the object and passsing it as props to Greeting component: <Greeting {...greeting}>
+                       And when we define Greeting functional component we do : const Greeting ({subject, description})=>{....}
+
+ 
+
+    -> Children proprty in React : It contains the content between opening and closing react component tags.
+
+    -> You can also pass components as props of a componenet. Here we are passing avatar and biography as components. This is called slot pattern in React :
+
+                          <Profile
+                                user={user}
+                                avatar={<AvatarRound user={user} />}
+                                biography={<BiographyFat user={user} />}
+                           /> 
+        
+
+   4.2 React Hooks (src : https://reactjs.org/docs/hooks-intro.html)
+       
+         Hooks are functions that let you  hook into React state and lifecycle features from function components. Hooks do not work inside classes.
+         They let you use React without classes. React provides built-in hooks like useState and useEffect but you can also create your own.
+         Hooks always start with name "use.."
+         Components that use hooks should start with upper case letter.
+         Hooks should be invoked in function body only.
+         We can not create hooks in if statements.
+
+       A) useState hook
+
+          useState() is a function that returns array with two elements. First element is actually the state variable(it could be object, value, string). Second element of the retruned array represents a reference to
+          the function that is going to change the state vaiable. This function is implemented by react and we receive only its reference. Using this function we can change the value that variable stores which in order           
+          will trigger component re-rendering.
+
+          Unlike this.setState in a class, updating a state variable always replaces it instead of merging it.
+
+       B) useEffect hook
+
+          We use this hook when we want to execute some operations after the rendering of React components. This opearatrions are refered as "side effects" and they could be : data fetching, subscriptions,
+          or manually changing the DOM.
+
+          The Effect Hook, useEffect, adds the ability to perform side effects from a function component. It serves the same purpose as componentDidMount, componentDidUpdate, and componentWillUnmount in class components.
+         
+          When you call useEffect, you’re telling React to run your “effect” function after flushing changes to the DOM. Effects are declared inside the component so they have access to its props and state. By default, React runs
+          the effects after every render — including the first render. 
+          Effects may also optionally specify how to “clean up” after them by returning a function.
+
+          We can configure it to run on initial render only by passing empty array as second argument :  useEffect(callBackAfterRenderingComponent, []);
+
+          We can also configure it to run only on first render and when there is a change in some value :  useEffect(callBackAfterRenderingComponent, [value]);
+
+
+ 
+        C) Custom hooks
+
+           Използваме, когато искаме да капсулираме state-а и логиката свързана с промяната на state-a на едно място, и да export-нем само стейта и референции към функции, които се занимават с бизнес логиката и променят стейта.
+
+           Sometimes, we want to reuse some stateful logic between components. Traditionally, there were two popular solutions to this problem: higher-order components and render props. Custom Hooks let you do this, but without adding
+           more components to your tree.
+
+           A custom hook can be treated as a simple js function which is executed from within the scope of functional component and effectively the hooks that are present in the custom hook can be treated as part of the component.
+           So that's why if we use exported by the hook setter function, our component will re-render.         
+
+           !!! The state of each component is completely independent. Hooks are a way to reuse stateful logic, not state itself. In fact, each call to a Hook has a completely isolated state — so you can even use the same
+               custom Hook twice in one component.
+
+           Custom Hooks are more of a convention than a feature. If a function’s name starts with ”use” and it calls other Hooks, we say it is a custom Hook.
+
+
+    4.3 Render props pattern
+
+
+        Прави се с цел създаваният от нас компонент да може да приема динамично своите child компоненти. Тоест разписваме така компонента, че не да му задаваме конкретни фиксирани компоненти, от които да е изграден, а по-скоро в него
+        да съхраним някаква базова информация (state например), която ще бъде използвана от неговите child компоненти независимо какви са те.
+
+        More concretely, a render prop is a function prop that a component uses to know what exactly child components to  render.
+
+        There are two approaches for implementing render props pattern : use separate property while defining the function or give function directly in children ({...}).
+
+        Render props have a lot of similarities with customHooks.
+
+
+   4.4 Higer Order Components (HOC) pattern (src : https://reactjs.org/docs/higher-order-components.html)
+
+       A higher-order component is a function that takes a component and returns a new component (not an instance of component).
+       HOCs are not part of the React API, per se (само по себе си). They are a pattern that emerges from React’s compositional nature.
+
+       Note that a HOC doesn’t modify the input component, nor does it use inheritance to copy its behavior. Rather, a HOC composes the original component by wrapping it in a container component. A HOC is a pure function with zero
+       side-effects.
+ 
+       HOCs behave much like proxies.
+
+       The HOC isn’t concerned with how or why the data is used, and the wrapped component isn’t concerned with where the data came from.
+
+       !!! Don’t Use HOCs Inside the render Method (https://reactjs.org/docs/higher-order-components.html#dont-use-hocs-inside-the-render-method)
+
+       !!! Be careful when using HOCs with components that have staic methods. Static methods of wrapped component should be copied (https://reactjs.org/docs/higher-order-components.html#dont-use-hocs-inside-the-render-method)
+
+
+
+   4.5 Create React App (https://create-react-app.dev/)
+
+       Create React App is a comfortable environment for learning React, and is the best way to start building a new single-page application in React.
+     
+       It sets up your development environment so that you can use the latest JavaScript features, provides a nice developer experience, and optimizes your app for production. You’ll need to have Node >= 14.0.0 and npm >= 5.6
+       on your machine. 
+
+       Create React App doesn’t handle backend logic or databases; it just creates a frontend build pipeline, so you can use it with any backend you want. Under the hood, it uses Babel and webpack, but you don’t need to know
+       anything about them.
+
+       When you’re ready to deploy to production, running npm run build will create an optimized build of your app in the build folder. 
+
+       You may create subdirectories inside src. For faster rebuilds, only files inside src are processed by webpack. You need to put any JS and CSS files inside src, otherwise webpack won’t see them.
+
+
+   4.6 Popular React packages (dependencies for react)
+
+       A) SWR (Stale-While-Revalidate)
+
+          В документацията на swr под key се има предвид url-to, към което ще се прави заявка.
+
+          Идеята на хуука е да кешира данните, които са извлечени един път при заявка към съответния url. Ако направим повторна заявка към този url куката ще върне старите данни от кеша(stale) от предишното извикване, и ще
+          изпрати нова завка (revalidate), която да реваилидира дали кешът е в синхрон със данните от сървъра за това url.  
+          It’s a React Hooks library for remote data fetching. SWR works with three main steps: first, it returns the data from cache (the stale part), then sends the fetch request (the revalidate part), and finally comes with
+          the up-to-date data.
+          But we already have Fetch API built in JS why need yet another mechanism ? -> Fetch API allows us to fetch or send data easily. However, once the operation is done, it will not help us to cache or paginate data,
+          you have to do it on our own. Actually SWR is built on top of Fetch API but adds to it caching, pagination, scroll position recovery,  dependent fetching and many other really importnat features for web developers.
+
+
+          In order to keep the data always fresh we can make automatic data fetches repeats in certain period of time. Example(fetch in 5 min interval) :
+         
+          useSwr(userId && `/api/users/${userId}/checkins`, {refreshInterval: 5 * 60 * 1000, });
+          The repeating fetches only happen when component is currently visible on screen.
+
+          About pagination : З
+
+
+        B) React-bootstrap
+
+           First let's start with what is Bootstrap? Bootstrap is a free and open-source CSS framework directed at responsive, mobile-first front-end web development. With Bootstrap, web developers can concentrate on the development work,
+                                                    without worrying about design, and get a good looking website up and running quickly. Conversely, it gives web designers a solid foundation for creating interesting Bootstrap themes.
+
+
+           React-Bootstrap is a complete re-implementation of the Bootstrap components using React. It has no dependency on either bootstrap.js or jQuery. If you have React setup and React-Bootstrap installed, you have
+           everything you need.
+
+
+         C) React-router
+
+            It is highly used in single page applications (SPA). It's main idea is to make our app less dependent on server to provide us with the necessary html. We can just change the component that is currently visible.
+            Thus user will have the experience of navigating through different pages of our app (the browser url will change) but in reality Router library will just change the React component that the user sees and there are
+            not going to be calls to the server for providing html pages.
+
+            
+           *** In <Route> element actually we are binding specific url to our specific React component (for example : <Route path="/login" component={Login} />)
+
+           *** With <Switch> component only the first <Route> that matches is displayed.
+
+
+
+          D) React-intl – i18n (src : https://lokalise.com/blog/react-i18n-intl/)
+
+            Internationalization or i18n is the design and development of a product, application, or document content that enables easy localization for target audiences that vary in culture, region, or language. 
+
+
+          E) React-select
+
+
+
+     5. Storybook
+
+        Общата идея е да се направи една документация на всички къстъм компоненти, които са вече дефинирани от реакт разработчиците в компанията и за всеки компонент да се разпише различна история в *.stories.js. Под история може да се
+        приеме това как ще бъде рендериран компонентът (как ще изглежда визуално) при подаването на различни porps. Всичко това се генерира като автоматична документация от Story book и може да се достъпи на съответен порт на приложението.
+        Тоест storybook използва разписаните от нас *.stories.js(x) файлове и генерира автоматично за нас уеб страница във вид на документацията, където може да видим какви къстъм компоненти има нашето приложение, какви пропс приемат
+        те и как изглежда чисто визулно компонентът.
+        Това е полезно при разработка, защото преди да направим компонент, може да погледнем в документацията на story book дали вече имплементация на такъв компонент не е направена от някой преди нас и да я използваме
+
+
+        
+
+
+                   
+
+
+
+
+                            
+
+
+
+                     

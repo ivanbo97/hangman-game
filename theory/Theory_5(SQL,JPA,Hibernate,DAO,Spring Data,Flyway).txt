@@ -1,0 +1,683 @@
+1. SQL
+
+   A) DDL (Data Definition Langugage) : Език за създаване и модифициране на обекти от БД (таблици,индекси, потребители)
+
+         -> CREATE table_name(
+ 	      ID INT NOT NULL,            
+ 	      NAME VARCHAR (20)     NOT NULL,
+              DATE DATE NOT NULL
+              PRIMARY KEY (ID)
+            );
+
+           Има разнообразни типове SQL данни, които могат да се задават на колоните на една таблица : DATE,  DATETIME(fsp), TIMESTAMP(fsp), YEAR, FLOAT(p), BIGINT(size), TINYINT(size)..
+
+
+         -> ALTER TABLE : Използва се за добавяне, изтриване, или модифициране на дадена колона от съществуваща таблица 
+
+         -> ALTER TABLE table_name
+            RENAME COLUMN old_name TO new_name;
+
+         -> DROP TABLE "table_name" : изтриване на таблица от БД
+
+         -> DROP TABLE IS EXISTS "table_name" 
+
+         -> TRUNCATE TABLE table_name : Изтриване на целото текущо съдържание на таблицата, но структурата и се запазва
+
+   B) DML (Data Manipulation Language) : Съдържа изрази, чрез които се манипулира съдържанието на обектите от дадена БД
+
+          -> INSERT INTO : използва се за добавяне на нови редове във съществуващи таблици. Възможно е също така копирането на цялото съдържание на една таблица и добавянето му в друга.
+
+             *Добавяне на един ред от таблица :   INSERT INTO table_name VALUES (value1, value2, value3,…); 
+
+             *Добавяне на точно определнеи стойностти за конкретни колони : INSERT INTO table_name (column1, column2, column3,..) VALUES ( value1, value2, value3,..);
+
+             *Използване на INSERT и SELECT за копиране на съдържание м/у таблици : INSERT INTO first_table SELECT * FROM second_table;
+
+	     *Използване на INSERT и SELECT за копиране на съдържание на специфични колони м/у таблици : INSERT INTO table1 SELECT * FROM table2 WHERE condition;
+
+
+          -> UPDATE table : използва се за обновяването на съдържанието на колоните на дадена таблица
+
+                 -> Смяна на съдържанието на колони на база на съдържание на друга колона (WHERE клауза) : UPDATE Student SET NAME = 'PRATIK' WHERE Age = 20;
+
+          -> IN : използва се за избягване на много OR изрази в WHERE клаузите
+
+                    SELECT * FROM Customers                              |   SELECT * FROM Customers
+                    WHERE Country = 'Germany' OR Country = 'France'      |   WHERE Country IN ('Germany','France')
+
+
+          -> GROUP BY : Използва се за логическо групиране на записи от таблица по съдържание на дадена колона/и. Когато в една заявка има GROUP BY, то в SELECT клаузата може да има обобщаващи функции и свободни атрибути,
+                        само ако свободните атрибути са подмножество на атрибуте на GROUP BY
+
+          -> HAVING : Тази клауза обикновено се използва след GROP BY. GROUP BY формира логически групи от записи, а HAVING се използва за прилагане на определни условия върху всяка група. Групите, които изпълняват
+                      условията заложени от HAVING, остават за по-натаъчна обработка (от SELECT клаузата например).
+                      
+                      Пример : Искаме да видим от коя държава имаме повече от 10 поръчки: 
+
+                               SELECT Country,COUNT(Country)
+                               FROM Customers
+                               GROUP BY Country
+                               HAVING COUNT(*) > 10
+
+                      Пример : Искаме да видим държавата с най-много поръчки : 
+
+                               SELECT  COUNT(CustomerID) , Country
+                               FROM Customers
+                               GROUP BY Country
+                               ORDER BY COUNT(Country) DESC LIMIT 1
+
+          -> JOIN клаузи : Използват се за комбиниране на данните от две или повече таблици, базирайки се на връзката FK -> PK
+
+                     * INNER JOIN : Селектират се само редовете , които имат FK -> PK връзка
+
+                     * LEFT (OUTER) JOIN : Селекират се всички записи от лявата таблица, а от дясната само тези, които имат FK->PK връзка с лявата таблица  (Представи си двата пресичащи се кръга)
+
+                                           Пример :
+                                                      SELECT customers.name,orders.content
+                                                      FROM customers
+                                                      LEFT JOIN orders ON customers.id = orders.customer_id 
+
+                                                      Таблицата, която е посочена след FROM клаузата (customers) може да се приеме за лява, следователно за дясна остава да е orders.
+                                                      И казваме вземи цялото съдържание на лявата таблица (customers) , а от дясната (orders) само тези редове, които имат връзка към лявата таблица.
+                                                      Семантиката на заявката е : Вземи ми всички клиенти, които нямат асоциирани поръчки + тези, които имат асоциирани поръчки  
+ 
+                     * RIGHT (OUTER) JOIN : Селектират се всички записи от дясната таблица, а от лявата само тези, които има FK->PK връзка с дясната таблица (Представи си двата пресичащи се кръга)
+
+                                            Пример : 
+
+                                                      SELECT customers.name,orders.content
+                                                      FROM customers
+                                                      RIGHT JOIN orders ON customers.id = orders.customer_id
+                                
+                                                      Тук таблицата, която е посочена след FROM клаузата (customers) отново се явява за лява, следовтелно дясна отново оства да е orders.
+                                                      Обаче тук казваме вземи ми цялото съдържание на дясната таблица (orders), a от лявата (customers) само тези редове, които имат връзка към дясната таблица.
+                                                      Семантиката на заявката е : Вземи ми всички поръчки, които нямат асоциирани клиенти + тези, които имат асоциирани клиенти.
+
+
+   
+      
+		
+
+2. JPA (Jakarta/Java Persistence API) / Hibiernate -> the implementation of the API
+
+   JPA e спецификация (интерфейс), която описва как да се управлява релационна база данни що се отнася до Java enterprise приложения. В основата е идеята за
+   object-relational mapping : Грубо казано как един Java обект да бъде превърнат в ред от таблица в релационна БД. Java Persistence се състои от 4 части :
+   
+      -> Java Persistence API
+      -> Езикът за заявки (JPQL-java persistence query language) 
+      -> Java Persistence Criteria API
+      -> Object/relational mapping metadata
+
+   
+   Говорейки за JPA e добре да се обърне внимание на следните теми : Entities, Managing Entities, Querying Entities.
+
+ 
+
+2.1. Какво е Entity ? 
+
+   В рамките на JPA, Entity е клас от домейна на приложението, който представлява описание на една таблица от релационна БД. Обект от даден Entity клас може да се приеме като един ред от таблица със 
+   съответно съдържание на атрибутите.
+
+   Изисквани към Entity класовете : 
+
+       -> Трябва да са анториани с @Entity
+       -> Трябва да имат public/protected no-arg конструктор
+       -> Класът не трябва да бъде final, същото важи за методите и полетата на класа.
+       -> Entity класовете мога да наследяват entity и non-entity класове, както и non-entity класове могат да наследяват Entity класове.
+
+    
+   Entity Lifecycle : 
+
+                    -> Transient (New) : The lifecycle state of a newly instantiated entity object is called transient. The entity hasn’t been persisted yet, so it doesn’t represent any database record and
+                                         usually doesn't have an id.
+
+                    -> Managed (Persistent): All entity objects attached to the current persistence context are in the lifecycle state managed. That means that your persistence provider, e.g. Hibernate,
+                                             will detect any changes on the objects and generate the required SQL INSERT or UPDATE statements when it flushes the persistence context.
+                                             There are different ways to get an entity to the lifecycle state managed:
+                                                          1. You can call the EntityManager.persist method with a new entity object (that is transient).
+                                                          2. You can load an entity object from the database using the EntityManager.find method, a JPQL query, a CriteriaQuery, or a native SQL query.
+                                                          3. You can merge a detached entity by calling the EntityManager.merge method or update it by calling the update method on your Hibernate Session.
+             
+                     -> Detached : An entity that was previously managed but is no longer attached to the current persistence context is in the lifecycle state detached. However it has an id.
+                                   An entity gets detached when you close the persistence context.That typically happens after a request got processed. Then the database transaction gets committed,
+                                   the persistence context gets closed, and the entity object gets returned to the caller. The caller then retrieves an entity object in the lifecycle state detached.
+                                   В общи линии това е ентити извън транзакцията.
+
+                     -> Removed : When you call the remove method on your EntityManager, the mapped database record doesn’t get removed immediately. The entity object only changes its lifecycle state to removed.
+                                  During the next flush operation, Hibernate will generate an SQL DELETE statement to remove the record from the database table.
+
+
+2.2. Persistent fields and properties in Entity Classes
+
+   Разликата между persistent field и persistent property ?  Когато говорим за persistent field имаме предвид, поле от класа, което е анотриано с @Column  и за него не е необходимо да се добавят getter-и 
+   и setter-и. 
+
+   Persistent property е такова поле на класа, за което има getter и setter метод като имената им са такива, че спазват JavaBean стила. Самият getter метод трябва да бъде анотран със съответната анотация.
+
+2.3. Basic types 
+
+   За базови типове могат да се приемат следните структури от данни в Java :
+
+              -> примитивните типове (int, float, double, long...)
+              -> Wrappers на примитивните типове (Integer, Float, Double, Long..)
+              -> util.Date, sql.Date. Calendar, sql.Time, sql.TimeStamp, BigInteger, BigDecimal
+              -> Класове имплементиращи Serializable интерфейса
+              -> byte[], Byte[], char[], Character []
+              -> Enumerated types
+              -> Дуги ентити класове или колекция от Entity класове
+              (-> Embeddable класове : Това са полета в ентити класа, които представляват обекти от класове, които не са ентитита (нямат таблица в БД). Анотират се с @Embedded.)
+   
+    
+
+2.4. Анотациите @Basic и @Column
+
+   Когато дадено поле е анотирано с @Basic това е подсказка за Hibernate, че полето е от базов тип и може да се използва стандартно мапване към колона от таблицата. 
+   ! Това всъщност е опционална анотация и не е задължителна да се споменава над базов тип, това става по подразбиране. Самата анотация има два атрибута:
+
+                -> optional : булев параметър указващ дали анотираното поле може да е null. По подразбиране примитивните типове няма как да са null, а в останлите случаи може, т.е тогава default ст-та е true
+
+                -> fetch : по подразбиране е EAGER. Можем да го направим LAZY, ако става въпрос за голям Serializable обект, който ще отнеме доста време да се зареди.
+
+      С една дума в повечето случаи няма да ни се налага да използваме @Basic анотацията директно освен ако не искаме да укажем LAZY fetch на дадено поле.
+
+ 
+    Анотацията @Column няма нищо общо с @Basic. Нейните атрибути са свързани с колоните на дадена таблица. През анотацията може да се указва името на колоната, към която е свързано дадено поле, дали колоната 
+    може да има null ст-т и други.
+
+2.5. Валидиране на полетата на Entity класовете
+
+    Може да се използват JavaBean Validtion API за вилидиране на полетата на ентити класовете. Примери за такива анотации са @NotNull, @Pattern, @Size, @Passed, както и наши custom анотации. За да могат да се ползват
+    обаче е необходимо да имаме hibernate validator в classpath-a, т.е като депендънси в пома.
+    Самата валидация се извърша веднага след събитията PrePersist, PreUpdate, PreRemove. Това означава преди обекта да бъде запазен в таблицата, преди да бъде ъпдейтнат или премахнат се извършва валидация.
+
+2.6. Primary keys in entities
+
+   Може да се използва само едно поле за първичен ключ, но има и опция за съставен ключ (composite key), който е комбинация от повече от едно полета
+
+2.7. Видове взаимоотношения между отделните Entity класове
+
+   1) One-to-one (@OneToOne) : Една инстанция на даденото ентити е свързана с една инстанция на друго ентити
+
+   2) One-to-many (@OneToMany) : Една инстанция на дадено ентити може да бъде свързана с много инстанции на друго ентити
+ 
+   3) Many-to-one (@ManyToOne) : Много инстанции на дадено енитити могат да бъдат свързани с една инстанция на друго ентити
+
+   4) Many-to-many (@MantToMany) : Много инстанции на дадено ентити могат да се свързат към много инстанции на друго ентити. Обикновено се постига с трета таблица.
+
+
+   *** Допълнително info за orphanRemoval опцията, която може да се задава при @OneToOne или @OneToMany :
+
+       An easy way to understand the difference between CascadeType.REMOVE and orphanRemoval=true.
+
+          public class Customer {
+
+	  @OneToMany
+          private List<Order> orders;
+
+          }
+
+       In case of using @OneToMany(orphanRemoval=true): If you invoke setOrders(null), the related Order entities will be deletedfrom db automatically.
+
+       In case of using @OneToMany(cascade=CascadeType.REMOVE): If you invoke setOrders(null), the related Order entities will NOT be deletedfrom db automatically.
+
+
+
+    *** Fetchtype depending on relationship in JPA 2.0 spec and hibernate
+
+        OneToMany: LAZY
+        ManyToOne: EAGER
+        ManyToMany: LAZY
+        OneToOne: EAGER
+ 
+
+
+
+2.8. Direction in Entity Relationships
+ 
+   Посоката на взаимоотношения между ентити класовете може да бъде bidirectional и unidirectional. При двупосочната връзка (bidirectional) се появяват още два термина: owning side и inverse side. При unidirectional имаме
+   само owning side. Owning side при ентити взаимоотношенията определя как Hibernate ще прави ъпдейти в БД.
+
+   Под relаtionship имаме предвид когато един Entity клас съдържа като поле рефернция към друг Entity клас. Например клас А съдържа референция към клас Б, но дали клас Б съдържа рефенция към клас А ?
+   
+   Според това се отделят два вид Entity realtionshipa -a :
+
+        -> Bi-direction (Двупосочна връзка) : При него ентити клас А съдържа рефенция към ентити клас Б, както и ентити клас Б съдържа референция към ентити клас А. При bi-directional връзките трябва да се следват долните правила:
+
+                                              -> The inverse side of a bidirectional relationship must refer to its owning side by using the mappedBy element of the @OneToOne, @OneToMany, or @ManyToMany annotation.
+                                                  The mappedBy element designates the property or field in the entity that is the owner of the relationship.
+
+                                              -> The many side of many-to-one bidirectional relationships must not define the mappedBy element. The many side is always the owning side of the relationship.
+
+                                              -> For one-to-one bidirectional relationships, the owning side corresponds to the side that contains the corresponding foreign key.
+
+                                              -> For many-to-many bidirectional relationships, either side may be the owning side. (the owning side is that which contains @JoinTable annotation)
+
+        -> Uni-directional (Еднопосочна връзка) : При този вид връзка ентити класа А съдържа референция към ентити класа Б, а Б няма към А. По този начин можем със сигурност да заключим, че е А е owning страната.
+
+
+       Пример 
+
+      public class Book {
+         @ManyToOne
+         @JoinColumn(name = "library_id")
+         private Library library;
+      }
+
+
+      public class Library {
+         @OneToMany(mappedBy = "library")
+         private List<Book> books;
+      }
+
+       От горният пример owning стрната е Book класа, което означава,че ако правим промени по library обекта (викаме негови сетъри Liпрез инстанция на Book: book), те автоматично ще се отразват на съответния елемент в books списъка
+       в Library.
+
+2.9. Entity Inhertance 
+
+   Тук ще говорим какво се случва, когато Entity класовете наследявата други класове, т.е каква точно информация запазва кореспондиращата на ентитито таблица в БД.
+
+   Entity класовете могат да населдяват класове, които не са ентитита и non-entity класовете от своя старана могат да наследяват Entity класовете.
+
+   Entity класовете могат да бъдат абстрактни.
+
+   Пример : 
+
+     @Entity
+     public abstract class Employee {
+         @Id
+         protected Integer employeeId;
+         ...
+     }
+
+  
+     @Entity
+     public class FullTimeEmployee extends Employee {
+         protected Integer salary;
+         ...
+      }
+
+
+     @Entity
+     public class PartTimeEmployee extends Employee {
+        protected Float hourlyWage;
+      }
+
+     В горния пример ще се създаде една таблица - EMPLOYEE, която ще има колони dtype(за разяснения виж 2.11.) employee_id,salary,hourly_wagе 
+
+2.10. Mapped Superclasses
+
+    Entity класовете мога да наследяват класове, които съдържат persistence и mapping инфромация, но самите те не са ентитита. Тоест родителският клас няма анотация @Entity и не се следи от JPA. Такива класове се използват
+    за капсулирана на информация, която е обща за няколко Entity класове. Например имаме различни видове работници изразени като ентитита и общото между тях е, че имат поле за уникално ид. Следователно ид полето може да се изнесе
+    в един родителски клас (анотиран с @MappedSuperclass) :
+
+    @MappedSuperclass
+    public class Employee {
+        @Id
+        protected Integer employeeId;
+        ...
+    }
+
+    @Entity
+    public class FullTimeEmployee extends Employee {
+          protected Integer salary;
+          ...
+    }
+
+    @Entity
+    public class PartTimeEmployee extends Employee {
+       protected Float hourlyWage;
+       ...
+    }
+
+    От горния пример ще се създадат таблици FULLTIMEEMPLOYEE и PARTTIMEEMPLOYEE, но няма да имаме таблица EMPLOYEE
+
+
+   Класовете, които не са анотирани с @MappedSuperclass и с @Entity, но се използват като родителски за някой Entity клас няма да получат persistence за полетата в тях, тоест техните членове няма да бъдат запазени в таблицата.
+
+2.11. Entity Inheritance Mapping Strategies
+
+    Може да се контролира как Persistence Provider-a (Hibernate) прилага мапването на Entity класове към таблици, когато става въпрос за йерархия(наследяване) между ентити класовете. Това става чрез анотацията @Inhertance и нейният
+    параметър strategy -> @Inhertance(strategy=...).
+
+    Има три типа стратегии : 
+
+     The default strategy, InheritanceType.SINGLE_TABLE, is used if the @Inheritance annotation is not specified on the root class of the entity hierarchy.
+
+             -> Single Table per Class Hierarchy : При тази стратегия, когато имаме parent-child връзка между две ентитита се създава само една физическа таблица в БД. Таблицата обаче има discriminator колона съдържаща стойност
+                                                   идентифицараща child класа към, който принадлежи инстанцията представенa от реда в таблицата. С други думи имаме един базов ентити клас, който се наследява от два други ентити 
+                                                   класа. Физически има само една таблица, е тогава как да определим даден ред от таблицата към кое точно от наследяващите ентититата да се обвърже. Тук идва на помощ спомената по-горе
+                                                   discriminator колона, чрез която се указва кой ред към кой точно наследяващ клас да се мапне.
+                                                   Самото име на дискриминатор колоната е DTYPE, но може да се променя заедно със типа (по подразбиране е String)
+                                                   @Inheritance(strategy = InheritanceType.SINGLE_TABLE) се слага под @Entity на базовия клас.
+
+                                                   Така като се замислим обаче един ред от такава таблица ще има колони, които ще бъдат null, все пак всеки наследяващ ентити клас си има свой собствени полета, които другите наследяващи
+                                                   класове нямат, но нали пък искаме да имамаме само една таблициа => следователно ред от такава таблица ще съдържа всички полета на базовия клас + всички полета на всички наследяващи класове
+                                                   във вид на колони.
+
+                                                   При тази стратегия се поддържа добра възможност за полиморфични взаимоотношения между ентити класовете и заявки, които да покриват цялата класова йерархия.
+
+             -> Table per concrete class :  При тази стратегия всеки конкретен child ентити клас в една йерархия има своя отделна таблица в БД с всички полета от базовия клас + полетата, които самия child клас е дефинирал.
+                                            Базовият клас се антора с @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS).
+
+                                            Тази стратегия не предоставя добра възможност за полморфични взаимоотношения между ентити класовете и обикновено изисква UNION, ако правим заявка директно към базовия клас. 
+                                            Това е така защото правим заявка към базовия клас, а той няма конкретна таблица за него, а има само таблици на child класовете, затова ще трябва UNION на резултатите от всички child
+                                            ентитита.
+
+             -> Joined subclass : При тази стратегия базовият ентити клас в йерархията има своя отделна таблица съдържаща колони съотвестващи само на полетата на базовия клас. Child ентититата също имат отделни таблици, но колоните
+                                  в тях съотвестват единствено на полетата на child класа, без да се вземат тези на базовия клас.
+              
+                                  Тази стратегия е добра за полиморфични взаимоотношения, но характерното за нея е, че изисква JOIN операции, когато се извличат child класовете. Това е така, защото както казахме child таблиците
+                                  не съдържат инфото от базовата таблица.
+
+
+
+3. DAO / Repository pattern
+
+  3.1 DAO (Data Access Object) : Това е структурен шаблон за дизайн, който позвалява изолирането на бизнес логиката на едно приложение от логиката свързана с persistence слоя (обикновено става въпрос за релационна БД, но може да 
+                                 бъде и друг persistence механизъм). Persistence логиката се скрива зад някаква абстракция - обикновнео интерфейс. Интерфейсът скрива цялата сложност и конкретика свързани с CRUD операциите.
+                                 Това е много важно, защото така двата слоя могат да еволюират поотделно без да "знаят" много един за друг.
+                                 
+				 Един типичен DAО интерфейс би имал следните методи : Optional<T> get(long id);   List<T> getAll();  void save(T t);  void update(T t, String[] params); void delete(T t);
+                                 Обикновено се създава по един DAO обект за всеки един Entity клас.
+
+  3.2 Repository pattern  : Идеята на този шаблон за дизайн е подобна на DAO шаблона. Отново говрим за скриване на persistence логиката от бизнес логиката. Разликата тук е, че се качваме още едно ниво на горе в абстракцията и се 
+                            приближаваме до бизнес логиката. Същността на шаблона проличава, когато има множество DAO обекти и определена бизнес логиката налага комбинирането на информацията от различните DAO обекти.
+                            Тоест в репозитори обекта имаме референции към повече от един DAO обекти и имаме методи в самото репозитори, които комбинират информацията от два дао обекта (например), за да изпълнят определна задача.
+
+                            Есенцията на шаблона е, че трябва да наподобява колекция, тоест да има методи, които се казват :  User get(Long id);  void add(User user); void update(User user); void remove(User user);
+
+  3.3 EntityManager
+
+      При JPA е основно застъпена идеята за кеширане, която на пръв поглед не се вижда, но е заложена в самото API. Кешът по своята същност представлява копие на данни, извлечени от БД, но съществуващи извън нея. Flushing е действие
+      свързано със запазването на извлечените данни отново в базата. 
+
+      Тук трябва да се спомене какво е PersistenceContext : Капсулира множество от ентити инстанции, които са извлечени от БД обикновено в рамките на една транзакция. Всъщност, чрез него се привнася идеята за кеш.
+
+      Сега вече може и да кажем за EntityManager-a : Това е интерфейс, в който са дефинирани методите за взаимодействие с PersistenceContext-a : създаване и премахване на ентити инстанция от PersistenceContext, намиране на ентита по
+                                                     първичен ключ, заявки насочени към конкретни ентитита.
+
+      *Container-managed Entity Managers : При този тип, persistence context-a на EntityManager инстанция се разпространява автоматично от контейнера (Spring) до всички компоненти на приложението, които използват инстанции на EntityManager
+                                          в една JTA транзакция. Също така самия контейнер (Spring) е отговорен за започване на транзакция, комитването, rollback. При спринг буут конкретно това става с помощта на AOP и създаване на proxy-та
+                                          на всички обекти на класове анотирани с @Тransactional. Тоест, когато извикаме публичен метод принадлежащ на клас анотиран с @Тransactional, автоматично преди да се изпълни метода ще се отвори транзакция
+                                          методът ще се изпълни и автоматично ще се затвори транзакцията. Между отварянето и затварянето на транзакциите може да извличаме ентитита от база и те ще бъдат в managed състояние. Тоест всичко, което
+                                          променяме по тях ще се запазва в базата. След като приключи транзакцията такива ентитита стават detached.
+
+                                          Пример : В един контролер имаме инжектиран сървис, който извлича определен ученик от някакво репозитори. Когато извлечем това ентити чрез извикването на метод на сървиса, то ще приситгне при
+                                                   контролера в detached състояние, защото транзакцията вече е приключила с изпълнението на сървис метода.
+
+
+                                          За да инжектираме такъв тип EntityManger в някой наш клас, се използва
+                                          анотацията @PersistenceContext, а самият клас, който използва EntityManager може да бъде анотиран с @Transactional
+
+                                          @Transactional annotation is used when you want the certain method/class(=all methods inside) to be executed in a transaction.
+					  Transactions means all or nothing. If there is an exception thrown somewhere in the method, changes are not persisted in the database. Something called rollback happens.
+
+                                          If you don't specify @Transactional, each DB call will be in a different transaction.
+
+
+      *Application-Managed Entity Mangers : Тук се налага да създаваме "ръчно" EntityManager инстанция от EntityManagerFactory и да управляваме цикъла и на живот
+
+      Полезно за persist vs merge : https://stackoverflow.com/questions/1069992/jpa-entitymanager-why-use-persist-over-merge/1070629#1070629
+      When to call manually persist and when not ? https://stackoverflow.com/questions/1069992/jpa-entitymanager-why-use-persist-over-merge/1070629#1070629
+
+   
+   3.4 Hibernate Criteria API - depreactaed : Препоръчва се изпозлването на JPA Criteria API
+
+   3.5 JPA Criteria API : Използва се за дефиниране на заявки за ентити обекти. Представлява прогрманата алтернатива на JPQL заявките, които са под формата на низ. Основното предимство на Criteria API пред JPQL са :
+
+                                                              -> type-safe queries : когато изграждаме една заявка сме сигурни, че тя е правилно написана като синтаксис. Така се хващат грешки още compile-time, а не чак runtime
+                                                                                     както е при JPQL
+
+                                                              -> portable : независмо от използваната БД (mysql,mariadb,postrges)
+
+
+      3.5.1 Основни класове на JPA Criteria API
+
+	Преди да разгледаме основните класове нека първо разгледаме някои термини свързани с SQL :
+			
+                          A) Expression (израз) : Представлява комбинация от една или повече стойности, оператори и SQL функции, които се приравняват до конкретна стойност. Обикновено се използват с цел извличане на данни от
+                                                  базата по някакъв критерии. Самите изрази може да са :
+                                                                                                         -> boolean : ....WHERE salary > 10000 (тук изразът е това след WHERE), може да се използва =, OR ,AND
+                                                                                                         -> numeric : това са например обобщаващите функции в select клаузата : count(..), avg(..), sum(..)
+                                                                                                         -> data :  SELECT CURRENT_TIMESTAMP;
+
+
+                         Б) Predicate (условие) : Представлява израз (expression), който се свежда до true или false. Всъщност е еквивалент на boolean подразделението на Expression. Може да бъде и група от изрази свързани с OR, AND, NOT
+	
+                                                     
+
+                           
+
+	Сега нека се върнем към класовете свързани с JPA - Criteria API :
+
+                      
+	              * CriteriaQuery : Интерфейс, чрез който се гради скелета на цялата заявка програмно, вместо да се пише директен JPQL низ. Като generic тип се дава класът, в който ще се капсулира резултатът. Не е задължително
+                                        да съвпада с generic на Root-a. Има методи : 
+
+                                               -> select, multiselect (използва се за посочване на атрибутите на select),from, where, groupBy, having, orderBy, distinct
+
+                      * Root : Обекти от този клас са връщани от from метода на CriteriaQuery. Те указват от кое ентити започва да се гради заявката. Дадена заявка може да има няколко root ентитита
+
+                      * Expression : Интерфейс, който се изпозлва за обозначаване на SQL израз. Мястото му обекновено е в клаузите SELECT, WHERE, HAVING. Съдържа методи за проверка дали даден израз е null (isNull),
+                                     дали не е null (isNotNull), дали съотвества на дадени стойности (in(...)).
+
+                      * TypedQuery : Обект, през който се изпълнява същинската заявка към БД и се извлича резултат (докато с CriteriaQuery самата заявка само се конструира, но нямаме обръщение към БД). Създава се от
+                                     EntityManager обекта, а не от CriteriaBuilder.
+
+
+                      * CriteriaBuilder : Този интерфейс се използва за конструиране на споменататите по-горе специфични за javax.persistence.criteria класове : CriteriaQuery, Expression, Selection, Predicate, Ordering 
+                                          Инстанции на този интерфейс се извличат от EntityManager-a. Дефинира методи, които съотвестват на изрази : 
+  
+                                                                    -> equal, notEqual, gt (grater than), ge (greater or equal), lt (less than), le (less than or equal), between, like,not like, and, or , asc  / desc,avg / sum / min / max / mod
+       
+                                                  _________________________________________________________________________________________________________________                 
+                                                 |                         SQL QUERY                     |                     JPA CRITERIA API QUERY              |
+                                                 |                                                       |                                                         |
+						 |  SELECT *					         |    CriteriaQuery<Pet> cq = cb.createQuery(Pet.class);   | 
+						 |  FROM pet                                             |    Root<Pet> pet = cq.from(Pet.class);                  |
+						 |  WHERE pet.name = 'Fido'                              |    cq.where(cb.equal(pet.get(Pet_.name), "Fido"));      |
+						 |_______________________________________________________|_________________________________________________________|
+						 | 							 |                                                         |
+                                                 |   SELECT *					         |   CriteriaQuery<Pet> cq = cb.createQuery(Pet.class);    | 
+                                                 |   FROM  pet                                           |   Root<Pet> pet = cq.from(Pet.class);                   |
+                                                     WHERE pet.name = 'Fido' AND pet.color = "brown"         cq.where(cb.equal(pet.get(Pet_.name), "Fido")
+                                                                                                                      .and(cb.equal(pet.get(Pet_.color), "brown")));
+
+
+
+
+     3.6 JPA Metamodel
+
+            Обикновено, когато пишем Criteria заявки използваме имената на полетата на ентити класовете като чисти стрингове. Ако се замислим обаче това не е най-добрата пратктика, защото при промяна на името на 
+            някоя колона от траблицата ще трябва да променим името на съответното поле в ентити класа, което пък от своя старана ще доведе до промяна в съществуващите заявки. Както виждаме така доста се усложнява
+            процеса, защото правим ръчни промени на две места едновременно в сорс кода : в ентити калсовете и в заявките. Следователно е добре на едно място да се изнесе цялата мета инфромация за ентити класа в един
+            отделен клас и  в съответните заявки да не се пишат имената на полетата като стрингове, а да се използва тази метаинформация.
+            Чрез dependency-то hibernate-jpamodelgen целият процес се прави автоматизиран. При билдване на проекта в директорията target/generated-sources се създават класове съдържащи метаинформация за всеки от ентити класовете. Имената
+            на мета класовете съотвестват с тези на ентити класовете с разликата, че имат _ накрая.
+
+        !!! Необходима е една важна настройка, за да накараме еклипса да почне правилно да чете генерарираните метамодел класове : Десен клик в/у проекта -> Properties -> Java Build Path -> Add folder -> Избери target/generated/sources/annotations
+
+            Понякога има проблем с това да добавим target/generated-sources като сорс папка, но може да се използва и този plugin (https://thorben-janssen.com/hibernate-tips-automatically-add-metamodel-classes-project/) : 
+
+
+              <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/generated-sources/annotations</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+   
+     3.7 HQL(Hibernate Query Langugage) and JPQL(Java Persistence Query Language)
+
+
+        -> HQL is an object-oriented query language, similar to SQL, but instead of operating on tables and columns, HQL works with persistent objects and their properties. This is main difference between hql vs sql.
+
+        -> HQL is a superset of the JPQL, the Java Persistence Query Language. A JPQL query is a valid HQL query, but not all HQL queries are valid JPQL queries.
+
+        -> HQL is a language with its own syntax and grammar. It is written as strings, like “from Product p“.
+
+        -> HQL queries are translated by Hibernate into conventional SQL queries. Note that Hibernate also provides the APIs that allow us to directly issue SQL queries as well. 
+
+
+
+4. Spring Data
+
+   -> Идеята на Spring Data е колкото се може да редуцира писането на boilerplate код свързан с persistence layer-a - създаване на EntityManager, транзакции, къмитване, затваряне на EntityManager. Самият framework поема имплементацията
+   на CRUD операциите,страницирането и сортирането, тъй като тя е еднаква, само класът на ентититата е различен. Така от програмна гледна точка се налага само да наследим някой от спринг Repository интерфейсите (CrudRepository,
+   JpaRepository..) без да пишем никаква имплементация за основноте CRUD операции - ползваме ги наготово.
+
+   -> Йерархия на Spring Repostiory класовете: Reposiotry (marker interface) -> CrudRepostiory (adds crud methods) -> PagingAndSortingRepostiory (findAll(Pageable..),findalAll(Sort...)) -> JpaRepository (JPA specific extension)
+
+
+   -> Също така в репозитори интерфейса може да декларираме методи, чиито имена ще подсказват на Spring какви точно SQL заявки да формира към БД. Тук имаме дефинирана и конвенция за това как да се пишат имената на такива методи.
+      Spring взема името на метода и започва да го парсира като го разделя основно да две части :
+                                               
+                                 -> subject : Това е комбинация от find..By, get..By, exists..By и доста други, които могат да се намерят в спецификацията на Spring Data (https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#appendix.query.method.subject)
+
+
+                                 -> predicate : Това е всичко, което стои след първата By ключова дума (https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#appendix.query.method.predicate)
+
+
+
+                          Пример :     // Enables the distinct flag for the query
+                                       List<Person> findDistinctPeopleByLastnameOrFirstname(String lastname, String firstname);
+                                       List<Person> findPeopleDistinctByLastnameOrFirstname(String lastname, String firstname);
+
+
+				       // Enabling ignoring case for an individual property
+ 				       List<Person> findByLastnameIgnoreCase(String lastname);
+
+                                       // Enabling ignoring case for all suitable properties
+                                       List<Person> findByLastnameAndFirstnameAllIgnoreCase(String lastname, String firstname);
+
+                                       // Enabling static ORDER BY for a query
+                                       List<Person> findByLastnameOrderByFirstnameAsc(String lastname);
+                                       List<Person> findByLastnameOrderByFirstnameDesc(String lastname);
+
+
+                                       List<GameRanking> findTop10ByOrderByTotalWinsDescGamerNameAsc();
+
+     -> Spring Data JPA Specifications : Първо нека да обърнем внимание на това какво знaчи терминът Specification. Всъщност това е вид шаблон от контекста на DDD (Domain-Driven-Design). Чрез него се обозначава едно бизнес правило,
+                                         което може да се комбинира с други такива и да бъде преизползвано. It defines a specification as a predicate over an entity
+
+                                         Specification интерфейса на Spring e насочен точно върху това. Той капсулира един предикат, който може да бъде преизползван и комбиниран с други. Също така не се налага да създаваме ръчно
+                                         типичния за Spring Criteria API boilerplate : CriteriaBuidler, CriteriaQuery, Root). Те се създават автоматочно от Spring.
+                                         Използвайки спецификациите ние създавам едни по-четими заявки.
+
+     -> Важна настройка на Spring Data JPA:   jpa.hibernate.ddl-auto: update -> С тази настройка казваме автоматично да се правят упдейти на таблици в БД, като се вземат по внимание 
+                                              текущите entity класове. Например, ако от даден entity клас изтрием поле, то ще бъде изтрито и като колона в същинската таблица в БД.
+                                              [!]Разбира се тази настройка не е добре да се ползва при професионалното програмиране, защото там промените по схемата на БД се прави чрез
+                                              миграции. Следователно е добре такова свойство (jpa.hibernate.ddl-auto) изобщо да не се специфицира или да е със стойност none.
+                           
+
+
+5. Flyway DB Migrations
+
+   Flyway е инстумент за мигарация на БД. Чрез него може да се следи еволюцята на базата, която използваме в нашето приложение и съответно да можем да се връщаме към всеки един етап. Може да се каже, че Flayway e 
+   инструмент за поддържане на различни версии на нашата база (подобно на git за сорс файловете).
+
+   Самите миграции (промени по базата) могат да бъдат писани като SQL скриптове или като Java класове(за по-сложни транформации на данни).
+
+   Flyway създава допълнителна таблица в БД (flyway_schema_history), в която записва кога какви миграции е изпълнила и съответните checksums.
+
+ 
+ 5.1 Видове миграции
+ 
+     5.1.1 Versioned Migrations : Специфицират се с версия, описание и checksum. Версията и описнието се посочват в името на sql скрипта / java класа. Версията трябва да бъде уникална, а описанието е само за подсказка какво
+                                  прави дадената миграция. Миграциите се прилагат като се следва тяхната версия.
+
+                                  Именaта на миграционните sql файлове имат следните компоненти : [prefix][version]__[description][.sql]
+
+                                                     * prefix : Посочва вида на миграцията : V->versioned, U->undo, R->repeatable
+                                                     * version : Самата версия може да бъде съставена от числа разделени с точка или _ (1.0.0, 1.0.1.1)
+
+
+     5.1.2 Undo migrations : За да се върнем към състоянието преди дадена versioned migration, ние можем да напишем undo мигарация, която трябва да има същата версия като тази нa versioned миграцията, която
+                             искаме да върнем. Не е препоръчително интензивното използване на такъв тип миграции.
+
+
+     5.1.3 Repeatable migrations : Те нямат описание и версия, а само checksum. Изпълняват се всеки път, когато checksum-ата им се промени.
+
+
+ 5.2 Къде се пишат мигарациите в едно Java enterprise приложение ?
+  
+     Обикновено се слагат в src/main/resources/db/migrations
+
+
+
+ ****** Важно за @Transactional :
+
+       Обикновено се използва за анотиране на методите на един сървис, когато самият метод имплементира логика, която трябва да се изпълни цялостно като група или да fail-не цялостно.
+       Както знаем crud методите на jpa repository по подразбиране също се изпълнват в транзакция, но ако преди това e била създадена транзакция при влизането в сървис метод (чрез антоцията @Transactional),
+       дефоутната на репозитори метода ще се bind-не към съществуващата транзакция на сървиса.
+
+  ***** What are @Transactional Propagation Levels used for?
+
+         -> Required (default): My method needs a transaction, either open one for me or use an existing one → getConnection(). setAutocommit(false). commit().
+
+         -> Supports: I don’t really care if a transaction is open or not, i can work either way → nothing to do with JDBC
+
+         -> Mandatory: I’m not going to open up a transaction myself, but I’m going to cry if no one else opened one up → nothing to do with JDBC
+
+         -> Require_new: I want my completely own transaction → getConnection(). setAutocommit(false). commit().
+
+         -> Not_Supported: I really don’t like transactions, I will even try and suspend a current, running transaction → nothing to do with JDBC
+
+         -> Never: I’m going to cry if someone else started up a transaction → nothing to do with JDBC
+
+         -> Nested: It sounds so complicated, but we are just talking savepoints! → connection.setSavepoint()
+
+	  As you can see, most propagation modes really have nothing to do with the database or JDBC, but more with how you structure your program with Spring and how/when/where Spring expects transactions to be there.
+
+
+************The most common @Transactional pitfall : 
+
+          There is one pitfall that Spring beginners usually run into. Have a look at the following code:
+
+            @Service
+            public class UserService {
+
+                 @Transactional
+                 public void invoice() {
+                     createPdf();
+                    // send invoice as email, etc.
+                 }
+
+                 @Transactional(propagation = Propagation.REQUIRES_NEW)
+                 public void createPdf() {
+                    // ...
+                 }
+             }
+
+
+           You have a UserService class with a transactional invoice method. Which calls createPDF(), which is also transactional.
+
+           How many physical transactions would you expect to be open, once someone calls invoice()?
+
+           Nope, the answer is not two, but one. Why? -> refer to self-invocation problem of spring aop
+
+
+
+
+
+      
+
+   
+             
+              
+ 
+       

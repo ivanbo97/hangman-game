@@ -1,0 +1,350 @@
+1. Какво представлява MVC (Model - View - Controller) ? 
+
+   Това е шаблон в софтуерния дизайн, който набляга на разделението между бизнес логиката и презентационната логика. По този начин
+   отделните слоеве на приложението може да се имплементират независимо и подлежат на по-лесена модификация, тъй като зависимостта помежду им
+   се свежда до минимум. Основните части на този шаблон са три : 
+
+   -> Model : Това са разнообразните типове данни, с които оперира нашето приложение.
+
+   -> View : Дефинира как самите данни (model) ще бъдaт визуализиран от потребителя
+
+   -> Controller : Капсулира логиката свързана с обновяване на модела (данните в приложението). Потребителят манипулира данните чрез изпращане на заявки към контролера, който 
+                   ги обработва.
+
+
+2. Spring MVC
+
+     Преди въвеждането на Spring MVC интеграцията на Spring контейнера и Servlet API е достигнала до следното ниво : Можем да инициализираме спринг контейнера при инциализация на сървлет контейнера (чрез клас, който имплентира
+    ServletContainerInitializer), след което да извличаме бийнове от самия спринг контейнер и да ги добавяме в ServletContext обекта. По този начин в init() методите на самите сървлети ще може да инжектираме необходимите бийнове
+    (обикновено сървис бийнове).Самите сървлети обаче не се управляват от спринг контейнера, тъй като тяхното инстанциране и управление се поема изцялo от сървлет контейнера (Tomcat). 
+    
+     Масовото навлизане на MVC шаблона за дизайн при разработката на софтуер, подтиква Spring да започене да търси начин за интегирането му заедно със сървелет концепцията, т.е да намери начин как контролерите (към този момемнт
+    сървелти) също да се превърнат в бийнове управлявани от спринг. За целта от Spring решават да имплементират Front Controller шаблона за дизайн. Той се използва масово в уеб приложенията като идеята му е да предоставя първоначлна
+    точка за достъп за всички http заявки и след това да делегира обслужването на всяка заявка към отделени компоненти от приложението (контролери).
+     
+     Така се появява DispatcherServlet класа, който е създаден от Spring и имплементира Front Controller шаблона.
+
+3. Какъв е механизмът на действие на DispatcherServlet, чрез който се гради и цялостната концепция на Spring MVC?
+
+   1) Първоначлно потребителят изпраща заявка за определн ресурс със съответен URL и евентуално допълнителни данни в request body-то.
+
+   2) Първото място през, което преминава заявката е DispatcherServlet на Spring. Този диспечер обект трябва да определи на кой точно от регистрираните в спринг контейнера контролери да предаде заявката.
+      Обикновено едно приложение има няколко контролера, които отговарят за различни функционалности. Как тогава да се определи кой от всичките е подходящ за обслужване на текущата заявка ?
+
+   3) За целта се използва обект, който имлементира HandlerMapping интерфейса. Има различни имплементации, но често се използва RequestMappingHandlerMapping. Обектът от този клас е отговорен за това да разбере, кой
+      от контролерите е предназначен за обслужавеното на текущата заявка. Това е възможно след като предварително сме анотирали самите контролери с @RequestMapping("/somePath").
+
+   4) След като DispatcherServlet с помощта на HandlerMapping е намерил подходящия контролер, то изпълнението на завката се предава на съответния контролер с помощта на HandlerAdapter. Обикновено самият контролер притежава сървиси,
+       в които е имплементирана бизнес логиката свързана с обслужването на заявката (извличане на данни от БД и много други). Обикновено резултатът получен от сървиса трябва да бъде изпратен обратно към 
+      потребителя и изобразен от браузъра. Този резултат се нарича модел в MVC шаблона. Изпращането на резултата в чист вид в повечето случаи е недостатъчно, все пак трябва по някакъв начин да е 
+      user-friendly - да се "облече" в HTML например (посредством View). 
+
+   5) Последното нещо, което прави контролера е да изпрати Model и логическото име на View-то към DispatcherServlet-a. За да не се прави тясна обвързаност между контролера и конкретния
+      тип на view-to се използва само логическо име на изгледа.
+
+   6) DispatcherServlet-a получава модела и логическото име на изгледa. Как обаче да се ориентира това логическо име на кой конктретен jsp/thymeleaf/html съответства ? 
+      Това се получава с помощта на клас, който имплементира ViewResolver интерфейса. Общо взето този клас ще сглобява същинския път до изгледа. Да речем от контолера връщаме
+      логическото име "student-list" като чист стринг, а ViewResolver-ът ще сложи префикс : "/WEB-INF/view" и суфикс ".jsp" и така резултатният изглед ще бъде  : /WEB-INF/view/student-list.jsp
+
+   7) След като DispatcherServlet знае кой точно изглед да използва, той предава управлението към изгледа (jsp-то) предоставяйки му модела
+
+   8) Изгледът използва данните от модела и генерира отговор към браузъра във вид на html. 
+
+4. Annotated Controllers
+
+   Spring MVC предоставя модел на програмиране базиран на анотации, където @Controller и @RestController се използват за посочването на съответния контролер клас. Предимството тук е, че методите принадлежащи
+   на контролерите имат гъвкавост откъм сигнатура и не трябва да се съобразяват с базов клас или интерфейс. 
+
+
+   @Controller 
+   public class HelloController {
+
+    @GetMapping("/hello")
+    public String handle(Model model) {
+        model.addAttribute("message", "Hello World!");
+        return "index";
+    }
+   }
+
+   Използвайки анотациите @Controller и @RestController указваме на Spring, че съответния клас е бийн и ще бъде управляван от IoC.
+
+
+
+   -> Request Mappings : Mоже да се използва антоацията @RequestMapping на ниво клас или метод. Самата анотация има разнообразни параметри: URL, HTTP method, параметри на заявката, хедъри и media types.
+			 Има също така разновидности на тази анотация, които са ориентирани към HTTP метода : @GetMapping, @PostMapping, @PutMapping, @DeleteMapping, @PatchMapping
+
+   -> URI patterns : Може да се задават шаблонен параметър в името на ресурса, който се подава като аргумент на @RequestMapping или на някоя от посочените по-горе анотации и след това да се достъпва с @PathVariable :
+
+                         @GetMapping("/owners/{ownerId}/pets/{petId}")
+			 public Pet findPet(@PathVariable Long ownerId, @PathVariable Long petId) {
+   			     // ...
+                         }
+                      
+                      Може да се използват и регулярни изрази : @GetMapping("/projects/{project:[a-z]+}/versions")
+
+
+   
+    -> Handler methods : Става въпрос за методите, които са част от контролерите и отговарят за обслужването на дадена http заявка. Както казахме те могат да имат разнообразни имена, аргументи и връщани стойности.
+                         Аргументите подавани на хендлър методите могат да бъдат анотирани с : @RequestParameter, @RequestHeader, @PathVariable. Тук трябва да отбележим, че аргументите на метода, които идват под формата
+                         на низ в самата http заявка автоматично се преобразуват към съответните типове : int, long, Date и др. 
+
+			Нека разгледаме някои по-специфични анотации, които могат да се прилагат върху аргументите на хендлър методите : 
+
+                        * Като аргумент на хендлър метод може да използваме и анотацията @CookieValue, като по този начин да обвържем ид-то на сесията с аргумент на метода
+      
+                        @GetMapping("/demo")
+			public void handle(@CookieValue("JSESSIONID") String cookie) { 
+   				 //...
+			}
+
+                      
+                       * Можем да използваме анотацията @ModelAttribute, за да достъпим атрибут на Model обекта или да го инстанцираме, ако не е създаден. Атрибута на модела също така се припокрива със стойностите от 
+                         Http Servlet request параметрите, чиито имена съвпадат с имената на полетата на модел атрибут обекта. Това се нарича Data Binding и ни спестява парсване и пребразуване на отделните параметри
+                         на заявката или полетата на една форма.
+                         Ако даден метод е анотиран само с @ModelAttribute (без @RequestMapping), част e от контролер клас и не връща стойност, то този метод ще бъде предназначен за инциализиране на модела, преди да се изпълни
+                         някой от методите анотирани с @RequestMapping или прозивдните @GetMapping...
+
+                         @PostMapping("/owners/{ownerId}/pets/{petId}/edit")
+			 public String processSubmit(@ModelAttribute Pet pet) {
+    				// method logic...
+                         }
+
+                         Тук има няколко варианта откъде да се вземе Pet обекта : 1. Извлича се директно от модел обекта, където е добавен преди това с анотацията @ModelAttribute.
+                                                                                  2. Извлича се от HttpSession обекта, ако преди това Pet класа е анотиран с @SessionAttributes
+                                                                                  3. Извлича се от Convertor, като името на модел атрибута (pet) съвпада с името на path variable или параметър на заявката
+                                                                                  4. Инстанцира се от default constructor 
+
+
+                        * @SessionAttribute  : Използва се за указване, че даденият модел атрибут трябва да извлече от HttpSession обекта
+
+
+                        * @RequestAttribute : Тук говорим за параметър, които е добавен в reqeust scop-a от филтър или HandlerInterceptor
+
+                        * @RequestBody : Можем да използваме анотацията, когато искаме цялото боди на http заявката да бъде преобразуване към някакъв определн бизнес клас : public void handle(@RequestBody Account account)..
+
+                        * Обект от клас HttpEntity : подобно на горната анотация, но имаме достъп и до хедърите
+
+                        * Обекти от класовете : WebRequest, ServletRequest, ServletResponse, HttpSession, PushBuilder, Principal, HttpMethod, Locale
+
+
+                      Типовете данни, които един хендлър метод може да върне са също разнообразни: 
+                                                1. Обекти от нашите бизнес класове, като методът се анотира с @ResponseBody, което означава, че върнатият обект ще бъде записан директно в бодито на http отговора, но преди това 
+                                                   ще бъде извикан обект, който имплементира HttpMessageConverter интерфейса. Коя точно имплементация зависи от това какъв тип данни приема клиента (посочено е в Accept хедъра при 
+                                                   първоначално подаване на HTTP завка от потребителя)
+                                                  
+                                                   По подразбиране Spring MVC предоставя имплементацията на конвертори към основните типове:
+                                                        
+                                                   -> StringHttpMessageConverter : Имплементация, която може да чете и пише String обекти от HTTP заявките и отговорите. (Context-type : text/plain)
+
+                                                   -> FormHttpMessageConverter : Конвертира данните от html форми към Java обекти и обратно
+
+                                                   -> MarshallingHttpMessageConverter : четене и парсване от и в HTTP заявка/отговор на XML данни
+
+                                                   -> ByteArrayHttpMessageConverter : Може да чете и пише byte масиви в HTTP заявката и отговора
+
+                                                   -> MappingJackson2HttpMessageConverter : използва се ObjectMapper на Jackson, който преобразува Java обекти към JSON и обратно
+
+
+                                                   Всеки един от тези конвертори може да бъде конфигуриран според конкретната ни нужда. За целта ще ни трябва наш клас, който да имплементира 
+                                                   WebMvcConfigurer и да овърайдне метода configureMessageConverters и там да се направи конкретната конфигурация. Всъщност след Java 8 оврайдването не е
+						   необходимо, защото всички методи в WebMvcConfigurer са обявени като default и може да връщаме директно конфигурирани от нас message convertor бийнове.
+
+                                                2. String, който да съответства на логическото име на View-то.
+                                                3. HttpEntity, ResponseEntity -> пълното съдържание на един Http отговор - хедъри, боди, статус.
+                                                4. HttpHeaders обект : когато нямаме боди
+                                                5. View обект и др...
+
+
+5. Data Binder : При Servlet API параметрите, които идват от HTTP заявката обикновено идват като низ и след това "на ръка" трябва да ги преобразувамe към int, long, float и т.н. При Spring се въвежда DataBinder,
+                 който отговаря за автоматичното превръщане на параметри на HTTP заявката в java обекти. Самият процес на binding включва в себе си конвертиране, форматиране и валидация.
+                 Идеята е контролер методите да приемат като аргументи директно обекти от посочените Java класове, като превръщането на информация от заявката в Java обект става "зад кулисите" посредством DataBinder.
+
+
+                 Converters vs Formatters : 
+
+                         * Converters  : Използват се за конвертирането на Java обект от един клас в Java обект от друг клас : от Long в Date, от Integer в Color и т.н
+
+                         * Formatters : Използват се за преобразуването на String в обект от друг Java клас и обратно. 
+
+
+                 Всeки контролер може да конфигурира собствения си DataBinder като се използва метод анотиран с @InitBinder. Методът се изпълнява преди всеки хендлър на текущия контролер. За да бъдем по-конкретни
+                 в това кога да се изпълни този метод можем да подадем аргумент към самата анотация, чрез който да се укаже модел атрибута, за  който да се прилага конфигурацията на биндера : @InitBinder("user")
+
+
+6. Exception Handling in Spring MVC
+
+    Spring MVC предоставя следните начини за Exception Handling : 
+
+    -> Controller Based : Логиката за обслужване на ексепшън генериран от даден контролер може да бъде разписана в метод, който е част от контрелера и е анториан с @ЕxceptionHandler(CustomException.class).
+                          Самият метод може да връща логическо име на view, customError message обект, който да бъде обърнат към JSON oт съответния message converter и др.
+
+                         If there are multiple exception handler methods defined, then handler method that is closest to the Exception class is used. For example, if we have two handler methods defined for
+                         IOException and Exception and our request handler method throws IOException, then handler method for IOException will get executed.
+
+
+     -> Global Exception Handler : Появява се малко по-късно от гореспоменатия вариант. Идеята е да се направи един глобален клас, който да съдържа логиката за обслужване на всички ексепшъни възникнали в 
+                                   контролерите. Класът трябва да бъде анотиран с @ControllerAdvice, a всеки exception handling метод с @ExceptionHandler.
+                                   Ползата от този подход проличава, когато два различни контролера хвърлят един и същ ексепшън и логиката по обслужване на ексепшъна е една и съща. Вместо тази логика да се
+                                   повтаря във вески един контролер, то тя може да бъде изнесена в клас анотриан с @ControllerAdvice.
+
+
+      -> Имплементиране на HandlerExceptionResolver интерфейса : допълнителен начин за обслужване на ексепшъни глобално, като се връща ModelAndView обект. Можем да обвържем даден ексепшън с конкретно view.
+
+
+7. How to configure DispatcherServlet ? 
+
+   Конфигурацията на DispatcherServlet е свързана основно с това да го интегрираме със спринг контейнера, от който ще взема анотираните контролери, ексепшън хендлъри и всички необходими други бийнове. Това може да 
+   стане по три основни начина :
+
+   -> Използване на web.xml (https://medium.com/thecodefountain/spring-mvc-primer-configuring-a-spring-mvc-application-through-web-xml-part-2-1cae66527789)  : 
+
+
+   -> В имплементацията на ServletContainerInitializer (https://medium.com/thecodefountain/spring-mvc-primer-configuring-a-spring-mvc-application-through-servletcontainerinitializer-part-462450e7f67d)
+
+   -> В имплементацията на клас, който наследвата WebApplicationIntializer 
+
+
+   -> Клас, който наследява AbstractAnnotationConfigDispatcherServletInitializer
+
+   
+   SpringServletContainerInitializer is Spring related class that implements ServletContainerInitializer (Servlet API interface). Its sole purpose is to instantiate and delegate ServletContext to any user-defined
+   classes that implement WebApplicationInitializer (Spring web specific interface).
+
+   Note that use of this container initializer and of WebApplicationInitializer is not in any way "tied" to Spring MVC other than the fact that the types are shipped in the spring-web module JAR.
+   Rather, they can be considered general-purpose in their ability to facilitate convenient code-based configuration of the ServletContext. In other words, any servlet, listener, or filter may be registered within
+   a WebApplicationInitializer, not just Spring MVC-specific components. 
+   !!!This class is neither designed for extension nor intended to be extended. It should be considered an internal type, with WebApplicationInitializer being the public-facing SPI.
+
+8. Handler Interceptor : 
+
+  -> Интерсепторите са концепция въведена при Spring MVC и са подобни на филтрите при Servlet API, но имат съществени разлики.
+  -> Когато се изпрати заявка от потребителя за определн ресурс, DispatcherServlet-а намира кой точно контролер и принадлежащ на него хендлър метод ще може да обслужи заявката. Преди
+     извикването на съответния хендлър метод обаче се прави обръщение към спсисъка с регистрирани интерсептори и се извикват техните preHandle() методи.
+  -> Всеки интереспетор може да се намесва на определнеи етапи в изпълненитето на хендлър метода на даден контролер. Тези етапи са отразени в интерфейса във вид на следните метод :
+          
+	* boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) : Съдържа код, който ще се изпълни точно преди изпълнението на handler метода на някой контролер.
+                                                                                                        Връща true, когато е ОК да се продължи със следващия интерсептор във веригата или ако няма такъв
+                                                                                                        да се извика директно хендлър метода на контролера.
+                                                                                                        Връща false, когато заявката е обслужена от интерсептора и няма смисъл от изпълнението на хендлър метода.
+       
+        * void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) : Съдържа код, който ще се изпълни след успешното! изпълнението на хендлър метода, но
+                                                                                                                                 преди DispatcherServlet-a да рендерира view-то. По този начин може да се добавят
+                                                                                                                                 допълнителни атрибути към модел обекта.
+
+        * void	afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) : Извиква се след като хендлър метода на контролера се е изпълнил (независимо дали е имало
+                                                                                                                          exception или не) и след като е рендерирано view-то. Подходящо място за освобождаване на ресурс.
+
+
+   -> Кога да се използва Servlet API Filter и кога Spring MVC HandlerInterceptor ?
+      
+      Основен съвет : Да се използва HandlerInterceptor, когато става въпрос за задачи тясно свързани с конкретния контролер метод, например проверки за оторизация или логване, управление на http сесия.
+                      Servlet Filter е по-подходящ за компресиране на съдържанието на един http request 
+
+      So where is the difference between Interceptor#postHandle() and Filter#doFilter()? :  postHandle will be called after handler method invocation but before the view being rendered. So, you can add more model
+                                                                                            objects to the view but you can not change the HttpServletResponse since it's already committed.
+                                                                                            
+                                                                                            doFilter is much more versatile than the postHandle. You can change the request or response and pass it to the chain
+                                                                                            or even block the request processing.
+   
+
+9. Bean Validation 
+  
+   Validating data is a common task that occurs throughout an application, from the presentation layer to the persistence layer. Often the same validation logic is implemented in each layer, proving to be time consuming and error-prone.
+   To avoid duplication of these validations in each layer, developers often bundle validation logic directly into the domain model, cluttering domain classes with validation code that is, in fact, metadata about the class itself.
+   
+   This JSR (Java Specification Request) defines a metadata model and API for JavaBean validation. The default metadata source is annotations, with the ability to override and extend the meta-data through the use of XML validation
+   descriptors.
+
+   As of version 1.1, Bean Validation constraints can also be applied to the parameters and return values of methods of arbitrary Java types.
+
+   Spring поддържа Java Bean Validation API, но както се досещаме това е само API и ни трябва някаква имплементация. Hibernate Validator е препоръчваната имплементация, като спринг позволява регистрирането на валидатора като биийн,
+   което позволява инжектирането му други класове, където е небходим.
+
+   Общо взето става дума за поставяне на анотации директно на полетата на даден клас или аргументите на даден метод. По този начин всеки път когато се създаде инстация на този клас, валидаторът ще бъде извикан да проверява
+   дали съдържанието отговаря на това, което е посочено в самта антоция.
+
+   Примери за анотации : @NotNull, @Size(min = 2, max = 14) ,  @Min(2), 
+
+
+=========================================================================================================================================================================================================================================== 
+                                                                                                                   Selenium Overview
+===========================================================================================================================================================================================================================================
+
+1. Basics 
+
+   -> Selenium is not just one tool or API but it composes many tools.
+   -> Selenium is many things but at its core, it is a toolset for web browser automation that uses the best techniques available to remotely control browser instances and emulate a user’s interaction with the browser.
+   -> It allows users to simulate common activities performed by end-users; entering text into fields, selecting drop-down values and checking boxes, and clicking links in documents.
+      It also provides many other controls such as mouse movement, arbitrary JavaScript execution, and much more.
+   -> One of the project’s guiding principles is to support a common interface for all (major) browser technologies. This allows you to write several lines of code to perform a complicated workflow, but these same lines will execute
+      on Firefox, Internet Explorer, Chrome, and all other supported browsers.
+   -> Selenium supports automation of all the major browsers in the market through the use of WebDriver.
+   -> Selenium tools : Selenium Integrated Development Environment (IDE), Selenium Remote Control (Deprecated), WebDriver, Selenium Grid.
+
+2. WebDriver
+
+   -> Selenium WebDriver is a W3C Recommendation.
+   -> WebDriver is an API and protocol that defines a language-neutral interface for controlling the behaviour of web browsers.
+   -> Each browser is backed by a specific WebDriver implementation, called a driver. 
+   -> The driver is the component responsible for delegating actions down to the browser, and handles communication to and from Selenium and the browser.
+   -> Each browser vendor should take the responsibility and write its own implementation of WebDriver. If the browser does not contain WebDriver implementation, Selenium provides its own.
+   -> The implementation of WebDriver contains ways for discovering and manipulating DOM elements in web documents and ways for controlling the behaviour of the browser.
+
+3. PageObjects : A simple abstraction of the UI of your web app.
+
+      Page Object е програмното изражение на една уеб страница от нашето приложение и капсулира всички нейни компоненти - WebElement обекти (бутони, полета, заглавия и т.н)
+      Един Page Object съдържа и методи, чрез които се извършва някакво действие на база на тези компоненти (WebElement обекти в терминологията на Selenium).
+      Така в самите JUnit тестове можем да използваме Page Object обектите и да извикваме съответните им методи.
+
+   -> Page Object is a Design Pattern which has become popular in test automation for enhancing test maintenance and reducing code duplication. 
+   -> Page object is an object-oriented class that serves as an interface to a page of your AUT (Application Under Test).
+   -> Page objects themselves should never make verifications or assertions. This is part of your test and should always be within the test’s code, never in an page object.
+   -> There is one, single, verification which can, and should, be within the page object and that is to verify that the page, and possibly critical elements on the page, were loaded correctly.
+      This verification should be done while instantiating the page object.
+
+4. PageFactory
+
+   In Selenium is an inbuilt Page Object Model framework concept for Selenium WebDriver but it is very optimized. It is used for initialization of Page objects or to instantiate the Page object itself. It is also used to
+   initialize Page class elements without using “FindElement/s.” through @FindBy annotation which can accecpt xPath, css, className
+
+3. LoadableComponent : Modeling PageObjects as components. 
+
+   -> The LoadableComponent is a base class that aims to make writing PageObjects less painful. 
+   -> You can use it to help reduce the amount of boilerplate code in your tests, which in turn make maintaining your tests less tiresome.
+
+=========================================================================================================================================================================================================================================== 
+                                                                                                              
+===========================================================================================================================================================================================================================================
+
+10. XPath and CSS selectors
+
+   -> XPath can be used to navigate through elements and attributes in an XML document.
+   -> XPath includes over 200 built-in functions.
+   -> XPath uses path expressions to select nodes or node-sets in an XML document. These path expressions look very much like the path expressions you use with traditional computer file systems
+   -> In XPath, there are seven kinds of nodes: element, attribute, text, namespace, processing-instruction, comment, and document nodes.
+    
+      <?xml version="1.0" encoding="UTF-8"?>
+
+	<bookstore>   -> root element node
+	  <book>
+   	    <title lang="en">Harry Potter</title>  -> lang="en" attribute node
+            <author>J K. Rowling</author>  -> element node
+            <year>2005</year>
+            <price>29.99</price>
+          </book>
+        </bookstore>
+ 
+10. Spring MVC Test framework - MockMVC
+
+   -> Служи за пълно тестване на контролер класовете и тяхната функционалност без да се изисква старитарането на сървлет контайнер (Томкат сървър например). Това се постига чрез извикването на
+     mock имплементация на Servlet API, която е част от spring-test пакета.
+
+   -> @WebAppConfiguration  : The mere presence of @WebAppConfiguration on a test class ensures that a WebApplicationContext is loaded for the test, using the default value of "file:src/main/webapp" for the path to the root of the web application
+     (that is, the resource base path). Note that @WebAppConfiguration must be used in conjunction with @ContextConfiguration, either within a single test class or within a test class hierarchy.
+
+                       
+
+
+
+                         
+ 

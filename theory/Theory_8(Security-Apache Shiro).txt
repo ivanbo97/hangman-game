@@ -1,0 +1,40 @@
+                                           ==================================================================================================================================================
+                                                                                                      Security with Apache Shiro
+                                           ==================================================================================================================================================
+
+
+
+
+1. Overview (https://shiro.apache.org/tutorial.html)
+
+   The first thing to understand in enabling Shiro in an application is that almost everything in Shiro is related to a central/core component called the SecurityManager.
+   Shiro SecurityManager is the core of a Shiro environment for an application and one SecurityManager must exist per application. 
+
+   When securing our applications, probably the most relevant questions we ask ourselves are “Who is the current user?” or “Is the current user allowed to do X”? It is common to ask these questions as we’re writing code or designing
+   user interfaces: applications are usually built based on user stories, and you want functionality represented (and secured) based on a per-user basis. So, the most natural way for us to think about security in our application
+   is based on the current user. Shiro’s API fundamentally represents the notion of 'the current user' with its Subject concept.
+
+
+2. Apache Shiro Architecture (https://shiro.apache.org/architecture.html)
+
+   At the highest conceptual level, Shiro’s architecture has 3 primary concepts: the Subject, SecurityManager and Realms.
+
+
+3. Apache Shiro Core
+
+   -> Authentication
+
+   -> Authorization
+
+       * Permissions: They are fundamentally statements about behavior and represent explicitly what can be done in an application.Permission statements reflect behavior (actions associated with resource types) only. They do not reflect
+         who is able to perform such behavior.')
+
+
+       * Roles: A Role is a named entity that typically represents a set of behaviors or responsibilities. Those behaviors translate to things you can or can’t do with a software application. Roles are typically assigned to user
+                accounts, so by association, users can do the things attributed to various roles. 
+
+                * Implicit Roles: Most people use roles as an implicit construct: where your application implies a set of behaviors (i.e. permissions) based on a role name only. With implicit roles, there is nothing at the software
+                                   level that says role X is allowed to perform behavior A, B and C. Behavior is implied by a name alone.
+
+                * Explicit Roles: An explicit role however is essentially a named collection of actual permission statements.n this form, the application (and Shiro) knows exactly what it means to have a particular role or not.
+                                   Because it is known the exact behavior that can be performed or not, there is no guessing or implying what a particular role can or can not do.	

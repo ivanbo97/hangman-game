@@ -1,0 +1,360 @@
+Разглеждане на важните термини и концепции
+
+1. Dependency : Това е зависимостта, която се получава, когато компонент А (клас) има нужа от компонент(клас) Б, за да изпълни определена задача.
+
+
+ Има различни начини, чрез които компонент А да се сдобие с въпросния компонент Б. Единият от тях е в конструктора на А да се създаде инстанция на класа Б. Пример :
+   
+
+         class A {
+
+	   private B b;
+
+           public A() {
+              ........
+	     b = new B();
+	      ........
+           }
+	
+	}
+
+ Какви са обаче проблемите, които на пръв поглед може да видим от горния пример ?
+
+       -> Зависимостта на А от клас Б е неявна. Не знаем, че съществува докато не погледнем сорс кода на самия клас А
+       -> Класовете са в тясна обвързаност (tightly coupled), което прави трудно тестването на клас А, защото не можем да заместим B с mock обект.
+       -> От семантична гледна точка фактът, че класът А конструира обект от класа Б може да не е правилен (Например ако Б е Engine, а А е Car, става неприемливо колата да си конструира двигател) 
+
+2. Invesrion of Control : Това е принцип в програмирането, при който вместо нашият код да извиква функционалност от библиотеки за постигането на различни задачи, става обратното. Библиотечена функционалност извиква
+                          наш код. Основната цел е постигане на модулярен и по-лесен за разширяване код.
+                          !!! Нека се има предвид, че IoC е термин свързан с, но различен от термина Dependency Inversion (един от SOLID принципите) 
+
+2. Dependency Injection : Представлва механизъм, по който да се добавят необходимите за текущия клас компоненти без да се сблъскваме с горните проблеми. DI e форма на IoC принципа и може да става по няколко начина.
+
+        -> Constructor Injection : Самият констуктор на класа получава като параметър вече създаден "отвън" компонент.
+        -> Setter Injection : Чрез подававне като параметър на самия компонент към setter метод. Ползва се обикновено при ситуации, когато даденото дипендънси ще бъде сменяно at runtime.
+        -> Field Injection : Чрез използване на Reflection технология (Spring не препоръчва използването на този вид) - https://stackoverflow.com/questions/39890849/what-exactly-is-field-injection-and-how-to-avoid-it
+
+        Чрез dependency injection постигаме разделяне на отговоростта по създаване на обект с самото използване на обекта.
+        
+	Има три главни термина, когато говорим за DI : 
+                                * client : обектът, който използва дадено дипендънси
+                                * service : обектът, който е дипендънси
+                                * injector : отговорен за "инжектиране" на service обекта в client обекта.
+
+	Какво прави DI форма на IoC : Когато клиентът иска да извика даден сървис, не е необходимо да знае как сървисът се конструира. По-скоро той делегира задачата по създаването на обекта към инжектора. Самият
+                                      клиент не осъзнава за наличието на конкретен инжектор (в кода на клиента няма указано пряко взаимодействие с инжектора). 
+
+        -> Circular Injection problem : Bean A → Bean B → Bean A : Как спринг да се ориентира кой бийн да създаде първо ? Този проблем се появява обикновено, когато прилагаме конструктор инжекция, тъй като при
+                                         другите видове инжекции дипендънсито се добавя само когато ще бъде изпозлванo, а не при spring context loading.
+                                         Имайки такава цикличност означава, че дизайнът ни не е добър и трябва рефакторинг. Ако рефакторинг не е възможен тогава има и други подходи като например използване на 
+                                         прокси обекти чрез анотацията @Lazy. Инстинският обект ще бъде създаден, когато се наложи да се използва.
+3. Inversion of Control Container
+  
+   Когато говорим за по-мащабен преоект с множество класове и зависимости между тях, става трудно за програмиста да конфигурира всеки един обект поотделно и да го добавя там където е необходим.
+   Затова се появяа идеята за специален контейнер, който да се заеме с конфигурацията на компонентите, да ги управлява и да ги добавя там където му бъде указано. Затова се нарича и Inversion of Control:
+   Класовете (бийновете) сами по себе си "заявяват" своите дипендънсита, а контейнерът им ги предоставя (инжектира) без да се налага самите класове да правят инстанциите.
+
+
+4. Обзор на IoC при Spring 
+
+   -> Оснивнте пакети, които са свързани с имплементацията на IoC от страна на Spring са [org.springframework.bean] и [org.springframework.context].
+
+   -> Интерфейсът BeanFactory предоставя специфичен конфигурационен механизъм, който е способен да управлява всякакви типове обекти.
+
+   -> ApplicationContext e интерфейс, който наследява BeanFactory и добавя функционалности, които са специфични за enterprise development като: AOP, Message Resource Handling, Event 
+      Publication, Application-layer specific context
+   
+   -> В терминологията на Spring всички обекти, които формират "гръбнака" на приложението се наричат бийнове(beans).
+
+   -> Бийнът е обект, който се инстанцира, "сглобява" и управлява от Spring IoC контейнера. 
+
+5. Поглед върху Spring контейнера
+
+  -> Идеологията на един контейнер може да се види от интерфейса org.springframework.context.ApplicationContext.
+
+  -> Инструкциите, които се отправят към контейнера относно кои обекти да създаде и как да ги конфигурара, се черпят чрез един от следните начини: XML конфигурационен файл, Java анотации или Java код.
+
+  -> От Spring получаваме няколко имплементации на интерфейса ApplicationContext : ClassPathXmlApplicationContext, FileSystemXmlApplicationContext, AnnotationConfigApplicationContext , AnnotationConfigWebApplicationContext,
+                                                                                   XmlWebApplicationContext и доста други.
+
+
+6. Proxy Design Pattern inside Spring
+
+   Първо да се спрем на това какво е прокси обект. Това е такъв обект, който имплементира интерфейса на истниския обект обаче същевременно с това може да добави и допълнителна функционалност. Той също така съдържа в себе си 
+   истинския обект през който извиква функционлност поискана от клиента. По този начин клиентът не е наясно, че комуникира през прокси обект тъй като интерфейсът на истинския и прокси обектът е един и същ. По този начин можем
+   да добавяме допълнителна функционалност към истинския обект без да променяме неговия изходен код. Примери за допълнителна функционалност може да бъдат логване, кеширане, сигурност.
+
+   Основното предимство на прокситата е, че те позволяват да се фокусираме върху кода обвързан с домейна, а допълнителната функционалност се добавя в прокси обекта от съответната библиотека.
+   
+   Не всички наши бийнове в Spring са прокси.
+
+   При AOP (Aspect-oriented programming) използването на проксита е често срещана практика. Идеологията на AOP е да отдели cross-cutting concerns(logging,security,data transfer) от бизнес логиката, която е core concern.
+   
+Базовият вариант на Spring AOP е прокси базиран и използва два вида проксита :
+		
+
+	     -> JDK Dynamic Proxies : Създава прокси обекта на база на интерфейса, който имплементира реалния обект, т.е реалният клас трябва да имплементира някакъв интерфейс иначе този меахнизъм е неприложим.
+                                      Не поддържа self-invocation. А какво е self-invocation ? Да приемем, че истинският обект има овърайднат метод1 (метод1 идващ от интерфейса), който от своя страна извиква
+                                      друг негов овърайднат метод2(идващ от интерфейса). Нека и за двата метода да има по-специфична съотвестваща имлементация в прокси-то. И така извикаме метод1, който минава през своя прокси вариант,
+                                      в който се съдържа извикване на метод2, но метод2 не се изпълнява през прокси варианта си, а през реалния обект, т.е прокси имплементацията на метод2 се прескача. 
+
+             -> CGLib Proxies : Използват се за създаване на прокси обект, като самият прокси обект наследява (extend-ва) реалния обект. Съответно не работи за класове / методи, които са обявени за final  
+                                Не поддържа self-invocation.
+
+
+            !!! Проблемът със self-invocation може да бъде преодолян, но това води до голяма обвързаност между кода с бизнес логиката и АОП кода(https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-understanding-aop-proxies)
+            !!! При AspectJ няма подобен проблем със self-invocation, защото не е прокси базиран AOP framework.    
+
+
+7. Жизнен цикъл на Spring Bean
+
+   -> Спринг бийн наричаме всеки клас, чийто обект ще бъде управляван от спринг контейнера. 
+   -> Под жизнен цикъл за един бийн разбираме кога и как бийнът се създава, какви действия извършва и кога и как е унищожен. Жизненият цикъл на бийновете се управля от контейнера и има следната последователност :
+
+                          1. Когато стартираме приложението, контейнерът също се статира. 
+			  2. Контейнерът създава инстанция на бийна, така както му е зададена в конфигурацията. 
+                          3. Инжектиране на завсимостите (обекти от други класове, ако има такива).
+			  4. Изпълнява се метода init() за съответния бийн.
+                          5. Контейнерът влиза в етап на унищожение и започва да извиква destroy() методите на бийновете.
+
+   -> Жизненият цикъл на контейнера съответно се асоциира с :
+         	          1. Създаване на инстанция на бийна.
+                          2. Настройване на бийна спрямо зададена биийн конфигурация 
+                          3. Инжектиеране на дипендъсита.
+                          4. Извикване на init() на бийна.
+                          5. При спиране на приложението съответно за всеки бийн се извиква deestroy метода.
+
+8. Механизми за превръщане на POJO (Plain Old Java Object) в Spring Bean
+
+
+   1) Използване на XML : Описнането на биийновете става в отделен xml файл в елемента <beans>. Самото инжектиране на един бийн в друг става чрез подоход constructor injection или чрез setter injection.
+
+                          *Constructor Injection : Трябва да укажем кой параметър на конструктора съответства на кой бийн за инжектиране.Пример: 
+                                                       
+													<beans ....>
+														<bean id="firstXmlConfigBean"
+															class="com.ivanboyukliev.example.xmlconfigbeans.FirstXmlConfigBean">
+
+															<!-- Injecting second bean into first using constructor injection -->
+															<constructor-arg name="secondBean" ref="secondXmlConfigBean" />
+														</bean>
+
+														<bean id="secondXmlConfigBean" class="com.ivanboyukliev.example.xmlconfigbeans.SecondXmlConfigBean" />
+
+													</beans>
+
+
+
+                            * Setter Injection : За целта в съответния бийн трябва да имаме имплементиран сетър метод за полето : 
+	                                                                                                <beans ....>
+														<bean id="firstXmlConfigBean"
+															class="com.ivanboyukliev.example.xmlconfigbeans.FirstXmlConfigBean">
+
+															<!-- Injecting third bean into first using setter injection -->
+															<property name="thirdBean" ref="thirdXmlConfigBean" />
+														</bean>
+
+														<bean id="thirdXmlConfigBean" class="com.ivanboyukliev.example.xmlconfigbeans.thirdXmlConfigBean" />
+
+													</beans>
+                                          
+
+   2) Използване на Java анотации с малко xml : Тук идеята е да се използва @Component анотацията за всички класове, които ще се управляват от спринг контейнера. Самото инжектиране на зависимостие става с анотацията
+                                                @Autowired, която може да бъде направена на ниво конструктор, сетър метод или директно над член-промелнивата.
+                                                XML файлът общо взето се използва, за да укаже на спринг кой пакет да сканира за класове, които ще бъдат управлявани от контейнера. В указания пакет след това се гледат 
+                                                класовете анотирани с @Component и се добавят към контейнера. Пример  : 
+                                 
+															<beans ...>
+															     <context:annotation-config />
+    															     <context:component-scan base-package="com.ivanboyukliev.example.annotationconfigbeans"/>
+															</beans>
+
+
+
+  3) Използване изцяло на Java (без XML) : Идеята тук е да се създаде един допълнителен конфигуриращ клас, който да се анотира с @Configuration. От тук нататък имаме два варианта :
+
+
+                                                -> връщане на бийновете през методи анотиран с @Bean. Този подход се използва, когато използваме някаква външна библотека с класове и искаме тези класове да бъдат добавени към контейнера.
+                                                   Пример : 
+
+
+                                                        @Configuration
+                                                        public class SpringContainerConfigurator{
+
+								@Bean
+                                                        	public MyBean myBean(){   //Името на метода ще бъде използвано на beanId. В случая това ще е myBean.
+								     return new MyBean();
+								}
+
+								..........
+
+							}
+
+
+                                                -> Директно указваме, в кой пакет да се търсят бийновете  (с анотация @ComponentScan("com.example...")) . Не се налага да пишем горните методи Пример : 
+                                                   !!! Важно : Обикновено конфиг класа стои в основния пакет и по този начин в ComponentScan не се налага изрично да се посчва кой пакет точно да сканира,
+                                                               защото по подразбиране ще скранира текущия и всички следващи в йерархията.
+                                                            
+                                                        @Configuration
+							@ComponentScan("com.example.beans")
+                                                        public class SpringContainerConfigurator{
+
+							
+							} 
+
+
+9. Spring AOP
+
+  Spring AOP's approach to AOP differs from that of most other AOP frameworks. The aim is not to provide the most complete AOP implementation (although Spring AOP is quite capable);
+  It is rather to provide a close integration between AOP implementation and Spring IoC to help solve common problems in enterprise applications.
+  There are some things you cannot do easily or efficiently with Spring AOP, such as advise very fine-grained objects (such as domain objects typically): AspectJ is the best choice in such cases.
+
+
+   Първо да започнем с малко терминология използвна в сферата на AOP : 
+
+
+   -> Aspect : Ключова единица за модуляризация що се отнася до AOP. (при ООП е класа, при AOP е аспекта). В Spring AOP аспектите се имплементират чрез:
+                         
+			-> обикновени класове с използването на xml конфиг
+                     
+                        -> обикновени класове анотирани с @Aspect (@AspectJ стил)
+
+   -> Join Point : Точката в изпълнението на програмата. В Spring AOP joint point винаги представлява изпълнението на метод.
+
+
+   -> Advice : конкретното действие, което се предприема от аспекта за съответния join point. Различните видове advices са : "around", "before", "after" съответния join point,
+
+   -> Pointcut : Предикатен израз, който отсява определен join point/s. Advice-ът се асоциира с pointcut израз и се изпълнява за всеки отсят join point. Например когато искаме advice за метод с определно име.
+                 Spring AOP изпозлва AspectJ expression langugage по подразбиране.
+
+   -> Introduction : Добавяне на нови интерфейси и съответните им имплементации за всеки adviced object (target object).
+
+   -> Target object : обектът, който е advice-нат от един или няколко аспекта. Нарича се още adviced object. Тъй като Spring AOP е имплементирана на базата на runtime проксита, target обектът може да се нарича още proxied object
+		      __________________________________________________________________________
+                      |!! При Spring AOP : target object = adviced object = proxied object     |
+                      |________________________________________________________________________|
+
+    -> AOP proxy : Обектът, който се създава от AOP фареймуорк, за да имплементира aspect contracts (advise method executions and so on). В спринг прокси обектът е JDK Dynamic proxy или CGLIB proxy (виж. т.6)
+
+    -> Weaving : свързване на аспекти с приложни обекти с цел създаване на прокси обекти. Spring AOP does dynamic weaving of aspects by creating proxy of the target objects. 
+                 Weaving is generating or editing code by directly modifying existing .class (byte-code) files. This can occur at different points in the application life cycle.
+
+
+
+   Сега нека обърнем внимание на типовете Advices:
+
+        -> Before Advice : изпълнява се преди joint point
+
+        -> After Returning Advice : изпълнява се след като joint point-a се изпълни
+
+        -> After Throwing Advice : изпълнвяа се само след като метод "хвърли" exception
+
+        -> After (finally) Advice : изпълнява се задължително след метод независимо дали е хърлил грешка или се е изпълнил коректно
+
+        -> Around Advice : Най-силният тип advice. Загражда самия joint point (метод) и се изпълнява преди и след него.
+
+
+   Как да използваме класическия вариант на Spring AOP включващ XML конфигурационен файл ? В <beans> създаваме нов елемент <aop:config> и там се описват всички аспекти (<aop:aspect>). Всеки един <aop:aspect> трябва да бъде
+                                                                                           рефериран към конкретен бийн и също така да бъде посочено кога даден негов метод да сработи и какъв ще бъде poincut-a. Пример : 
+                                              
+                                                                                           <aop:config>
+                                                                                             <aop:aspect id="aspects" ref="doAfterReturningAspect">
+                                                                                                <aop:pointcut id="pointCutAfterReturning" expression=
+                                                                                                  "execution(* org.baeldung.logger.SampleAdder+.*(..))"/>
+                                                                                                <aop:after-returning method="afterReturn"
+                                                                                                   returning="returnValue" pointcut-ref="pointCutAfterReturning"/>
+                                                                                             </aop:aspect>
+                                                                                            </aop:config>
+
+   
+   Как да използваме АОП със Spring контейнер без да ни е необходима xml конфигурация (https://stackoverflow.com/questions/48467234/maven-dependencies-for-writing-spring-aop-programs) ?
+     	 
+	-> Трябва ни дипендънси aspectjweaver (дипендънси към spring-aop не е нужно, защото то трябва само при xml конфиг.)
+        -> Класът, който представялва аспектът, трябва да е анотиран с @Aspect и @Component (т.е и самият аспект се слага в контейнера)
+        -> Конфигураиращият контейнера клас трябва да се анотира с @EnableAspectJAutoProxy след @Configuration   
+
+10.  Какво става, когато два бийна имплементират един и същи интерфейс и бъдат инжектиране в някой клас ? Как Spring ще определи кой от двата бийна да инжектира ?
+
+     При такава ситуация Spring ще хвърли ексепшън : NoUniqueBeanDefinitionException. Има два подхода за справяне със ситуацията :
+
+     -> Използване на @Qualifier("beanId") анотация : По този начин при инджектването указваме изрично кой точно биийн да се инжектира
+     -> Използване на @Primary анотация в комбинация с @Bean или @Component : Така се указва кой е бийнът с приоритет при евентуален конфликт
+     -> Трябва да се разглeда и следната ситуация : имаме два бийна имплементиращи един и същи интерфейс. Да приемем, че бийн А е анториан с @Primary, а бийн Б няма такава анотация.
+        Ако решим обаче да инжектираме точно бийн Б някъде, ние можем да прескочим приоритета на А, чрез използването на @Qualifier("beanB"). Анотацията @Qualifier има превъзходство над
+        @Primary.
+     -> Може също така да се инжектира колекция от даден интерфейс, а самата подредба в колекцията да се постига като бийновете са анторани с @Оrder.
+
+9.1 Разлики между Spring AOP и AspectJ
+
+    -> Spring AOP е по-лека имплементация на AOP концепцията и може да се прилага само на бийнове от контейнера.
+    -> AspectJ e пълна реализация на конепцията за AOP и може да се прилага за всички обекти от домейна
+    -> АspectJ използва compile-time и class-load time weaving
+    -> При Spring AOP се използва само runtime weaving.
+    -> Spring AOP only supports method call as joinpoint
+    -> AspectJ supports : method call, method execution, constructor call, constructor execution, static initalizer execution, object initialization, field refernce, field assignment, handler execution advice execution.
+    -> AspectJ is much faster than Spring AOP because it makes the weaving at compile-time.
+    -> When using Spring AOP you don't need separate compiler. With AspectJ you need special compiler (ajc)
+
+10. Junit 5 (Jupiter)
+
+    JUnit 5 = JUnit Platform + JUnit Jupiter + JUnit Vintage
+
+    *JUnit Plаtform служи като основа за изпълнеие на testing frameworks от JVM.
+ 
+    *JUnit Jupiter е комбинация от нов програмен модел и extension model за писане на тестове и extensions.
+   
+    *JUnit Vintage предоставя TestEngine за изпълнение на JUnit 3 и 4 базирани тестове.
+
+    *Junit extnsions служат за разширяване на поведението на тест класове или методи и могат да бъдат преизползвани в различни тестове.
+
+   
+    10.1  JUnit 5 Extension Model : JUnit 5 екстеншъните се обвързани с определно събитие (extension point) при изпълнение на тест. Когато се достигне до определена фаза на жизнения цикъл на теста, JUnit Engine извиква 
+                                    регистрирание екстеншъни. Има 5 главни типа extension points:
+     
+                                   -> test instance post-processing (интерфейс TestInstancePostProcessor) : Използва се, когато искаме да инжектираме дипендънсита в тестовата инстанция.
+				   -> conditional test execution (интерфейс ExecutionCondition) : Използва се, за иказване дали тестът да се узпълни или не.
+                                   -> life-cycle callbacks
+                                   -> parameter resolution
+                                   -> exception handling
+
+11. AssertJ : Това е библиотека, която се използва допълнително на фаза тестване. Като ни помага да пишем по-четими assert изрази. 
+
+12. Mockito 
+
+    * Какво представлява Mock (имитиращ) обектът ?  Представлява обект симулатор на реалния, който имитира поведението му в ограничен мащаб. Програмистът обикновено създава mock обект, за да тества имплентация на друг обект.
+                                                    Чрез този механизъм може да се фокусираме върху главната функционалност на проверявания от нас клас и да имитираме определено поведението на останалите класове, от които зависи нашият.
+                                                    
+       Lets assume you are connecting to a remote service which is being built by one of your engineering team, and you are not familiar with its internal functionality but you know what requests and response it returns.
+       In that case, you can create a Mock of that Object, and defines it with set of responses returns in different situations. Each situation should get its own different test and for each response you should check separately
+       the reaction of the code (you are working on).
+
+    The @ExtendWith annotation is used to load a JUnit 5 extension. JUnit defines an extension API, which allows a third-party vendor like Mockito to hook into the lifecycle of running test classes and add additional functionality.
+    (https://www.infoworld.com/article/3537563/junit-5-tutorial-part-1-unit-testing-with-junit-5-mockito-and-hamcrest.html?page=3)
+
+    * Какво представялва Mockito ? Това е фреймуорк, който позволява лесно създаване на Mock обекти. Когато искаме да тестваме нашият клас в изолация, без да инстанцираме всички обекти от които зависи, ние може да използваме Mockito и
+                                   да "му кажем" да създаде имитиращи дипендънси обекти, а функционалността от тях, която ни е необходима можем да я добавим. Например можем да имитираме какви точно стойности да връща мок обекта, когато
+                                   изпълнява съответен метод/и. 
+                                   Например , когато тестваме сървис, който от своя страна използва репозитори, ние може да мокнем репозиторито и да укажем какви стойности да се върнат при извкване на съответния метод.
+				********************************************************************************************
+                                *    List<Course> courses = new ArrayList<>();                                             *
+        			*   courses.add(mathCourse);							           *		
+                                *    courses.add(biologyCourse);                                                           *
+				*                                                                                          *
+                                *    given(courseRepository.findAll()).willReturn(courses);                                *
+                                *                                                                                          *
+                                *   Тук буквално казваме: Когато се извика findAll() ще бъде върната следната стойност.    *
+				*                                                                                          * 
+                                ********************************************************************************************
+
+    @Mock vs @Spy (https://frontbackend.com/java/mockito-spy-annotation)
+
+    
+     * Разлика между @Mock и @Spy обектите ? Разликата идва оттам, че при @Mock имплементацията на всички методи е dummy и не може да се очаква при извикване на метод от мок обект да получим адекватна стойност.
+                                             Когато използваме Spy вече говорим за инстанциран обект, на който може да пренапишем някоя от функционалностите, може и да оставим по подразбиране. Тоест това е обект,
+                                             чиито методи са вече имплеметирани.
+                                             Kогато сме анотирали обект с @Spy не e необходимо изрично да го инстанцираме, защото анотацията сама ще потърси конструктора без аргументи на съответния обект.
+
+
+      
+							 
+ -	 Закон на Парето при тестването : Тествай най-базовата функционалност първо(не corner case-овете), защото с нея си осигуряваш покриването на  възможно най-много реални ситуации.
