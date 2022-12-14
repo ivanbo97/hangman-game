@@ -1,0 +1,322 @@
+           ===========================================================================================================================================================================================================
+									                                           Docker Basics
+           ===========================================================================================================================================================================================================
+
+
+   1. Docker arhitecture
+
+      The architecture of Docker uses a client-server model and consists of the Docker’s Client, Docker Host, Network and Storage components, and the Docker Registry/Hub. 
+
+      A) Docker Client : Това е docker.exe. Посредством docker командата ние фактически управляваме Docker client и го караме да изпраща заявки към docker deamon (който се явява сървъра - dockerd.exe).
+                         Сървърът и клиента може да се намират на една и съща машина, но това не е задължително. Може да свързваме докер клиент към отдалечен демон (сървър) през REST API.
+
+      B) Docker Host : Предоставя пълната среда нужна за изпълнение на едно приложение. Състои се от docker deamon (dockerd.exe), Images, Containers, Networks and Storage.
+                       Docker Deamon (dockerd.exe - сървъра в docker архитектурата) е отговорен за всякакви операции свързани с контейнерите. Той получава команди от docker.exe (клиента) или от
+                       отдалечен клиент.
+
+   
+      C) Network : Тук говорим за механизъм, чрез който контейнерите комуникират с "външния свят" посредством хост машината, където се изпълнява docker deamon (сървърът).
+
+   
+      D) Storage : По подразбиране всички файлове съзадавани в контейнера се съхраняват в writeable слоя на самия контейнер. Това означа, че данните не се запазват когато контейнерът бъде спрян и е трудно 
+                   тези данни да се вземат от друг процес.
+                   Writeable слоя на контейнера е тясно обвързан с хост машината, на която се изпълнява контейнера.
+                   Писането в writeable слоя изисква storage driver, който да управлява файловата система
+                   
+
+   1. Какво е Docker ?
+
+      -> Това е инструмент, чрез който може да изпълняваме приложения в изолирана среда.
+
+      -> Подобно на виртуалните машини, но разлика е, че стартира много бързо и не изисква толкова рам и cpu.
+
+      -> Ако приложение, което съм създал работи в докер интеграция на моята машина, това означава, че ще работи на всяка една друга машина в докер среда.
+   
+      -> Стандарт за software deployment.
+
+  
+   2. Контейнери vs Виртуални машини
+
+      Докер Контейнерът е абстракция на приложно ниво, която капсулира нашето приложение и неговите дипендънсита. Множество контейнери мога да се изпълняват
+      върху една и съща машина и да споделят ядрото на ОС помежду си. Всеки контейнер се изпълнява като изоплиран процес в user space. Контейнерът не изисква 
+      напълно функционираща ОС.
+
+      В концепцията за вирутални машини е заложена идеята за изпълняване на множество ОС върху един и същи хардуер с помощта на Hypervisor. Всяка една виртуална
+      машина си мисли, че е "единственият господар" на наличния хардуера и не е наясно за съществуването на другите виртуални машини използващи същият хардуер.
+      Всяка една вируална машина претежава напълно функционираща ОС (всички библиотеки и байнърита), което изисква десетки GB-ти. Виртуалните машини буутват бавно.
+
+      Container is a group of processes with some cool kernel features sprinkled on top that allow the processes to pretend that they’re running on their own separate machine.
+      While the host machine knows that the container is actually a process, the container thinks that it is a separate machine. 
+
+      A container is realy just a native host process beeing isolated and restricited.
+      A container is a set of isolated processes. This isolation is ensured by the operating system kernel. 
+ 
+      The OS of the container is in the form an image. This is not the full operating system as on the host, and the difference is that the image is just the file system and binaries for the OS while the full OS
+      includes the file system, binaries, and the kernel. 
+  
+      The cool part is if there are two containers with the image layers a, b, c and a, b, d, then you only need to store only one copy of each image layer a, b, c, d both locally and in the repository. Thus two containers
+      can share a and b images and there is not duplication. This is Docker’s union file system.  
+
+   3. Предимствата на Docker контейнерите
+
+      -> Контейнерът с приложението се вдига за секунди.
+      -> Не изисква напълно функционираша операционна система
+      -> Ако конейнерът работи, както трябва на моята машина, значи ще работи по същия начин на всяка друга машина, която изпозлва докер.
+
+
+   4. Docker Image 
+
+     -> Представлява шаблон за настройка на средата, която нашето приложение ще използва - БД, web app
+
+     -> Също така това е и версия (snapshot)
+
+     -> Това е описнаие на всички компонененти, от които има нужда нашето приложение, за да се изпълнява коректно.
+
+  
+   5. Docker Container
+
+     -> Представлява изплъняваща се инстанция на даден docker image
+
+  
+   6. Docker Hub : регистър за сваляне на docker images.
+
+      Командата за сваляне на image : docker pull [image-name]
+                                     Пример: docker pull ngnix
+
+
+    7. Running a container
+
+        docker run container-name:tag-name (docker run nginx:latest)
+ 
+	docker run -d nginx:latest (контейнерът се изпълнява в dettached mode, т.е текущият терминал не "зависва")
+
+
+    8. Exposing container port
+
+       docker run -p <hostPort>:<containerPort> imageName:tagName
+
+       Пример:  docker run -d -p 8080:80 nginx:latest
+
+       Можем да свързваме един контейнер порт с множество хост портове : docker run -d -p 8080:80 -p 8081:80 nginx:latest
+
+    9. Managing Containers
+
+        1) Можем да стартираме и сприаме контейнерите по тяхното id или име.
+       
+            docker ps [показва всички контейнери, които се изпълняват]
+
+               -> docker stop 8e7878bbe0f4
+
+               -> docker stop friendly_bose
+
+         2) Можем да показваме всички контейнери независимо дали в момента се изпълняват или не
+
+                    docker ps -a
+
+         3) Можем да изтриваме контейнери
+
+              docker rm [container-id]
+
+              Изтирване на контейнери с един ред: docker rm ${docker ps -aq}
+
+         
+	 4) docker start vs docker run
+
+            * docker run [image-id] : Използва се създавне на нов контейнер от даден имидж и стартиране.
+
+                      run = create + start
+
+            * docker start [container-id] : Използва се за стартиране на контейнер, които преди това се е изпълнявал, а сега е спрян
+
+
+         5) Можем да рестартираме контейнер
+
+                docker restart [image-id]
+
+   
+    10. Dockerfile
+
+        Този файл ни позволява да създаваме наши images и съдържа стъпки как тези images да бъдат създавани.
+
+        Пример за съдържание на Docker file:
+    
+        FROM nginx:latest
+        ADD . /usr/share/nginx/html
+
+        Тук указваме, че наследваме image-a на nginx и добавяме всички файлове на текущата директория в следната директория на image-a.
+
+        За да създадем image от Dockerfile-a използваме командата : docker build --tag [image-name:image-tag] .
+
+
+    11. Docker file and Docker Layers
+
+        Когато билдваме един докер имидж, това което се случва е билдване на абсолютно цялата среда необходима за изпълнението на нашето приложение: започва се 
+        с билдване на ядро на ОС, след това инсталиране на всички необходими помощни библиотеки. В зависимост от броя на библиотеките и организацията на Dockerfile,
+        билд процесът може да отнеме доста време.
+          Всеки път, когато правим промяна по сорс кода на нашето приложение се налага да билднем нова версия на имиджа, която може да бъде използвана за деплоймент.
+        Въпреки, че се прави промяна само на сорс кода принадлежащ на самото приложение, целият имидж трябва да се билдва наново от началото : ядрото на ОС и всички 
+        библиотеки. Тове не е особено ефективно, затова Docker въвежда идеята за кеширане на слоевете.
+   
+        Нека първо разгедаме един пример за Dockerfile:
+
+	FROM node:12.13.1-buster-slim AS dev
+	WORKDIR /home/app
+	COPY ./package.json ./package-lock.json* ./
+	RUN npm install
+	COPY public /home/app/public
+	COPY src /home/app/src
+	CMD ["npm", "start"]
+
+        Всеки един ред от Dockerfile представлява команда, която създава нов слой на docker image-a. Информацията за всеки слой се запазва във файловата система на хоста и може да служи като кеш.
+        Следователно, ако нищо не се е променило на даден слой спрямо предишния билд на имиджа, то ние можем да преизползваме информацията от предишния билд за дадения слой.
+        Ако обаче се установи, че има промяна и кешът не може да бъде използван, се налага да се билдне както съответният слой, така и всички останали, които следват след него.
+
+        !!! Затова е много важно, когато създаваме Dockerfile, внимателно да планираме подредбата на командите, за да може да се възползваме от кеширането и съответно да намаляваме времето
+            за билд на нов имидж.
+
+
+    11. Docker and Spring Boot Apps
+
+        The other issue is that putting your application’s code and all its dependencies in one layer in the Docker image is sub-optimal. Since you probably recompile your code more often than you upgrade the version of
+        Spring Boot you use, it’s often better to separate things a bit more. 
+        If you put jar files in the layer before your application classes, Docker often only needs to change the very bottom layer and can pick others up from its cache.
+
+        За да създават по-оптимизарани докер имиджи, т.е такива които се билдват за кратко време, от Spring Boot въвеждат layer.idx файл. В него има списък със логически слоеве, на които може да бъде разделено приложението.
+        Подредбата на тези слоеве съотвества на това как ще бъдат добавяни към Docker имиджа. 
+        Добавянето на layer.idx файла и неговото дефоутно съдържание се поема от maven плъгина : spring-boot-maven-plugin.
+       
+        Съдържанието на layer.idx е следното: 
+        
+        dependencies 
+	spring-boot-loader
+	snapshot-dependencies
+        application
+
+	Идеята e архивът на цялото ни приложение (jar/war), който е fat, да бъде разбит на словете посочени в layer.idx файла. Това може да стане с командата:
+        java -Djarmode=layertools -jar application.war extract
+
+        Имайки вече слоеста структура с файловете,разпределни по отделни директории, можем да правим поетапно добавяне на всеки от словете от хост файловата система към имиджа :
+
+        COPY --from=builder application/dependencies/ ./
+    	COPY --from=builder application/spring-boot-loader ./
+	COPY --from=builder application/snapshot-dependencies/ ./
+	COPY --from=builder application/application/ ./
+
+        Така всяка една COPY команда създава нов слой и го кешира. По този начин, ако правим промени по сорс кода на приложението и билдваме наново имиджа то ще използваме кеш съдържанието на всички 
+        слоеве, с изключение на последния (COPY --from=builder application/application/ ./). Там ще се наложи да направим само едно копиране на сорс кода на приложението.
+
+
+   12. Linux Alpine
+
+       Когато сваляме някакъв image е добре да използваме таг, който съдържа в себе си ключовата дума alpine. Това означава, че имиджът използва "олекотена" дистрибуция на линукс, която е значително по-малка по размер.
+
+   
+        docker build --tag hangman-game:latest .
+
+        docker exec -it website bash
+
+
+   13. Versionin of containers
+
+      Можем да използваме тагове за поддържане на различни версии на нашето приложение. Ако например latest билда на нашия имидж е добавил някакъв бъг ние без проблем можем да се върнем към предишната версия на имиджа, ако
+      преди това тя е била обозначена с някакъв так.
+
+      Затова преди да правим билд на имидж е добре да направим нов таг, чрез който ще съхраним текущата версия. Например :
+   
+      docker tag website:latest website:v1   // По този начин казваме вземи имиджа в текщия му вариант и го тагни с v1
+
+      След това можем да наприм билд на новата версия на имиджа : docker build -t website:latest .
+
+      Ако обаче след стартиране на контейнера установим, че новият билд е вкарал някакъв бъг, без проблем можем да се върнем към старата версия на имиджа и да стартираме контейнер от нея : 
+      docker run --name website -d -p8080:80 website:v1 
+
+
+
+   14. Docker Compose
+
+       Общата идея да стартираме няколко кoнтейнера наведнъж : Например имаме спринг приложение и MySQL БД към него. Следователно ни трябват два сървиса : приложението и mysql. 
+       Едноврменното стартиране може да стане с помощта на docker compose файл, където описваме сървисите и как точно да бъдат стартирани. Автоматично се създава вътрешен network за двата сървиса и могат да си комуникират.
+       Има един основен проблем, че mysql се инициализира бавно и първите опити на приложението да се свърже ще хвърлят exception-и. Затова задаваме restart: always на приложението в docker compose.
+       Много е важно също така в application.properties кънекшън стринга към БД да е с името на контейнера на базата данни и вътрешният порт на, който слуша mysql : url: jdbc:mysql://mysqldb:3306/hangman-game-db
+       От горния пример mysqldb e името на контейнера.
+       Примрно видео : https://www.youtube.com/watch?v=-ekBqIvAGY4
+       Примерен docker compose за spring-boot  + mysql :
+
+version: "3"
+services:
+  hangman-game-app:
+    container_name: hangman-game-app
+    image: hangman-game:latest
+    restart: always
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      -  hangman-game-mysql
+ 
+  mysqldb:
+    image: mysql:latest
+    environment:
+      - MYSQL_USER=ivanb
+      - MYSQL_PASSWORD=ivanbproxiad
+      - MYSQL_ROOT_PASSWORD=ivanbproxiad
+      - MYSQL_DATABASE=hangman-game-db
+    ports:
+      - 3307:3306
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 20s
+      retries: 10
+
+     При горната релизация обаче не се пазят данните между отлдените рестарти на mysql контейнера, за целта трябва да се добавят volumes
+
+     Важно!!!  : Aко искаме да достъпваме от докер контейнер сървиси, които се изпълняват на localhost, то самия локалхост трбва да се замени с host.docker.internal.
+                 Така например, ако решим да изпълняваме Spring приложение в контейнер и да го сързваме към MySQL база, която се изпълнявама на локалната машина (не
+                 в контейнер), то ще трябва да в application.yml да сложим : url: jdbc:mysql://host.docker.internal:3306/hangman-game-db
+
+
+
+    Стартиране на Spring Booт в контейнер задавайки активен профил : docker run -d -p 8080:8080 -e "SPRING_PROFILES_ACTIVE=test" --name my-app:latest
+
+      We have 3 ways to start spring boot app image in continer with active profiles:
+
+         1. Passing Spring Profile in a Dockerfile
+
+             FROM openjdk:8-jre-alpine
+             ...
+             ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=test","-jar","app.jar"]
+
+         2. Passing Spring Profile in Docker run
+
+              docker run -d -p 8080:8080 -e "SPRING_PROFILES_ACTIVE=test"  my-app:latest
+
+         3. Passing Spring Profile in DockerCompose
+
+            version: "3.5"
+            services:
+              my-app:
+                image: my-app:latest
+                ports:
+                  - "8080:8080" 
+                environment:
+                  - "SPRING_PROFILES_ACTIVE=test"
+
+   
+
+     docker build -t hangman-game:latest .
+
+     docker run  --name HangmanGameJPA -p 8080:8080 hangman-game:latest
+
+     docker compose up
+     
+     docker compose down -> Stops all containers previously created with the "up" command
+
+
+ Deleting docker cache: docker builder prune
+
+      
+        
+
+       
+

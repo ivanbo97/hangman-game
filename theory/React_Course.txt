@@ -1,0 +1,733 @@
+						          ==========================================================================
+                                                                  REACT JS - A JavaScript library for building user interfaces
+                                                          ==========================================================================
+
+
+1. What is a React component ? 
+  
+  -> Components are independent and reusable bits of code. They serve the same purpose as JavaScript functions, but work in isolation and must return HTML (technically is is called JSX).
+  -> Components come in two types, Class components and Function components.
+  -> When creating a React component, the component's name MUST start with an upper case letter.
+  -> Components always need to be closed when we use them in : ReactDom.render(<Greeting />, document.getElementById("root"));	
+
+==================================================================================================
+2. What is index.js file ? 
+
+   -> It is JavaScript entry point.
+
+==================================================================================================
+3. What are we doing when we call : ReactDom.render(<Greeting />, document.getElementById("root"));  ?
+
+   We are importing our javascript inside html element with id of root. The synax is : ReactDom.render([component], [where to paste the component]);
+
+==================================================================================================
+4. Stateless functional components should always return JSX : 
+    
+   function Greeting() {
+     return <h4>This is John and this is my first component</h4>;
+   }
+
+==================================================================================================
+5. JSX Rules
+  
+        -> Return single element (this element could have many children though)
+        -> Better practice is to follow html semantics : <section>, <article>, React Fragment
+        -> Use camelCase for html attributes (onClick insead of onclick='', className instead of class='')
+        -> Close every element.
+        -> Good practice to surround JSX retrun value with paranthesis :   return (...);
+
+==================================================================================================
+
+6. Nested component structure - in our components we can inlcude other components. Example : 
+
+function Greeting() {
+  return (
+    <div>
+      <Person />
+      <Message />
+    </div>
+  );
+}
+
+const Person = () => <h2>John Doe</h2>;
+
+const Message = () => {
+  return <p>This is my first component</p>;
+};
+
+==================================================================================================
+7. React Dev Tools (browser util)
+
+==================================================================================================
+8. Writing JavaScript inside JSX  : we should use {..jscode..}
+
+==================================================================================================
+9. Reading properties of components 
+
+    <Book
+        img={firsBookData.img}
+        title={firsBookData.title}
+        author={firsBookData.author}
+      /> 
+
+Here we set a book component with different properties. So to read them and paste them in JSX we can go with the following : 
+
+  const Book = (props) => {
+  return (
+    <article className="book">
+      <img src={props.img} alt="" />
+      <h1>{props.title}</h1>
+      <h4>{props.author}</h4>
+    </article>
+  );
+};
+
+
+    Or we can go with standart javascript object destrcturing which remove some boilerplate (this is all JS specific code not React specific) :
+
+
+const Book = (props) => {
+  const { img, title, author } = props;
+  return (
+    <article className="book">
+      <img src={img} alt="" />
+      <h1>{title}</h1>
+      <h4>{author}</h4>
+    </article>
+  );
+};
+
+
+  Or we can destructure right in the parameter  :
+
+const Book = ({ img, title, author }) => {
+  return (
+    <article className="book">
+      <img src={img} alt="" />
+      <h1>{title}</h1>
+      <h4>{author}</h4>
+    </article>
+  );
+};
+
+==================================================================================================
+10. React children property
+
+ -> It contains the content between opening and closing react component tags.
+
+    In this example <p> will be stored inside children poperty
+
+        <Book
+        img={firsBookData.img}
+        title={firsBookData.title}
+        author={firsBookData.author}
+        >
+        <p>
+          Adipisicing proident culpa ullamco ipsum magna deserunt aliqua.  
+          Nostrud veniam non quis non proident aliqua nulla officia.
+        </p>
+      </Book>
+
+ 
+Accessing above children data in JSX  :
+
+        
+const Book = ({ img, title, author, children }) => {
+  return (
+    <article className="book">
+      <img src={img} alt="" />
+      <h1>{title}</h1>
+      <h4>{author}</h4>
+      {children}
+    </article>
+  );
+};
+
+====================================================================================================================================================================
+
+11. In React we can iterrate through arrays with JS objects but first we should wrap the array data into html elements or React components using js map(..) method.
+
+    Bellow is an example in which we have books data stored in an array of js object : booksData. The idea is to iterrate through the array of js objects and to turn
+    them into <Book> components having the coressponding data.
+
+
+
+// JS array with book data
+
+const booksData = [
+  {
+    img: "https://m.media-amazon.com/images/I/91qQRhs0mlS._AC_UY218_.jpg",
+    title: "Will Autobiography",
+    author: "Will Smith, Mark Manson",
+  },
+
+  {
+    img: "https://images-na.ssl-images-amazon.com/images/I/8144Vic9C5L._AC_UL200_SR200,200_.jpg",
+    title: "I Love You To The Moon And Back",
+    author: "Amelia Hepworth",
+  },
+];
+
+
+// Book List component where the mapping is done
+
+
+function BookList() {
+  return (
+    <section className="booklist">
+      {booksData.map((bookData) => {
+        const { img, title, author } = bookData; // this is js object destructuring
+        return <Book bookData={bookData} />;
+      })}
+    </section>
+  );
+}
+
+
+// Book Component
+const Book = (props) => {
+  const { img, title, author } = props.bookData;  // this is js object destructuring
+  return (
+    <article className="book">
+      <img src={img} alt="" />
+      <h1>{title}</h1>
+      <h4>{author}</h4>
+    </article>
+  );
+};
+
+
+// Setting the book list inside div element in index.html
+
+ReactDom.render(<BookList />, document.getElementById("root"));
+
+
+=====================================================================================================================
+
+12. Each and every time you have a list in React you need to add a key property with unique value to your component.
+
+	............
+ return <Book key={bookData.id} bookData={bookData} />;
+
+=======================================================================================================================
+
+13. For passing data to React component we can use spread operator (js syntax : ...) instead of explicitly setting separate property.
+
+
+function BookList() {
+  return (
+    <section className="booklist">
+      {booksData.map((bookData) => {
+        return <Book key={bookData.id} {...bookData} />;
+      })}
+    </section>
+  );
+}
+
+
+Therefore Book component will look like this doing destructuring right in the parameter : 
+
+const Book = ({ img, title, author }) => {
+  return (
+    <article className="book">
+      <img src={img} alt="" />
+      <h1>{title}</h1>
+      <h4>{author}</h4>
+    </article>
+  );
+};
+  
+=============================================================================================================================  
+
+14. Evenets in React - Always use camelCase for event property of element. 
+
+    You can use reference to function : 
+       
+       const clickHandler = () => {
+    		alert("hello world");
+       };
+      ......................................
+     <button type="button" onClick={clickHandler}>
+
+     ***********************************************************
+     You can also use inline function : 
+
+     <h1 onClick={() => console.log(title)}>{title}</h1>
+
+     ***********************************************************
+      Here is an example of calling function in onClick attr
+     
+        const complexExample = (authorName) => {
+                console.log(authorName);
+  	}; 
+      ...........................................................
+      <button type="button" onClick={() => complexExample(author)}>
+     
+     ***************************************************************
+
+==========================================================================================================================================
+  
+15. You can access the html element that you have clicked on from event object (event.target will point to <button> in the example bellow)
+
+      const clickHandler = (event) => {
+          console.log(event.target);
+       };
+
+     ...........................................................
+
+          <button type="button" onClick={clickHandler}>reference example</button>
+              
+==========================================================================================================================================
+
+16. Import and Exporting files  (ES6 specific, not React specific)
+
+ When you export smth, you import it with the same name as it is exported!!! (for default exports is different)
+
+  ******************************************************************************************************************************
+    Example 1
+
+  Content of bookRepository.js : 
+
+
+  export const booksData = [
+  {
+    id: 1,
+    img: "https://m.media-amazon.com/images/I/91qQRhs0mlS._AC_UY218_.jpg",
+    title: "Will Autobiography",
+    author: "Will Smith, Mark Manson",
+  },
+
+  {
+    id: 2,
+    img: "https://images-na.ssl-images-amazon.com/images/I/8144Vic9C5L._AC_UL200_SR200,200_.jpg",
+    title: "I Love You To The Moon And Back",
+    author: "Amelia Hepworth",
+  },
+ ];
+
+  Importing above array in index.js. We should use the same name booksData : import { booksData } from "./bookRepository"; 
+
+ *****************************************************************************************************************************
+
+ ******************************************************************************************************************************
+    Example 2
+
+    Content of Book.js : 
+
+
+import React from "react";
+
+const Book = ({ img, title, author }) => {
+  // aproach with reference function
+
+  const clickHandler = (event) => {
+    console.log(event.target);
+  };
+
+  const complexExample = (authorName) => {
+    console.log(authorName);
+  };
+
+  return (
+    <article
+      className="book"
+      onMouseOver={() => {
+        console.log(title);
+      }}
+    >
+      <img src={img} alt="" />
+      {/* using inline function, the result is the same as using reference funtion */}
+      <h1 onClick={() => console.log(title)}>{title}</h1>
+      <h4>{author}</h4>
+      <button type="button" onClick={clickHandler}>
+        reference example
+      </button>
+      <button type="button" onClick={() => complexExample(author)}>
+        More Complex Example
+      </button>
+    </article>
+  );
+};
+
+export default Book; 
+
+
+ When importing this Book component we can use the following statement : import Book from "./Book";
+
+ We can also use different name since Book has been exported by default : import SingleBook from "./Book"
+
+
+netli753159741fy
+
+
+17. Introduction into React Hooks
+
+ Hooks are functions that let you  hook into React state and lifecycle features from function components. Hooks do not work inside classes.
+ They let you use React without classes. React provides built-in hooks like useState and useEffect but you can also create your own.
+ Hooks always start with name "use.."
+ Components that use hooks should start with upper case letter.
+ Hooks should be invoked in function body only.
+ We can not use hooks in if statements.
+
+17. useState() hook: Това е функция, която връща масив, чийто първи елемент е стойността, която ще се променя, а вторият е референция към функцията, която ще променя стойността.
+
+
+     const value = useState("firstValue")[0];
+     const funReference = useState("firstValue")[1];
+
+     или алтернативно : 
+
+     const [value,funReference] = useState("firstValue");
+
+    По този начин можем някъде в кода да извикаме funReference, с нова стойност и тя ще бъде обновена от реакт.
+
+
+   Важно!!! : Когато променяме накаква стойност на база на предишно състояние, на самия setState метод трябва да се подаде не направо новата стойност, а функцията, която ще изчислява новата стойност на база текущата.
+              Това е преопръчително при всяка една ситуация, когато новата стойност се изчислява на база на старата. По този начин си подсигуряваме, че работим с най-актуалната стойност. Пример
+
+
+  const complexIncrease = () => {
+    setTimeout(() => {
+      setValue((prevState) => {return prevState + 1;});
+    }, 2000);
+  };
+    
+
+<button className="btn" onClick={complexIncrease}>
+
+ В горния пример показваме, че ако направим няколко клика в интервала на 2 сек, то те ще бъдат отразени с най-актуалните стойности.
+	
+
+18. useEffect() hook : Става въпрос за работа, която трябва да се изпълни извън компонента (нарича се още side effect). Странична работа може да бъде смяна на заглавието на документа, абониране за някакви данни.
+
+     -> useEffect runs every re-rendering of the component by default
+
+     -> We are passing function refrence to useEffect, it acts as a callback function
+
+     -> We can configure it to run on initial render only by passing empty array as second argument :  useEffect(callBackAfterRenderingComponent, []);
+
+     -> We can also configure it to run only on first render and when there is a change in some value :  useEffect(callBackAfterRenderingComponent, [value]);
+
+     -> We can add a cleanup function which is going to be triggered before every useEffect unmount. 
+
+     -> The useEffect Hook is built in a way that we can return a function inside it and this return function is where the cleanup happens.
+        The cleanup function prevents memory leaks and removes some unnecessary and unwanted behaviors.
+	Example : 
+  useEffect(() => {
+    console.log("setting handler");
+    window.addEventListener("resize", checkSize);
+    return () => {
+      // clean-up code
+      console.log("cleanup");
+      window.removeEventListener("resize", checkSize);
+    };
+  });
+
+
+   -> We should be carefull how we combine useEffect with callback function that calls some kind of setState() function, because we may cause an infinite loop. This happens especially when we do not give empty array as a 
+      second argument of the useEffect hook. This causes useEffect to call setState, then setState causes re-rendering which triggers useEffect again and thus leading to ∞ loop. 
+
+      !!! Be careful the approach with gicing devependency array to useEffect is tricky when using it with objects which are created as follows : const [gameData,setGameData] = useState({}); . Because on each render you will
+          have different instance of the object although the field values may be the same. In this situation it is good to use object field value in depenedncy array of useEffect. Example:
+
+          useEffect(()={....},[gameData.id]) instead of useEffect(()={....},[gameData])
+
+19. Fetching data and multiple return (the Fetch API is not React specific, it a js api similar to XMLHttpRequest)
+
+    Example : 
+
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetch(url)
+      .then((resp) => {
+        if (resp.status >= 200 && resp.status <= 299) {
+          return resp.json();
+        } else {
+          setIsLoading(false);
+          setIsError(true);
+          throw new Error(resp.statusText);
+        }
+      })
+      .then((user) => {
+        const { login } = user;
+        setUser(login);
+        setIsLoading(false);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
+
+20. Short - Circuit Evaluation in JS 
+
+   -> AND (&&) : Start evaluation of expression from left to right and if false (undefined,null..) condition is encountered it short circuits to this false condition and doesn't make further evaluation.
+
+      Example 1 :                           |     Example 2 : 
+					    |    
+                                            |      var a=null;
+      var a = "first";                      |      var b = true;                                      
+      var b = "second";                     |      var c = a && b;
+      var c = "third";                      |      console.log(c); // will log null
+                                            |
+      var d = a && b && c;                  |
+     // Will log the last evaluated         |
+     // which is "third".                     |
+      console.log(d);                       |  
+
+
+
+   -> OR (||) : Starts evaluation of expression from left to right and if true (meaning a boolean true or some string) condition is encoountred short-circuits and results to providing the true value without further evaluation.
+
+               Example : 
+
+		var a;
+		var b = null;
+                var c = undefined;
+                var d = 4;
+                var e = "five";
+
+                var f = a || b || c || d || e
+   
+                console.log(f);  // Will log 4, because d is the first value that has true condition and this short-circuits and doesn't reach e["five"];
+
+
+20.1 Using short-circuit evaluation for diplaying/hiding html elements inside React component 
+
+// This is React component
+
+const ShortCircuit = () => {
+
+  const [isError, setIsError] = useState(false);
+  
+return (
+    <>
+      <button className="btn" onClick={() => setIsError(!isError)}>
+        Toggle Error
+      </button>
+      {isError && <h1>Error...</h1>} // Will display h1 only if isError is true, otherwise if it is false it will short-circuit
+    </>
+  );
+};
+     
+
+     
+21. Using ternary operator for condition logic
+
+From Above example :
+
+  .................................
+ {isError ? <h1>Error...</h1> : <h1>Everything is Good In The Hood</h1>}    
+  .....................................................................
+
+22. Forms
+
+    -> In React we have controlled and uncontrolled inputs. Here we will discover the controlled inputs.
+
+    -> We should use separate useState value(hook) and setter method for every input field of a from.  
+
+    -> We shoud wire the state value to the input by providing the state value(hook) name to value property of the input html element.  
+
+    -> We should also give handler to onChange property of input field. The handler should take the entered value of the user and set the state value(hook) accordingly. Therefore each and everytime we type something in the input field
+       onChange will be called which in turn will set the hook value. Example:
+
+         const [firstName, setFirstName] = useState("");
+         ...............................................
+
+        <form className="form" onSubmit={handleSubmit}>
+          <div className="form-control">
+            <label htmlFor="firstName">Name : </label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={firstName}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+              }}
+            />
+          </div>
+          .....................................
+          <button type="submit">Add person</button>
+        </form>
+
+
+22.1 Multiple inputs having one and the same onChange method ( useful approach for more than 3 components)
+
+    -> The idea is giving the same handle function for all onChange poperties of all input fields. This handle function will get name of the input and the actual value from the event object. Example : 
+
+
+       const handleChange = (e) => {
+   	 const name = e.target.name;
+         const value = e.target.value;
+         setPerson({ ...person, [name]: value }); // here we are doing dynamic object keys (it is js specific,if we want to get the value of variable and treat it as class field name)
+       };
+
+23. useRef hook (for uncontrolled inputs)
+
+   -> preserves value between renders (like useState)
+
+   -> does not trigger re-render (unlike useState)
+
+   -> it's major use is for targeting DOM nodes/elements
+  
+   -> You can think of refs as instance variables of class-based components. A ref is a generic container to store any kind of data, such as primitive data or objects.
+
+
+24. useReducer hook
+
+    -> It was introduced with the idea of separating rendering and state management logic. The hook does so by extracting the state management out of the component.
+  
+    -> The useReducer(reducer, initialState) hook accept 2 arguments: the reducer function and the initial state. The hook then returns an array of 2 items: the current state and the dispatch function.
+
+    -> Terms related to this hook:
+
+         * Initial state : The initial state is the value the state is initialized with.For example, in the case of a counter state, the initial value could be:
+
+            // initial state
+            const initialState = { 
+               counter: 0 
+            };
+
+         * Action object : An action object is an object that describes how to update the state.Typically, the action object would have a property type — a string describing what kind of state update the reducer must do.
+                           For example, an action object to increase the counter can look as follows:
+
+				const action = {
+  				  type: 'increase'
+				};
+
+                            If the action object must carry some useful information (aka payload) to be used by the reducer, then you can add additional properties to the action object.For example, here's an action object to add
+                            a new user to an array of users state:
+
+				const action = {
+ 				  type: 'add',
+                                  user: { 
+                                     name: 'John Smith',
+                                     email: 'jsmith@mail.com'
+                                  }
+                                };
+
+                            user is a property that holds the information about the user to add
+
+
+           * Dispatch function : The dispatch is a special function that dispatches an action object. the dispatch function is created for you by the useReducer() hook:
+
+                                 const [state, dispatch] = useReducer(reducer, initialState);
+
+                                 Whenever you want to update the state (usually from an event handler or after completing a fetch request), you simply call the dispatch function with the appropritate action object:
+                                 dispatch(actionObject).
+
+            * Reducer function : The reducer is a pure function that accepts 2 parameters: the current state and an action object.Depending on the action object, the reducer function must update the state in an immutable manner,
+                                 and return the new state.
+                                 !!!React checks the difference between the new and the current state to determine whether the state has been updated, so do not mutate the current state directly.
+				 The following reducer function supports the increase and decrease of a counter state:
+
+					function reducer(state, action) {
+ 				             let newState;
+                                             switch (action.type) {
+                                                case 'increase':
+                                                  newState = { counter: state.counter + 1 };
+                                                break;
+                                                case 'descrease':
+                                                  newState = { counter: state.counter - 1 };
+                                                break;
+                                                default:
+                                                  throw new Error();
+                                             }
+                                             return newState;
+                                          }
+
+
+         -> How all above components run together : 
+
+                When you'd like to update the state, simply call dispatch(action) with the appropriate action object. The action object is then forwarded to the reducer() function that updates the state.
+                If the state has been updated by the reducer, then the component re-renders.
+
+
+            !!! useReducer() fits great with relatively complex state update (requiring at least 2-3 update actions). For simple state management, simply use useState().
+
+
+25. Prop Drilling
+
+    Prop drilling (also called "threading") refers to the process you have to go through to get data to parts of the React Component tree. If we have complex React component tree with many children and we have to pass 
+    some properties to specific children this should be done through the parent component. This means that although the parent component does not need this properties it has to pass them. (this is undesired consequence)
+  
+    Ways to get over this scenarion : context api , redux (for more complex cases)
+
+
+    The idea of Context API is to enable sharing of data between multiple components without having to pass data from parent component all the way down to child components (prop-drilling).
+    Using the Context requires first to create a context :
+    
+    const PersonContext = React.createContext();
+
+    Component returned from createContext() has two components : Provider and Consumer
+
+    The Provider is used to wrap all the react components that are going to share the context data : 
+
+    <PersonContext.Provider value={{ removePerson, people }}>
+      <h3>Context API / useContext</h3>
+      <List />
+    </PersonContext.Provider>
+
+    In the above example, all subcomponents of List will have access to removePerson and people.
+
+26. Custom hooks
+
+    The basic idea of custom hook is to capsulate logic that duplicates across different components. Custom hooks are nothing more than functions but their name should start with "use", in order to invoke other hooks (useState,
+    UseEffect..) in their body.
+
+
+27. Typechecking with PropTypes
+
+    As your app grows, you can catch a lot of bugs with typechecking. React has some built-in typechecking abilities with the help of PropTypes. Every component of react has built-in property : propTypes, which can be used
+    in order to impose validation rules.
+    
+   import PropTypes from "prop-types";
+
+    Product.propTypes = {
+ 	image: PropTypes.object.isRequired,
+  	name: PropTypes.string.isRequired,
+  	price: PropTypes.number.isRequired,
+    };
+
+    From the above example we are telling that the Product component has image, name and price props, and we are also imposing their type (object,string,number) and if the corresponding should be required when defining the Product
+    component.
+
+    We can also use the built-in property of React components : defaultProps . It is dedicated to providing default values for react component props. Example bellow : 
+
+    Product.defaultProps = {
+  	name: "default name",
+  	price: 3.99,
+  	image: defaultImage,
+    };
+
+
+28. Client-side routing
+   
+    Client side routing is a type of routing where as the user navigates around the application or website no full page reloads take place, even when the page's URL changes. Instead, JavaScript is used to update the URL and
+    fetch and display new content. Thus there is less comminication between the browser and the server.	
+
+29. React Optimization
+
+    When we have hierarchy of React components and there is a state change in the parent component, all the elements down the hierarchy have to be re-rendered, despite the that they haven't change their states.
+    In such cases we can use React.memo method and wrap the parent functional component inside it. Example : 
+
+    
+     const BigList = React.memo(({ products }) => {
+        useEffect(() => {
+         console.log("BigList called");
+        });
+        return (
+            <section className="products">
+            {products.map((product) => {
+                return <SingleProduct key={product.id} {...product}></SingleProduct>;
+            })}
+            </section>
+            ); 
+           });
+
+
+      In the above example if haven't any changes in SingleProduct component 
+
+
+Course last time 9.05.00 (https://www.youtube.com/watch?v=4UZrsTqkcW4)
+   

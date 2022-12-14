@@ -1,0 +1,71 @@
+git 1. Creating local branch with the same name as the remote branch
+
+   git switch 5.2243(this is the remote's branch name)
+
+2. Create new branch from currently checkout branch
+  
+   git checkout -b new_branch
+
+3. Show remotes repos
+  
+  git remote -v
+
+  -> change remote origin url : git remote set-url origin https://gitlab-middle.boulogne.boursorama.fr/iboyukli/oxy-client.git
+
+
+4. Push only locally exisitng branch to remote origin repo
+
+git push -u origin <branch>
+
+
+5. Adding new remote repo with name  upstream)
+
+git remote add upstream https://gitlab-middle.boulogne.boursorama.fr/risk/oxy-app
+
+
+6. Create copy of remote branch to local branch
+
+ git fetch origin remote_branch_name:local_branch_name
+
+7. Change message of the last commit
+
+   git commit --ammend -m "New message"
+   git push --force-with-lease <repository> <branch>
+
+8. Add all changed files inluding the untracked to stash
+
+   git stash --include-untracked
+
+9 Apply stashed change
+
+   git stash apply stash@{1}
+
+   git stash drop            # drop top hash, stash@{0}
+
+   git stash drop stash@{n}  # drop specific stash - see git stash list
+
+10. Marking conflicts as resolved
+
+  git restore --stage .
+
+11. Somone has created a new brnach in upstream. You want that branch in your origin repo and locally.
+ 
+    -> $ git fetch upstream [This will fetch all of the remote branches for you. ]
+
+    -> $ git switch -c new-branch-name upstream/new-branch-name [Check out the branch you are interested in with -c to create a new local branch]
+
+    ->  $ git push origin new-branch-name [Pushing new local branch to your origin repo]
+
+12. Deleting branches
+
+// delete branch locally
+git branch -d localBranchName
+
+// delete branch remotely
+git push origin --delete remoteBranchName
+
+
+
+
+
+
