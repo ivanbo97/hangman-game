@@ -24,7 +24,8 @@ Every new topic of the learning path can be found on separate branch of this rep
 
 * Requirements: **Having docker deamon and docker client on your machine**
 
-After the project is built. You can run : **docker compose up**. This will pull two images (hangman-game and mysql), and start the application.
+* If you want to quickly find out what is all about just execute  **docker compose up**. This will pull two images (hangman-game and mysql), and start the application.
 Data from MySQL DB is going to be persisted on your local machine. You can check the exact folder in **docker-compose.yml**
-Now you should have locally running two services: MySQL and Hangman game. You can acess the app on localhost:8080 and there you go :)
+
+* Now you should have locally running two services: MySQL and Hangman game. You can acess the app on localhost:8080 and there you go :)
 
