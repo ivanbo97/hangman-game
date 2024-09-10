@@ -128,7 +128,12 @@
 
 4. REST (according to PayPal guidelines and based on Roy Fielding dissertation - https://github.com/paypal/api-standards/blob/master/api-style-guide.md)
 
-
+     -> Key principles
+          -> The main communication is between client and server.
+          -> The communication is stateless.
+          -> Resource oriented
+          -> Uses HTTP
+          -> Resources are represented in formats like JSON / XML
 
    4.1 Приниципите за дизайн на един сървис (услуга)
 
