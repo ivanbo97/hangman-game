@@ -73,7 +73,7 @@
    -> Request Mappings : Mоже да се използва антоацията @RequestMapping на ниво клас или метод. Самата анотация има разнообразни параметри: URL, HTTP method, параметри на заявката, хедъри и media types.
 			 Има също така разновидности на тази анотация, които са ориентирани към HTTP метода : @GetMapping, @PostMapping, @PutMapping, @DeleteMapping, @PatchMapping
 
-   -> URI patterns : Може да се задават шаблонен параметър в името на ресурса, който се подава като аргумент на @RequestMapping или на някоя от посочените по-горе анотации и след това да се достъпва с @PathVariable :
+   -> URI patterns : Може да се задават шаблонен параметър в името на ресурса, който се подава като аргумент на @GetMapping или на някоя от посочените по-горе анотации и след това да се достъпва с @PathVariable :
 
                          @GetMapping("/owners/{ownerId}/pets/{petId}")
 			 public Pet findPet(@PathVariable Long ownerId, @PathVariable Long petId) {
@@ -102,7 +102,7 @@
                          Http Servlet request параметрите, чиито имена съвпадат с имената на полетата на модел атрибут обекта. Това се нарича Data Binding и ни спестява парсване и пребразуване на отделните параметри
                          на заявката или полетата на една форма.
                          Ако даден метод е анотиран само с @ModelAttribute (без @RequestMapping), част e от контролер клас и не връща стойност, то този метод ще бъде предназначен за инциализиране на модела, преди да се изпълни
-                         някой от методите анотирани с @RequestMapping или прозивдните @GetMapping...
+                         някой от методите анотирани с @RequestMapping или прозивoдните @GetMapping...
 
                          @PostMapping("/owners/{ownerId}/pets/{petId}/edit")
 			 public String processSubmit(@ModelAttribute Pet pet) {
@@ -229,7 +229,7 @@
        
         * void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) : Съдържа код, който ще се изпълни след успешното! изпълнението на хендлър метода, но
                                                                                                                                  преди DispatcherServlet-a да рендерира view-то. По този начин може да се добавят
-                                                                                                                                 допълнителни атрибути към модел обекта.
+                                                                                                                                 допълнителни атрибути към модел обекта, които в последстие да се използват от view-то.
 
         * void	afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) : Извиква се след като хендлър метода на контролера се е изпълнил (независимо дали е имало
                                                                                                                           exception или не) и след като е рендерирано view-то. Подходящо място за освобождаване на ресурс.

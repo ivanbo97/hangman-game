@@ -103,7 +103,7 @@
 
           Ако искаме напълно да заменим default error handling трябва да имплементираме ErrorController.
           Tip : The BasicErrorController can be used as a base class for a custom ErrorController. This is particularly useful if you want to add a handler for a new content type (the default is to handle text/html specifically
-          and provide a fallback for everything else). To do so, extend BasicErrorController, add a public method with a @RequestMapping that has a produces attribute, and create a bean of your new type.
+          and provide a fallback for everything else). To do so, extend BasicErrorController, add a public method with a @RequestMapping that produces attribute, and create a bean of your new type.
 
           Може също така да се дефинира клас с анотация @ControllerAdvice.
 
@@ -227,7 +227,7 @@
 
    1. Docker arhitecture
 
-      The architecture of Docker uses a client-server model and consists of the Docker’s Client, Docker Host, Network and Storage components, and the Docker Registry/Hub. 
+      The architecture of Docker uses a client-server model and consists of the Docker’s Client, Docker Host, Network and Storage components and the Docker Registry/Hub. 
 
       A) Docker Client : Това е docker.exe. Посредством docker командата ние фактически управляваме Docker client и го караме да изпраща заявки към docker deamon (който се явява сървъра - dockerd.exe).
                          Сървърът и клиента може да се намират на една и съща машина, но това не е задължително. Може да свързваме докер клиент към отдалечен демон (сървър) през REST API.
@@ -260,7 +260,7 @@
    2. Контейнери vs Виртуални машини
 
       Докер Контейнерът е абстракция на приложно ниво, която капсулира нашето приложение и неговите дипендънсита. Множество контейнери мога да се изпълняват
-      върху една и съща машина и да споделят ядрото на ОС помежду си. Всеки контейнер се изпълнява като изоплиран процес в user space. Контейнерът не изисква 
+      върху една и съща машина и да споделят ядрото на ОС помежду си. Всеки контейнер се изпълнява като изолиран процес в user space. Контейнерът не изисква 
       напълно функционираща ОС.
 
       В концепцията за вирутални машини е заложена идеята за изпълняване на множество ОС върху един и същи хардуер с помощта на Hypervisor. Всяка една виртуална
