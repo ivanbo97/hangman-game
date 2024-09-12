@@ -457,6 +457,29 @@
 
         docker exec -it website bash
 
+
+================================================================================================================
+                The fast way to secure a running locally MYSQL RDBMS without having to using some setup.exe
+================================================================================================================
+
+1) Start MySQL RDBMS inside a docker container and expose it through a port
+
+   docker run -d -p 3306:3306 --name mysql-container -e MYSQL_ROOT_PASSWORD=root mysql:latest
+
+2) "Enter" inside the container inorder to access the mysql client and use it later
+
+   docker exec -it mysql-container bash
+
+3) Login with root user and provide the password used in 1) command
+
+   mysql -h localhost -P 3306 -u root -p
+
+4) Now you can create databases, tables using the standar SQL syntax
+
+
+*** If you want to connect DBeaver to a DB hosted inside Docker container you can use thins JDBC connection string jdbc:mysql://localhost:3306/your_database?allowPublicKeyRetrieval=true&useSSL=false
+
+
       
         
 
