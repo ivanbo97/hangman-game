@@ -49,7 +49,7 @@
           -> GROUP BY : Използва се за логическо групиране на записи от таблица по съдържание на дадена колона/и. Когато в една заявка има GROUP BY, то в SELECT клаузата може да има обобщаващи функции и свободни атрибути,
                         само ако свободните атрибути са подмножество на атрибуте на GROUP BY
 
-          -> HAVING : Тази клауза обикновено се използва след GROP BY. GROUP BY формира логически групи от записи, а HAVING се използва за прилагане на определни условия върху всяка група. Групите, които изпълняват
+          -> HAVING : Тази клауза обикновено се използва след GROUP BY. GROUP BY формира логически групи от записи, а HAVING се използва за прилагане на определни условия върху всяка група. Групите, които изпълняват
                       условията заложени от HAVING, остават за по-натаъчна обработка (от SELECT клаузата например).
                       
                       Пример : Искаме да видим от коя държава имаме повече от 10 поръчки: 
@@ -68,7 +68,7 @@
 
           -> JOIN клаузи : Използват се за комбиниране на данните от две или повече таблици, базирайки се на връзката FK -> PK
 
-                     * INNER JOIN : Селектират се само редовете , които имат FK -> PK връзка
+                     * INNER JOIN : Селектират се само редовете, които имат FK -> PK връзка
 
                      * LEFT (OUTER) JOIN : Селекират се всички записи от лявата таблица, а от дясната само тези, които имат FK->PK връзка с лявата таблица  (Представи си двата пресичащи се кръга)
 
@@ -90,7 +90,7 @@
                                                       RIGHT JOIN orders ON customers.id = orders.customer_id
                                 
                                                       Тук таблицата, която е посочена след FROM клаузата (customers) отново се явява за лява, следовтелно дясна отново оства да е orders.
-                                                      Обаче тук казваме вземи ми цялото съдържание на дясната таблица (orders), a от лявата (customers) само тези редове, които имат връзка към дясната таблица.
+                                                      Обаче тук казваме: Вземи ми цялото съдържание на дясната таблица (orders), a от лявата (customers) само тези редове, които имат връзка към дясната таблица.
                                                       Семантиката на заявката е : Вземи ми всички поръчки, които нямат асоциирани клиенти + тези, които имат асоциирани клиенти.
 
 
@@ -100,13 +100,13 @@
 
 2. JPA (Jakarta/Java Persistence API) / Hibiernate -> the implementation of the API
 
-   JPA e спецификация (интерфейс), която описва как да се управлява релационна база данни що се отнася до Java enterprise приложения. В основата е идеята за
-   object-relational mapping : Грубо казано как един Java обект да бъде превърнат в ред от таблица в релационна БД. Java Persistence се състои от 4 части :
+   JPA e спецификация (интерфейс), която описва как да се управлява релационна база данни що се отнася до Java Еnterprise приложения. В основата е идеята за
+   Оbject-Relational Mapping (ORM) : Грубо казано как един Java обект да бъде превърнат в ред от таблица в релационна БД. Java Persistence се състои от 4 части :
    
       -> Java Persistence API
       -> Езикът за заявки (JPQL-java persistence query language) 
       -> Java Persistence Criteria API
-      -> Object/relational mapping metadata
+      -> Object-relational mapping metadata
 
    
    Говорейки за JPA e добре да се обърне внимание на следните теми : Entities, Managing Entities, Querying Entities.
@@ -138,12 +138,12 @@
                                                           2. You can load an entity object from the database using the EntityManager.find method, a JPQL query, a CriteriaQuery, or a native SQL query.
                                                           3. You can merge a detached entity by calling the EntityManager.merge method or update it by calling the update method on your Hibernate Session.
              
-                     -> Detached : An entity that was previously managed but is no longer attached to the current persistence context is in the lifecycle state detached. However it has an id.
+                    -> Detached :  An entity that was previously managed but is no longer attached to the current persistence context is in the lifecycle state detached. However, it has an id.
                                    An entity gets detached when you close the persistence context.That typically happens after a request got processed. Then the database transaction gets committed,
                                    the persistence context gets closed, and the entity object gets returned to the caller. The caller then retrieves an entity object in the lifecycle state detached.
                                    В общи линии това е ентити извън транзакцията.
 
-                     -> Removed : When you call the remove method on your EntityManager, the mapped database record doesn’t get removed immediately. The entity object only changes its lifecycle state to removed.
+                    -> Removed :  When you call the remove method on your EntityManager, the mapped database record doesn’t get removed immediately. The entity object only changes its lifecycle state to removed.
                                   During the next flush operation, Hibernate will generate an SQL DELETE statement to remove the record from the database table.
 
 
@@ -269,8 +269,7 @@
          private List<Book> books;
       }
 
-       От горният пример owning стрната е Book класа, което означава,че ако правим промени по library обекта (викаме негови сетъри Liпрез инстанция на Book: book), те автоматично ще се отразват на съответния елемент в books списъка
-       в Library.
+       От горният пример owning стрната е Book класа, което означава,че ако правим промени по library обекта (викаме негови сетъри Library през инстанция на Book: book), те автоматично ще се отразяват на съответния елемент в books          	списъка в Library.
 
 2.9. Entity Inhertance 
 
@@ -307,8 +306,7 @@
 2.10. Mapped Superclasses
 
     Entity класовете мога да наследяват класове, които съдържат persistence и mapping инфромация, но самите те не са ентитита. Тоест родителският клас няма анотация @Entity и не се следи от JPA. Такива класове се използват
-    за капсулирана на информация, която е обща за няколко Entity класове. Например имаме различни видове работници изразени като ентитита и общото между тях е, че имат поле за уникално ид. Следователно ид полето може да се изнесе
-    в един родителски клас (анотиран с @MappedSuperclass) :
+    за капсулиране на persistence информация, която е обща за няколко Entity класове. Например имаме различни видове работници изразени като ентитита и общото между тях е, че имат поле за уникално ид. Следователно ид полето може да се  изнесе в един родителски клас (анотиран с @MappedSuperclass) :
 
     @MappedSuperclass
     public class Employee {
@@ -351,8 +349,7 @@
                                                    @Inheritance(strategy = InheritanceType.SINGLE_TABLE) се слага под @Entity на базовия клас.
 
                                                    Така като се замислим обаче един ред от такава таблица ще има колони, които ще бъдат null, все пак всеки наследяващ ентити клас си има свой собствени полета, които другите наследяващи
-                                                   класове нямат, но нали пък искаме да имамаме само една таблициа => следователно ред от такава таблица ще съдържа всички полета на базовия клас + всички полета на всички наследяващи класове
-                                                   във вид на колони.
+                                                   класове нямат, но нали пък искаме да имамаме само една таблициа => следователно ред от такава таблица ще съдържа всички полета на базовия клас + всички полета на всички наследяващи   						класове във вид на колони.
 
                                                    При тази стратегия се поддържа добра възможност за полиморфични взаимоотношения между ентити класовете и заявки, които да покриват цялата класова йерархия.
 
@@ -363,8 +360,7 @@
                                             Това е така защото правим заявка към базовия клас, а той няма конкретна таблица за него, а има само таблици на child класовете, затова ще трябва UNION на резултатите от всички child
                                             ентитита.
 
-             -> Joined subclass : При тази стратегия базовият ентити клас в йерархията има своя отделна таблица съдържаща колони съотвестващи само на полетата на базовия клас. Child ентититата също имат отделни таблици, но колоните
-                                  в тях съотвестват единствено на полетата на child класа, без да се вземат тези на базовия клас.
+             -> Joined subclass : @Inheritance(strategy = InheritanceType.JOINED) При тази стратегия базовият ентити клас в йерархията има своя отделна таблица съдържаща колони съотвестващи само на полетата на базовия клас. Child 					  ентититата също имат отделни таблици, но колоните в тях съотвестват единствено на полетата на child класа, без да се вземат тези на базовия клас.
               
                                   Тази стратегия е добра за полиморфични взаимоотношения, но характерното за нея е, че изисква JOIN операции, когато се извличат child класовете. Това е така, защото както казахме child таблиците
                                   не съдържат инфото от базовата таблица.
@@ -384,7 +380,7 @@
                             приближаваме до бизнес логиката. Същността на шаблона проличава, когато има множество DAO обекти и определена бизнес логиката налага комбинирането на информацията от различните DAO обекти.
                             Тоест в репозитори обекта имаме референции към повече от един DAO обекти и имаме методи в самото репозитори, които комбинират информацията от два дао обекта (например), за да изпълнят определна задача.
 
-                            Есенцията на шаблона е, че трябва да наподобява колекция, тоест да има методи, които се казват :  User get(Long id);  void add(User user); void update(User user); void remove(User user);
+                            Есенцията на шаблона е, че трябва да наподобява колекция, тоест, да има методи, които се казват :  User get(Long id);  void add(User user); void update(User user); void remove(User user);
 
   3.3 EntityManager
 
@@ -396,18 +392,14 @@
       Сега вече може и да кажем за EntityManager-a : Това е интерфейс, в който са дефинирани методите за взаимодействие с PersistenceContext-a : създаване и премахване на ентити инстанция от PersistenceContext, намиране на ентита по
                                                      първичен ключ, заявки насочени към конкретни ентитита.
 
-      *Container-managed Entity Managers : При този тип, persistence context-a на EntityManager инстанция се разпространява автоматично от контейнера (Spring) до всички компоненти на приложението, които използват инстанции на EntityManager
-                                          в една JTA транзакция. Също така самия контейнер (Spring) е отговорен за започване на транзакция, комитването, rollback. При спринг буут конкретно това става с помощта на AOP и създаване на proxy-та
-                                          на всички обекти на класове анотирани с @Тransactional. Тоест, когато извикаме публичен метод принадлежащ на клас анотиран с @Тransactional, автоматично преди да се изпълни метода ще се отвори транзакция
-                                          методът ще се изпълни и автоматично ще се затвори транзакцията. Между отварянето и затварянето на транзакциите може да извличаме ентитита от база и те ще бъдат в managed състояние. Тоест всичко, което
-                                          променяме по тях ще се запазва в базата. След като приключи транзакцията такива ентитита стават detached.
+      *Container-managed Entity Managers : При този тип, persistence context-a на EntityManager инстанция се разпространява автоматично от контейнера (Spring) до всички компоненти на приложението, които използват инстанции на   						   EntityManager в една JTA транзакция. Също така самия контейнер (Spring) е отговорен за започване на транзакция, комитването, rollback. При спринг буут конкретно това става с помощта
+					   на AOP и създаване на proxy-та на всички обекти на класове анотирани с @Тransactional. Тоест, когато извикаме публичен метод принадлежащ на клас анотиран с @Тransactional, автоматично преди да   					   се изпълни метода ще се отвори транзакция, методът ще се изпълни и автоматично ще се затвори транзакцията. Между отварянето и затварянето на транзакциите може да извличаме ентитита от база и те 					   ще бъдат в MANGED състояние. Тоест всичко, което променяме по тях ще се запазва в базата. След като приключи транзакцията такива ентитита стават detached.
 
-                                          Пример : В един контролер имаме инжектиран сървис, който извлича определен ученик от някакво репозитори. Когато извлечем това ентити чрез извикването на метод на сървиса, то ще приситгне при
+                                          Пример : В един контролер имаме инжектиран сървис, който извлича определен ученик от някакво репозитори. Когато извлечем това ентити чрез извикването на метод на сървиса, то ще пристигне в
                                                    контролера в detached състояние, защото транзакцията вече е приключила с изпълнението на сървис метода.
 
 
-                                          За да инжектираме такъв тип EntityManger в някой наш клас, се използва
-                                          анотацията @PersistenceContext, а самият клас, който използва EntityManager може да бъде анотиран с @Transactional
+                                          За да инжектираме такъв тип EntityManger в някой наш клас, се използва анотацията @PersistenceContext, а самият клас, който използва EntityManager може да бъде анотиран с @Transactional
 
                                           @Transactional annotation is used when you want the certain method/class(=all methods inside) to be executed in a transaction.
 					  Transactions means all or nothing. If there is an exception thrown somewhere in the method, changes are not persisted in the database. Something called rollback happens.
@@ -421,7 +413,8 @@
       When to call manually persist and when not ? https://stackoverflow.com/questions/1069992/jpa-entitymanager-why-use-persist-over-merge/1070629#1070629
 
    
-   3.4 Hibernate Criteria API - depreactaed : Препоръчва се изпозлването на JPA Criteria API
+   3.4 Hibernate Criteria API - depreactaed : Препоръчва се изпозлването на JPA Criteria API. Тhis API is even removed from Hibernate 6. Spring Boot 3+ uses exactly Hibernate 6, so if you want to 
+                                              update you APP from Spring BOOT 2.5 to SPRING Boot 3+ and have hibernate criteria api code, you should rewrite all the code to JPA Criteria
 
    3.5 JPA Criteria API : Използва се за дефиниране на заявки за ентити обекти. Представлява прогрманата алтернатива на JPQL заявките, които са под формата на низ. Основното предимство на Criteria API пред JPQL са :
 
@@ -490,10 +483,9 @@
 
             Обикновено, когато пишем Criteria заявки използваме имената на полетата на ентити класовете като чисти стрингове. Ако се замислим обаче това не е най-добрата пратктика, защото при промяна на името на 
             някоя колона от траблицата ще трябва да променим името на съответното поле в ентити класа, което пък от своя старана ще доведе до промяна в съществуващите заявки. Както виждаме така доста се усложнява
-            процеса, защото правим ръчни промени на две места едновременно в сорс кода : в ентити калсовете и в заявките. Следователно е добре на едно място да се изнесе цялата мета инфромация за ентити класа в един
+            процеса, защото правим ръчни промени на две места едновременно в сорс кода : в ентити класовете и в заявките. Следователно е добре на едно място да се изнесе цялата мета инфромация за ентити класа в един
             отделен клас и  в съответните заявки да не се пишат имената на полетата като стрингове, а да се използва тази метаинформация.
-            Чрез dependency-то hibernate-jpamodelgen целият процес се прави автоматизиран. При билдване на проекта в директорията target/generated-sources се създават класове съдържащи метаинформация за всеки от ентити класовете. Имената
-            на мета класовете съотвестват с тези на ентити класовете с разликата, че имат _ накрая.
+            Чрез dependency-то hibernate-jpamodelgen целият процес се прави автоматизиран. При билдване на проекта в директорията target/generated-sources се създават класове съдържащи метаинформация за всеки от ентити класовете. 		    Имената на мета класовете съотвестват с тези на ентити класовете с разликата, че имат _ накрая.
 
         !!! Необходима е една важна настройка, за да накараме еклипса да почне правилно да чете генерарираните метамодел класове : Десен клик в/у проекта -> Properties -> Java Build Path -> Add folder -> Избери target/generated/sources/annotations
 
@@ -575,10 +567,10 @@
                                          което може да се комбинира с други такива и да бъде преизползвано. It defines a specification as a predicate over an entity
 
                                          Specification интерфейса на Spring e насочен точно върху това. Той капсулира един предикат, който може да бъде преизползван и комбиниран с други. Също така не се налага да създаваме ръчно
-                                         типичния за Spring Criteria API boilerplate : CriteriaBuidler, CriteriaQuery, Root). Те се създават автоматочно от Spring.
+                                         типичния за JPA Criteria API boilerplate : CriteriaBuidler, CriteriaQuery, Root). Те се създават автоматочно от Spring.
                                          Използвайки спецификациите ние създавам едни по-четими заявки.
 
-     -> Важна настройка на Spring Data JPA:   jpa.hibernate.ddl-auto: update -> С тази настройка казваме автоматично да се правят упдейти на таблици в БД, като се вземат по внимание 
+     -> Важна настройка на Spring Data JPA:   jpa.hibernate.ddl-auto: update -> С тази настройка казваме автоматично да се правят ъпдейти на таблици в БД, като се вземат по внимание 
                                               текущите entity класове. Например, ако от даден entity клас изтрием поле, то ще бъде изтрито и като колона в същинската таблица в БД.
                                               [!]Разбира се тази настройка не е добре да се ползва при професионалното програмиране, защото там промените по схемата на БД се прави чрез
                                               миграции. Следователно е добре такова свойство (jpa.hibernate.ddl-auto) изобщо да не се специфицира или да е със стойност none.
@@ -607,13 +599,13 @@
 
 
      5.1.2 Undo migrations : За да се върнем към състоянието преди дадена versioned migration, ние можем да напишем undo мигарация, която трябва да има същата версия като тази нa versioned миграцията, която
-                             искаме да върнем. Не е препоръчително интензивното използване на такъв тип миграции.
+                             искаме да върнем. Не е препоръчително интензивното използване на такъв тип команд.
 
 
      5.1.3 Repeatable migrations : Те нямат описание и версия, а само checksum. Изпълняват се всеки път, когато checksum-ата им се промени.
 
 
- 5.2 Къде се пишат мигарациите в едно Java enterprise приложение ?
+ 5.2 Къде се пишат мигарациите в едно Java Еnterprise приложение ?
   
      Обикновено се слагат в src/main/resources/db/migrations
 
@@ -670,14 +662,22 @@
 
            Nope, the answer is not two, but one. Why? -> refer to self-invocation problem of spring aop
 
+How Spring Proxies Work?
 
+Spring uses proxies to manage transactions, among other things. These proxies are dynamically created objects that "wrap" your service bean and intercept method calls to apply additional logic, such as transactional behavior. Here’s a step-by-step explanation of how this works:
 
+Proxy Creation: When Spring detects that a bean has transactional methods (through the @Transactional annotation), it creates a proxy for that bean. This proxy is responsible for intercepting method calls and applying transaction management logic.
 
+Method Interception: The proxy intercepts method calls and handles transactions based on the @Transactional annotations. For instance, if a method is annotated with @Transactional(propagation = Propagation.REQUIRES_NEW), the proxy ensures that a new transaction is started and committed independently of any existing transactions.
 
-      
+Transaction Management: When a method annotated with @Transactional is invoked through the proxy, the proxy manages the transaction lifecycle. This includes starting, committing, or rolling back transactions as needed.
 
-   
-             
-              
- 
-       
+Here's what happens during self-invokation:
+
+Proxy Interception: When you call invoice() from outside the class, Spring's proxy intercepts the call, starts a transaction, and executes invoice() with the proper transactional context.
+
+Direct Method Call: Inside invoice(), when you call createPdf(), it’s a direct method call on the same instance of UserService. This call bypasses the Spring proxy because it’s within the same object instance.
+
+No Transactional Behavior Applied: Since createPdf() is not called through the proxy, it doesn’t get the transactional behavior specified by its @Transactional(propagation = Propagation.REQUIRES_NEW) annotation. It simply executes within the transaction context of invoice() if any.
+
+*********************************************************************************************************************  
